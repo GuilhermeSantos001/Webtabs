@@ -81,26 +81,76 @@ class Page {
             ipcRenderer.send('updatefullscreenview', fullscreen);
     };
 
+    section_websites_append(id, name, section, loadurl, removeurl) {
+        $("#section_websites").append(`\
+        <div id="${section}" class="section">\
+        <div class="col s12 blue accent-2">\
+        <h5 class="white-text">${name}</h5>\
+        </div>\
+        <button id="${loadurl}" class="btn white black-text col s12 waves-effect waves-grey" type="submit"\
+        name="action" style="margin-bottom: 5px;">Carregar\
+        <i class="material-icons right">web</i>\
+        </button>\
+        <button id="${removeurl}" class="btn white black-text col s12 waves-effect waves-grey" type="submit" name="action"\
+        style="margin-bottom: 10px;">Remover\
+        <i class="material-icons right">delete</i>\
+        </button>\
+        </div>\
+    `);
+        $(`#${loadurl}`).click(() => {
+            page.urls.seturl(id);
+        });
+        $(`#${removeurl}`).click(() => {
+            page.urls.remove(id, `#${section}`);
+        });
+    }
+
     initializeURLs() {
         this.urls = {
             data: require(require('./import/LocalPath').resolve('settings\\websites')),
+            add: (name, url) => {
+                let fs = require('fs'),
+                    data = this.urls.data;
+                if (data.websites.indexOf(name) == -1) {
+                    let id = data.content.length,
+                        section = `${name}_section`,
+                        loadurl = `${name}_loadURL`,
+                        removeurl = `${name}_removeURL`;
+                    data.section.push([id, name, section, loadurl, removeurl]);
+                    data.content.push(url);
+                    data.websites.push(name);
+                    this.section_websites_append(id, name, section, loadurl, removeurl);
+                    fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
+                        JSON.stringify(data, null, 2));
+                    $("#add_website_submit").prop('checked', false);
+                }
+            },
             remove: (indexOf, sectionID) => {
                 let fs = require('fs'),
-                    data = this.urls.data,
-                    nextURL = data.content[data.counter + 1];
+                    data = this.urls.data;
                 if (data.content.length - 1 < 1) return;
                 if (data.content[indexOf] != undefined) {
+                    data.websites.splice(indexOf, 1);
                     data.content.splice(indexOf, 1);
                     data.section.splice(indexOf, 1);
                     if (data.counter == indexOf) {
                         this.timepage = null;
-                        ipcRenderer.send('updateurlview', nextURL);
+                        while (!data.content[indexOf]) { indexOf--; }
+                        ipcRenderer.send('updateurlview', data.content[indexOf]);
                     }
-                    if (data.counter + 1 < data.content.length - 1) data.counter++;
-                    else if (data.counter > data.content.length - 1) data.counter--;
-                    fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
-                        JSON.stringify(data, null, 2));
-                    $(sectionID).fadeOut('slow', function () { $(this).remove(); });
+                    let i = 0, l = data.content.length;
+                    data.section.forEach(content => {
+                        if (data.counter == content[0])
+                            data.counter = i, content[0] = i;
+                        else
+                            content[0] = i;
+                        if (i < l) i++;
+                    });
+                    $(sectionID).fadeOut('slow', function () {
+                        $(this).remove();
+                        fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
+                            JSON.stringify(data, null, 2));
+                    });
                 }
             },
             start: () => {
@@ -210,9 +260,31 @@ $(document).ready(function () {
         page.setfullscreen(val);
     });
 
+    /**
+     * Buttons
+     */
+    $("#add_website_submit").click(() => {
+        let name = $("#add_website_name").val(),
+            url = $("#add_website_url").val();
+        if (name.length <= 0 || url.length <= 0) return;
+        name = name.replace(/["']/g, '');
+        url = url.toLowerCase().replace(/\s{1,}/g, '');
+        url = url.toLowerCase().replace(/[\\/]/g, '');
+        if (url.substring(0, 5).match(/https/)) {
+            url = url.toLowerCase().replace(/https:/g, '');
+        } else {
+            url = url.toLowerCase().replace(/http:/g, '');
+        }
+        ipcRenderer.send('debug', [name, url]);
+        if ($("#add_website_submit").prop("checked")) {
+            require('ping').sys.probe(url, isAlive => {
+                if (isAlive) page.urls.add(name, require('normalize-url')(url));
+            });
+        }
+    });
 
     /**
-     * Render
+     * Render Websites List
      */
     (() => {
         let d = page.urls.data.section,
@@ -220,27 +292,13 @@ $(document).ready(function () {
             l = d.length
         for (; i < l; i++) {
             let content = d[i];
-            $("#section_websites").append(`\
-                <div id="${content[2]}" class="section">\
-                <div class="col s12 blue accent-2">\
-                <h5 class="white-text">${content[1]}</h5>\
-                </div>\
-                <button id="${content[3]}" class="btn white black-text col s12 waves-effect waves-grey" type="submit"\
-                name="action" style="margin-bottom: 5px;">Carregar\
-                <i class="material-icons right">web</i>\
-                </button>\
-                <button id="${content[4]}" class="btn white black-text col s12 waves-effect waves-grey" type="submit" name="action"\
-                style="margin-bottom: 10px;">Remover\
-                <i class="material-icons right">delete</i>\
-                </button>\
-                </div>\
-            `);
-            $(`#${content[3]}`).click(() => {
-                page.urls.seturl(content[0]);
-            });
-            $(`#${content[4]}`).click(() => {
-                page.urls.remove(content[0], `#${content[2]}`);
-            });
+            page.section_websites_append(
+                content[0],
+                content[1],
+                content[2],
+                content[3],
+                content[4]
+            );
         }
     })();
 });
