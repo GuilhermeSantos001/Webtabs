@@ -1,23 +1,45 @@
 {
-  "counter": 0,
+  "websites": [
+    "Pipedrive",
+    "Youtube",
+    "Google",
+    "Github"
+  ],
+  "counter": 3,
   "content": [
-    "https://sla.performancelab.com.br/login.php?uri=%2F",
-    "https://www.pipedrive.com/pt"
+    "https://www.pipedrive.com/pt",
+    "https://www.youtube.com/",
+    "https://www.google.com.br/?gws_rd=ssl",
+    "https://github.com/"
   ],
   "section": [
     [
       0,
-      "Performancelab",
-      "Performancelab_section",
-      "Performancelab_loadURL",
-      "Performancelab_removeURL"
-    ],
-    [
-      1,
       "Pipedrive",
       "Pipedrive_section",
       "Pipedrive_loadURL",
       "Pipedrive_removeURL"
+    ],
+    [
+      1,
+      "Youtube",
+      "Youtube_section",
+      "Youtube_loadURL",
+      "Youtube_removeURL"
+    ],
+    [
+      2,
+      "Google",
+      "Google_section",
+      "Google_loadURL",
+      "Google_removeURL"
+    ],
+    [
+      3,
+      "Github",
+      "Github_section",
+      "Github_loadURL",
+      "Github_removeURL"
     ]
   ]
 }

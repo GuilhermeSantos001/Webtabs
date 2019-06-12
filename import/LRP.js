@@ -12,6 +12,9 @@ var settings = {
     geral: require('../settings/geral')
 }
 
+/**
+ * Listeners
+ */
 ipcMain.on('settings_update', (event, args) => {
     switch (args[0]) {
         case 'timepage':
