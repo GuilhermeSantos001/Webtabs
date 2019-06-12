@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import nouislider.css and materialize.css -->
+  <link type="text/css" rel="stylesheet" href="css/nouislider.min.css" />
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hello World!</title>
+
+</head>
+
+<body>
+  <div class="row">
+    <!--MENU LATERAL-->
+    <div id="TESTE" class="col s2 grey lighten-3">
+      <!--Lista de sites-->
+      <div id="section_websites"></div>
+      <div class="section">
+        <button class="btn blue col s12" type="submit" name="action" style="margin-bottom: 10px;" disabled>Carregar
+          Mais!
+          <i class="material-icons right">refresh</i>
+        </button>
+      </div>
+      <!--Menu Configurações-->
+      <div class="section">
+        <div class="col s12 blue accent-2">
+          <h5 class="white-text">Configurações</h5>
+        </div>
+        <ul class="collapsible">
+          <!--Item: Geral-->
+          <li>
+            <div class="collapsible-header waves-effect waves-grey">
+              <i class="material-icons">settings</i>
+              Geral
+            </div>
+            <div class="collapsible-body">
+              <label>Tempo até a pagina ser alterada.</label>
+              <p class="range-field">
+                <input type="range" id="timepage" min="1" max="60" value="2" />
+              </p>
+              <p id="timepage_label" class="grey-text text-darken-1">2 min.</p>
+              <div class="divider" style="margin-bottom: 10px;"></div>
+              <label>
+                Zoom da pagina<br />
+              </label>
+              <p class="range-field">
+                <input type="range" id="zoompage" min="10" max="200" value="100" step="10" />
+                <p id="zoompage_label" class="grey-text text-darken-1">100%.</p>
+              </p>
+              <div class="divider" style="margin-bottom: 10px;"></div>
+              <label>
+                Tela Cheia<br />
+              </label>
+              <div class="switch">
+                <label>
+                  Desativado
+                  <input id="fullscreen" type="checkbox">
+                  <span class="lever"></span>
+                  Ativado
+                </label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>
+    if (typeof module === 'object') { window.module = module; module = undefined; }
+  </script>
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="js/wNumb.js"></script>
+  <script type="text/javascript" src="js/nouislider.min.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript">
+    require('./renderer.js');
+  </script>
+  <script>
+    if (window.module) module = window.module;
+  </script>
+</body>
+
+</html>

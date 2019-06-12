@@ -1,0 +1,23 @@
+{
+  "counter": 0,
+  "content": [
+    "https://sla.performancelab.com.br/login.php?uri=%2F",
+    "https://www.pipedrive.com/pt"
+  ],
+  "section": [
+    [
+      0,
+      "Performancelab",
+      "Performancelab_section",
+      "Performancelab_loadURL",
+      "Performancelab_removeURL"
+    ],
+    [
+      1,
+      "Pipedrive",
+      "Pipedrive_section",
+      "Pipedrive_loadURL",
+      "Pipedrive_removeURL"
+    ]
+  ]
+}
