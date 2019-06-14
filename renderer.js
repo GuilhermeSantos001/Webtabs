@@ -97,6 +97,10 @@ class Page {
         </button>\
         </div>\
     `);
+        this.setclick_section_websites(id, section, loadurl, removeurl);
+    }
+
+    setclick_section_websites(id, section, loadurl, removeurl) {
         $(`#${loadurl}`).click(() => {
             page.urls.seturl(id);
         });
@@ -144,8 +148,9 @@ class Page {
                             data.counter = i, content[0] = i;
                         else
                             content[0] = i;
+                        this.setclick_section_websites(content[0], content[2], content[3], content[4]);
                         if (i < l) i++;
-                    });
+                    }, this);
                     $(sectionID).fadeOut('slow', function () {
                         $(this).remove();
                         fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
@@ -162,12 +167,15 @@ class Page {
                     content = data.content,
                     i = data.counter;
                 if (content[indexOf] != undefined) {
-                    if (content[i] != ipcRenderer.sendSync('geturlview')) content[i] = ipcRenderer.sendSync('geturlview');
+                    this.timepage = null;
+                    if (content[i] != ipcRenderer.sendSync('geturlview'))
+                        $(this).delay(1000, () => {
+                            content[i] = ipcRenderer.sendSync('geturlview')
+                        });
                     i = indexOf, data.counter = i;
+                    ipcRenderer.send('updateurlview', content[i]);
                     fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
                         JSON.stringify(data, null, 2));
-                    this.timepage = null;
-                    ipcRenderer.send('updateurlview', content[i]);
                 }
             },
             change: () => {
@@ -175,11 +183,14 @@ class Page {
                     data = this.urls.data,
                     content = data.content,
                     i = data.counter;
-                if (content[i] != ipcRenderer.sendSync('geturlview')) content[i] = ipcRenderer.sendSync('geturlview');
+                if (content[i] != ipcRenderer.sendSync('geturlview'))
+                    $(this).delay(1000, () => {
+                        content[i] = ipcRenderer.sendSync('geturlview')
+                    });
                 i < content.length - 1 ? i++ : i = 0, data.counter = i;
+                ipcRenderer.send('updateurlview', content[i]);
                 fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
                     JSON.stringify(data, null, 2));
-                ipcRenderer.send('updateurlview', content[i]);
             }
         };
         this.urls.start();
@@ -221,7 +232,6 @@ const settings = {
     geral: require('./settings/geral')
 },
     page = new Page();
-
 
 /**
  * Jquery
@@ -275,12 +285,20 @@ $(document).ready(function () {
         } else {
             url = url.toLowerCase().replace(/http:/g, '');
         }
-        ipcRenderer.send('debug', [name, url]);
         if ($("#add_website_submit").prop("checked")) {
             require('ping').sys.probe(url, isAlive => {
                 if (isAlive) page.urls.add(name, require('normalize-url')(url));
+                else $("#add_website_submit").prop('checked', false);
             });
         }
+    });
+
+    $("#menu_hide").click(() => {
+        $("#menu").animate({
+            "margin-left": "-=300"
+        }, () => {
+            ipcRenderer.send('menuhide');
+        });
     });
 
     /**
@@ -301,4 +319,17 @@ $(document).ready(function () {
             );
         }
     })();
+
+    /**
+     * Listeners
+     */
+    ipcRenderer
+        .on('menushow', event => {
+            $("#menu").animate({
+                "margin-left": "+=300"
+            });
+        })
+        .on('togglefullscreen', (event, arg) => {
+            $('#fullscreen').prop('checked', Boolean(arg));
+        });
 });
