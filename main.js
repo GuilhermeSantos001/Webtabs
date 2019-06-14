@@ -1,5 +1,6 @@
 const { app, BrowserWindow, BrowserView, Menu, globalShortcut } = require('electron');
-const path = require(__dirname + '/import/LocalPath');
+const path = require(__dirname + '/import/LocalPath'),
+  nativeImage = require('electron').nativeImage;
 
 require('module').globalPaths.push(path.resolve('node_modules'));
 
@@ -9,7 +10,7 @@ function createWindow() {
     settings = {
       width: width,
       height: height,
-      icon: path.resolve('icon.ico'),
+      icon: path.resolve('img/icon.ico'),
       resizable: false,
       webPreferences: {
         nodeIntegration: true
@@ -33,9 +34,10 @@ function createWindow() {
   const menu = Menu.buildFromTemplate([
     {
       id: "menuback",
-      label: "Voltar"
+      label: "Menu"
     }
   ]);
+
   menu.getMenuItemById('menuback').click = () => {
     viewSetBounds();
     mainWindow.webContents.send('menushow');
