@@ -7,9 +7,9 @@ const { ipcMain } = require('electron');
  * Variable
  */
 const fs = require('fs');
-const path = require('../import/LocalPath');
+const path = require('./LocalPath');
 var settings = {
-    geral: require('../settings/geral')
+    geral: require(path.resolve('settings/geral.json'))
 }
 
 /**

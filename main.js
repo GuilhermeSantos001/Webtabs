@@ -35,6 +35,10 @@ function createWindow() {
     {
       id: "menuback",
       label: "Menu"
+    },
+    {
+      label: "Sair",
+      role: "close"
     }
   ]);
 
