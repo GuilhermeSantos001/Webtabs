@@ -5,7 +5,7 @@
 /**
  * Import
  */
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, remote } = require('electron');
 
 /**
  * Class
@@ -168,10 +168,7 @@ class Page {
                     i = data.counter;
                 if (content[indexOf] != undefined) {
                     this.timepage = null;
-                    if (content[i] != ipcRenderer.sendSync('geturlview'))
-                        $(this).delay(1000, () => {
-                            content[i] = ipcRenderer.sendSync('geturlview')
-                        });
+                    if (content[i] != ipcRenderer.sendSync('geturlview')) content[i] = ipcRenderer.sendSync('geturlview')
                     i = indexOf, data.counter = i;
                     ipcRenderer.send('updateurlview', content[i]);
                     fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
@@ -183,10 +180,7 @@ class Page {
                     data = this.urls.data,
                     content = data.content,
                     i = data.counter;
-                if (content[i] != ipcRenderer.sendSync('geturlview'))
-                    $(this).delay(1000, () => {
-                        content[i] = ipcRenderer.sendSync('geturlview')
-                    });
+                if (content[i] != ipcRenderer.sendSync('geturlview')) content[i] = ipcRenderer.sendSync('geturlview')
                 i < content.length - 1 ? i++ : i = 0, data.counter = i;
                 ipcRenderer.send('updateurlview', content[i]);
                 fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
@@ -299,6 +293,10 @@ $(document).ready(function () {
         }, () => {
             ipcRenderer.send('menuhide');
         });
+    });
+
+    $("#exit_app").click(() => {
+        remote.getCurrentWindow().close();
     });
 
     /**
