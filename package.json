@@ -4,13 +4,15 @@
   "description": "Programa para exibir paginas dinamicamente.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pkg-win": "electron-packager . --platform=win32 --arch=all --out=public"
   },
   "repository": "https://github.com/GuilhermeSantos001/Webtabs.git",
   "author": "GuilhermeSantos001",
   "license": "CC0 1.0 Universal",
   "devDependencies": {
-    "electron": "^5.0.3"
+    "electron": "^5.0.3",
+    "electron-packager": "^13.1.1"
   },
   "dependencies": {
     "electron-notify": "^0.1.0",
