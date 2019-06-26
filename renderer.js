@@ -101,7 +101,13 @@ class Page {
     }
 
     setclick_section_websites(id, section, loadurl, removeurl) {
+        if (!this._loadurls) this._loadurls = [];
+        if (!this._removeurls) this._removeurls = [];
+        if (this._loadurls.indexOf(`#${loadurl}`) === -1) this._loadurls.push(`#${loadurl}`);
+        if (this._removeurls.indexOf(`#${removeurl}`) === -1) this._removeurls.push(`#${removeurl}`);
         $(`#${loadurl}`).click(() => {
+            this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', true); });
+            this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', true); });
             page.urls.seturl(id);
         });
         $(`#${removeurl}`).click(() => {
@@ -168,7 +174,8 @@ class Page {
                     i = data.counter;
                 if (content[indexOf] != undefined) {
                     this.timepage = null;
-                    if (content[i] != ipcRenderer.sendSync('geturlview')) content[i] = ipcRenderer.sendSync('geturlview')
+                    this._loadURL = content[i];
+                    if (content[i] != this._URL) content[i] = this._URL;
                     i = indexOf, data.counter = i;
                     ipcRenderer.send('updateurlview', content[i]);
                     fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
@@ -180,7 +187,7 @@ class Page {
                     data = this.urls.data,
                     content = data.content,
                     i = data.counter;
-                if (content[i] != ipcRenderer.sendSync('geturlview')) content[i] = ipcRenderer.sendSync('geturlview')
+                if (content[i] != this._URL) content[i] = this._URL;
                 i < content.length - 1 ? i++ : i = 0, data.counter = i;
                 ipcRenderer.send('updateurlview', content[i]);
                 fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
@@ -192,8 +199,25 @@ class Page {
 
     update() {
         setInterval(() => {
+            this.updateURL();
+            this.updateLoadURL();
             this.timepageUpdate();
         }, 1000);
+    };
+
+    updateURL() {
+        if (this._URL != ipcRenderer.sendSync('geturlview'))
+            this._URL = ipcRenderer.sendSync('geturlview');
+    };
+
+    updateLoadURL() {
+        if (this._loadURL) {
+            if (this._loadURL != this._URL) {
+                this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', false); });
+                this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', false); });
+                this._loadURL = null;
+            }
+        }
     };
 
     timepageUpdate() {
