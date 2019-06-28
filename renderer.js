@@ -202,7 +202,7 @@ class Page {
             this.updateURL();
             this.updateLoadURL();
             this.timepageUpdate();
-        }, 1000);
+        }, 500);
     };
 
     updateURL() {
