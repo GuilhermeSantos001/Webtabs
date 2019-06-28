@@ -78,30 +78,27 @@ function createWindow() {
   mainWindow.setBrowserView(view.content);
 
   function viewSetBounds(fullsize) {
-    let delay = setTimeout(() => {
-      if (!fullsize)
-        anchorX = Math.floor((16 * mainWindow.getContentBounds().width) / 100) + 10,
-          view.settings = {
-            x: anchorX,
-            y: 0,
-            width: mainWindow.getContentBounds().width - anchorX,
-            height: mainWindow.getContentBounds().height
-          },
-          view.hide = false;
-      else
+    if (!fullsize) {
+      anchorX = Math.floor((16 * mainWindow.getContentBounds().width) / 100) + 10,
         view.settings = {
-          x: 0,
+          x: anchorX,
           y: 0,
-          width: mainWindow.getContentBounds().width,
+          width: mainWindow.getContentBounds().width - anchorX,
           height: mainWindow.getContentBounds().height
         },
-          view.hide = true;
-      view.content.setBounds(view.settings);
-      clearTimeout(delay);
-    });
+        view.hide = false;
+    }
+    else {
+      view.settings = {
+        x: 0,
+        y: 0,
+        width: mainWindow.getContentBounds().width,
+        height: mainWindow.getContentBounds().height
+      },
+        view.hide = true;
+    }
+    view.content.setBounds(view.settings);
   };
-
-
 
   require('electron').ipcMain
     .on('updatezoomview', (event, arg) => {
