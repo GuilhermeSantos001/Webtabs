@@ -82,13 +82,15 @@ class Page {
     };
 
     section_websites_append(id, name, section, loadurl, removeurl) {
+        let i = this.urls.data.counter,
+            disabled = i == id ? 'disabled' : '';
         $("#section_websites").append(`\
         <div id="${section}" class="section">\
         <div class="col s12 blue accent-2">\
         <h5 class="white-text">${name}</h5>\
         </div>\
         <button id="${loadurl}" class="btn white black-text col s12 waves-effect waves-grey" type="submit"\
-        name="action" style="margin-bottom: 5px;">Carregar\
+        name="action" style="margin-bottom: 5px;" ${disabled}>Carregar\
         <i class="material-icons right">web</i>\
         </button>\
         <button id="${removeurl}" class="btn white black-text col s12 waves-effect waves-grey" type="submit" name="action"\
@@ -170,12 +172,22 @@ class Page {
             seturl: (indexOf) => {
                 let fs = require('fs'),
                     data = this.urls.data,
+                    websites = data.websites,
                     content = data.content,
                     i = data.counter;
                 if (content[indexOf] != undefined) {
-                    this.timepage = null;
+                    this.timepage = 'pause';
                     this._loadURL = content[i];
-                    if (content[i] != this._URL) content[i] = this._URL;
+                    let website = websites[i].toLowerCase().replace(/\s{1,}/g, ''),
+                        url = this._URL.toLowerCase().replace(/\s{1,}/g, '');
+                    if (url.search(website) != -1) {
+                        if (content[i] != this._URL)
+                            content[i] = this._URL;
+                    } else {
+                        this.timepage = null;
+                        this._loadURL = '???';
+                        return;
+                    }
                     i = indexOf, data.counter = i;
                     ipcRenderer.send('updateurlview', content[i]);
                     fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
@@ -186,8 +198,20 @@ class Page {
                 let fs = require('fs'),
                     data = this.urls.data,
                     content = data.content,
-                    i = data.counter;
-                if (content[i] != this._URL) content[i] = this._URL;
+                    websites = data.websites,
+                    i = data.counter,
+                    website = websites[i].toLowerCase().replace(/\s{1,}/g, ''),
+                    url = this._URL.toLowerCase().replace(/\s{1,}/g, '');
+                this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', true); });
+                this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', true); });
+                if (url.search(website) != -1) {
+                    if (content[i] != this._URL)
+                        content[i] = this._URL;
+                } else {
+                    this.timepage = null;
+                    this._loadURL = '???';
+                    return;
+                }
                 i < content.length - 1 ? i++ : i = 0, data.counter = i;
                 ipcRenderer.send('updateurlview', content[i]);
                 fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
@@ -206,14 +230,22 @@ class Page {
     };
 
     updateURL() {
-        if (this._URL != ipcRenderer.sendSync('geturlview'))
+        if (this._URL != ipcRenderer.sendSync('geturlview')) {
             this._URL = ipcRenderer.sendSync('geturlview');
+            this.timepage = null;
+        }
     };
 
     updateLoadURL() {
         if (this._loadURL) {
             if (this._loadURL != this._URL) {
-                this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', false); });
+                this._loadurls.map(_loadurls => {
+                    let data = this.urls.data,
+                        i = data.counter,
+                        loadurl = `#${data.section[i][3]}`;
+                    if (_loadurls != loadurl)
+                        $(_loadurls).prop('disabled', false);
+                });
                 this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', false); });
                 this._loadURL = null;
             }
@@ -221,6 +253,7 @@ class Page {
     };
 
     timepageUpdate() {
+        if (this.timepage === 'pause') return;
         if (!this.timepage)
             this.timepage = {};
         if (this.timepage.second === undefined)
@@ -237,7 +270,8 @@ class Page {
                 this.timepage.minute = 0;
         }
         if (this.timepage.minute >= $('#timepage').val()) {
-            this.timepage = null;
+            this.timepage = 'pause';
+            this._loadURL = this._URL;
             this.urls.change();
         }
     };
