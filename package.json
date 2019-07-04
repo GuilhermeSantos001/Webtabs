@@ -18,8 +18,8 @@
     "electron-notify": "^0.1.0",
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0",
-    "normalize-url": "^4.3.0",
     "nouislider": "^13.1.5",
-    "ping": "^0.2.2"
+    "ping": "^0.2.2",
+    "valid-url": "^1.0.9"
   }
 }
