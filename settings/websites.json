@@ -1,25 +1,13 @@
 {
   "websites": [
     "Performancelab",
-    "Pipedrive",
-    "Youtube",
-    "Youtube_TESTE",
-    "Youtube_TESTE_2",
-    "Youtube_TESTE_3"
+    "Pipedrive"
   ],
-  "assembled_count": {
-    "Performancelab": 1,
-    "Pipedrive": 1,
-    "Youtube": 3
-  },
-  "counter": 5,
+  "assembled_count": {},
+  "counter": 0,
   "content": [
     "https://sla.performancelab.com.br/vlab_rel_eventos.php",
-    "https://grupomave2.pipedrive.com/progress/reports/deal/started/users-over-time/1/year/all/count/owner/months",
-    "https://www.youtube.com/watch?v=5USYlNJEcNo",
-    "https://www.youtube.com/watch?v=EL7QJM760KQ",
-    "https://www.youtube.com/watch?v=Px5PX7lu6wo",
-    "https://www.youtube.com/watch?v=ZiK9d4SumrY&t=138s"
+    "https://grupomave2.pipedrive.com/progress/reports/deal/started/users-over-time/1/year/all/count/owner/months"
   ],
   "section": [
     [
@@ -35,34 +23,6 @@
       "Pipedrive_section",
       "Pipedrive_loadURL",
       "Pipedrive_removeURL"
-    ],
-    [
-      2,
-      "Youtube",
-      "Youtube_section",
-      "Youtube_loadURL",
-      "Youtube_removeURL"
-    ],
-    [
-      3,
-      "Youtube_TESTE",
-      "Youtube_TESTE_section",
-      "Youtube_TESTE_loadURL",
-      "Youtube_TESTE_removeURL"
-    ],
-    [
-      4,
-      "Youtube_TESTE_2",
-      "Youtube_TESTE_2_section",
-      "Youtube_TESTE_2_loadURL",
-      "Youtube_TESTE_2_removeURL"
-    ],
-    [
-      5,
-      "Youtube_TESTE_3",
-      "Youtube_TESTE_3_section",
-      "Youtube_TESTE_3_loadURL",
-      "Youtube_TESTE_3_removeURL"
     ]
   ]
 }

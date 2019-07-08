@@ -99,22 +99,24 @@ class Page {
         </button>\
         </div>\
     `);
-        this.setclick_section_websites(id, section, loadurl, removeurl);
+        this.setclick_section_websites(id, loadurl, removeurl);
     }
 
-    setclick_section_websites(id, section, loadurl, removeurl) {
+    setclick_section_websites(id, loadurl, removeurl) {
         if (!this._loadurls) this._loadurls = [];
         if (!this._removeurls) this._removeurls = [];
         if (this._loadurls.indexOf(`#${loadurl}`) === -1) this._loadurls.push(`#${loadurl}`);
         if (this._removeurls.indexOf(`#${removeurl}`) === -1) this._removeurls.push(`#${removeurl}`);
-        $(`#${loadurl}`).click(() => {
+        function loadURL() {
             this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', true); });
             this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', true); });
             page.urls.seturl(id);
-        });
-        $(`#${removeurl}`).click(() => {
-            page.urls.remove(id, `#${section}`);
-        });
+        };
+        function removeURL() {
+            page.urls.remove(id);
+        };
+        document.getElementById(`${loadurl}`).onclick = loadURL.bind(this);
+        document.getElementById(`${removeurl}`).onclick = removeURL.bind(this);
     }
 
     initializeURLs() {
@@ -123,25 +125,19 @@ class Page {
             add: (name, url) => {
                 let fs = require('fs'),
                     data = this.urls.data,
-                    assembled_value = $("#add_website_assembled_name").val(),
                     assembled_name = name,
                     assembled_count = (() => {
-                        return data.assembled_count[name] || 1;
+                        return data.assembled_count[name] || 0;
                     })(),
-                    assembled_join = (() => {
-                        return assembled_count > 1 ? true : false;
-                    })();
+                    assembled_join = false;
                 if (data.content.indexOf(url) != -1) {
                     $("#add_website_url").val('');
-                    $("#add_website_assembled_name").val('');
                     $("#add_website_submit").prop('checked', false);
                     return;
                 };
-                while (data.websites.indexOf(assembled_name) != -1) {
-                    if (!assembled_join)
-                        assembled_name = `${name}_${assembled_value}`,
-                            assembled_join = true;
-                    else assembled_name = `${name}_${assembled_value}_${++assembled_count}`;
+                if (data.websites.indexOf(assembled_name) != -1) {
+                    assembled_name = `${name}_${++assembled_count}`;
+                    assembled_join = true;
                 }
                 data.assembled_count[name] = assembled_count;
                 if (assembled_join) name = assembled_name;
@@ -156,21 +152,35 @@ class Page {
                 fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
                     JSON.stringify(data, null, 2));
                 $("#add_website_url").val('');
-                $("#add_website_assembled_name").val('');
                 $("#add_website_submit").prop('checked', false);
                 window.scrollTo(0, 0);
             },
-            remove: (indexOf, sectionID) => {
+            remove: (indexOf) => {
                 let fs = require('fs'),
                     data = this.urls.data;
-                if (data.content.length - 1 < 1) return;
-                if (data.content[indexOf] != undefined) {
+                if (data.websites.length - 1 <= 0) return;
+                if (typeof data.websites[indexOf] != 'undefined') {
+                    this.timepage = 'pause';
+                    const sectionID = `#${data.section[indexOf][2]}`;
+                    let assembled_name = data.websites[indexOf]
+                    if (typeof assembled_name === 'string') {
+                        if (assembled_name.indexOf('_') != -1) {
+                            assembled_name = assembled_name.substr(0, assembled_name.indexOf('_'));
+                            if (typeof data.assembled_count[assembled_name] === 'number') {
+                                if (data.assembled_count[assembled_name] > 0)
+                                    data.assembled_count[assembled_name]--;
+                                if (data.assembled_count[assembled_name] <= 0)
+                                    delete data.assembled_count[assembled_name];
+                            }
+                        }
+                    }
                     data.websites.splice(indexOf, 1);
                     data.content.splice(indexOf, 1);
                     data.section.splice(indexOf, 1);
-                    if (data.counter == indexOf) {
-                        if (data.content.length >= indexOf) indexOf--; else indexOf++;
-                        data.counter = indexOf;
+                    const counter = data.counter;
+                    if (data.counter > 0) data.counter--;
+                    if (data.counter + 1 < data.content.length) data.counter++;
+                    if (counter == indexOf) {
                         this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', true); });
                         this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', true); });
                         this.timepage = 'pause';
@@ -179,16 +189,17 @@ class Page {
                     }
                     let i = 0, l = data.content.length;
                     data.section.forEach(content => {
-                        if (data.counter == content[0]) data.counter = i, content[0] = i;
-                        else content[0] = i;
-                        this.setclick_section_websites(content[0], content[2], content[3], content[4]);
+                        content[0] = i;
+                        this.setclick_section_websites(content[0], content[3], content[4]);
                         if (i < l) i++;
                     }, this);
-                    $(sectionID).fadeOut('slow', function () {
-                        $(this).remove();
+                    function sectionClear() {
                         fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
                             JSON.stringify(data, null, 2));
-                    });
+                        this.timepage = null;
+                        $(sectionID).remove();
+                    }
+                    $(sectionID).fadeOut('slow', sectionClear.bind(this));
                 }
             },
             start: () => {
@@ -392,7 +403,6 @@ $(document).ready(function () {
             }
             function clearpropswebsite() {
                 $("#add_website_url").val('');
-                $("#add_website_assembled_name").val('');
                 $("#add_website_submit").prop('checked', false);
             }
             return clearTimeout(delay);
