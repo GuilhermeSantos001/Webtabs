@@ -99,22 +99,24 @@ class Page {
         </button>\
         </div>\
     `);
-        this.setclick_section_websites(id, section, loadurl, removeurl);
+        this.setclick_section_websites(id, loadurl, removeurl);
     }
 
-    setclick_section_websites(id, section, loadurl, removeurl) {
+    setclick_section_websites(id, loadurl, removeurl) {
         if (!this._loadurls) this._loadurls = [];
         if (!this._removeurls) this._removeurls = [];
         if (this._loadurls.indexOf(`#${loadurl}`) === -1) this._loadurls.push(`#${loadurl}`);
         if (this._removeurls.indexOf(`#${removeurl}`) === -1) this._removeurls.push(`#${removeurl}`);
-        $(`#${loadurl}`).click(() => {
+        function loadURL() {
             this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', true); });
             this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', true); });
             page.urls.seturl(id);
-        });
-        $(`#${removeurl}`).click(() => {
-            page.urls.remove(id, `#${section}`);
-        });
+        };
+        function removeURL() {
+            page.urls.remove(id);
+        };
+        document.getElementById(`${loadurl}`).onclick = loadURL.bind(this);
+        document.getElementById(`${removeurl}`).onclick = removeURL.bind(this);
     }
 
     initializeURLs() {
@@ -122,48 +124,82 @@ class Page {
             data: require(require('./import/LocalPath').resolve('settings\\websites')),
             add: (name, url) => {
                 let fs = require('fs'),
-                    data = this.urls.data;
-                if (data.websites.indexOf(name) == -1) {
-                    let id = data.content.length,
-                        section = `${name}_section`,
-                        loadurl = `${name}_loadURL`,
-                        removeurl = `${name}_removeURL`;
-                    data.section.push([id, name, section, loadurl, removeurl]);
-                    data.content.push(url);
-                    data.websites.push(name);
-                    this.section_websites_append(id, name, section, loadurl, removeurl);
-                    fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
-                        JSON.stringify(data, null, 2));
+                    data = this.urls.data,
+                    assembled_name = name,
+                    assembled_count = (() => {
+                        return data.assembled_count[name] || 0;
+                    })(),
+                    assembled_join = false;
+                if (data.content.indexOf(url) != -1) {
+                    $("#add_website_url").val('');
                     $("#add_website_submit").prop('checked', false);
+                    return;
+                };
+                if (data.websites.indexOf(assembled_name) != -1) {
+                    assembled_name = `${name}_${++assembled_count}`;
+                    assembled_join = true;
                 }
+                data.assembled_count[name] = assembled_count;
+                if (assembled_join) name = assembled_name;
+                let id = data.content.length,
+                    section = `${name}_section`,
+                    loadurl = `${name}_loadURL`,
+                    removeurl = `${name}_removeURL`;
+                data.section.push([id, name, section, loadurl, removeurl]);
+                data.content.push(url);
+                data.websites.push(name);
+                this.section_websites_append(id, name, section, loadurl, removeurl);
+                fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
+                    JSON.stringify(data, null, 2));
+                $("#add_website_url").val('');
+                $("#add_website_submit").prop('checked', false);
+                window.scrollTo(0, 0);
             },
-            remove: (indexOf, sectionID) => {
+            remove: (indexOf) => {
                 let fs = require('fs'),
                     data = this.urls.data;
-                if (data.content.length - 1 < 1) return;
-                if (data.content[indexOf] != undefined) {
+                if (data.websites.length - 1 <= 0) return;
+                if (typeof data.websites[indexOf] != 'undefined') {
+                    this.timepage = 'pause';
+                    const sectionID = `#${data.section[indexOf][2]}`;
+                    let assembled_name = data.websites[indexOf]
+                    if (typeof assembled_name === 'string') {
+                        if (assembled_name.indexOf('_') != -1) {
+                            assembled_name = assembled_name.substr(0, assembled_name.indexOf('_'));
+                            if (typeof data.assembled_count[assembled_name] === 'number') {
+                                if (data.assembled_count[assembled_name] > 0)
+                                    data.assembled_count[assembled_name]--;
+                                if (data.assembled_count[assembled_name] <= 0)
+                                    delete data.assembled_count[assembled_name];
+                            }
+                        }
+                    }
                     data.websites.splice(indexOf, 1);
                     data.content.splice(indexOf, 1);
                     data.section.splice(indexOf, 1);
-                    if (data.counter == indexOf) {
-                        this.timepage = null;
-                        while (!data.content[indexOf]) { indexOf--; }
-                        ipcRenderer.send('updateurlview', data.content[indexOf]);
+                    const counter = data.counter;
+                    if (data.counter > 0) data.counter--;
+                    if (data.counter + 1 < data.content.length) data.counter++;
+                    if (counter == indexOf) {
+                        this._loadurls.map(_loadurls => { $(_loadurls).prop('disabled', true); });
+                        this._removeurls.map(_removeurls => { $(_removeurls).prop('disabled', true); });
+                        this.timepage = 'pause';
+                        this._loadURL = this._URL;
+                        ipcRenderer.send('updateurlview', data.content[data.counter]);
                     }
                     let i = 0, l = data.content.length;
                     data.section.forEach(content => {
-                        if (data.counter == content[0])
-                            data.counter = i, content[0] = i;
-                        else
-                            content[0] = i;
-                        this.setclick_section_websites(content[0], content[2], content[3], content[4]);
+                        content[0] = i;
+                        this.setclick_section_websites(content[0], content[3], content[4]);
                         if (i < l) i++;
                     }, this);
-                    $(sectionID).fadeOut('slow', function () {
-                        $(this).remove();
+                    function sectionClear() {
                         fs.writeFileSync(require('./import/LocalPath').resolve('settings\\websites.json'),
                             JSON.stringify(data, null, 2));
-                    });
+                        this.timepage = null;
+                        $(sectionID).remove();
+                    }
+                    $(sectionID).fadeOut('slow', sectionClear.bind(this));
                 }
             },
             start: () => {
@@ -178,13 +214,16 @@ class Page {
                 if (content[indexOf] != undefined) {
                     this.timepage = 'pause';
                     this._loadURL = content[i];
-                    let website = websites[i].toLowerCase().replace(/\s{1,}/g, ''),
+                    let website = websites[i]
+                        .toLowerCase()
+                        .replace(/\s{1,}/g, ''),
                         url = this._URL.toLowerCase().replace(/\s{1,}/g, '');
-                    if (url.search(website) != -1) {
+                    if (website.indexOf('_') != -1) website = website.substr(0, website.indexOf('_'));
+                    if (url.indexOf(website) != -1) {
                         if (content[i] != this._URL)
                             content[i] = this._URL;
                     } else {
-                        this.timepage = null;
+                        this.timepage = 'pause';
                         this._loadURL = '???';
                         return;
                     }
@@ -208,7 +247,7 @@ class Page {
                     if (content[i] != this._URL)
                         content[i] = this._URL;
                 } else {
-                    this.timepage = null;
+                    this.timepage = 'pause';
                     this._loadURL = '???';
                     return;
                 }
@@ -326,23 +365,48 @@ $(document).ready(function () {
      * Buttons
      */
     $("#add_website_submit").click(() => {
-        let name = $("#add_website_name").val(),
-            url = $("#add_website_url").val();
-        if (name.length <= 0 || url.length <= 0) return;
-        name = name.replace(/["']/g, '');
-        url = url.toLowerCase().replace(/\s{1,}/g, '');
-        url = url.toLowerCase().replace(/[\\/]/g, '');
-        if (url.substring(0, 5).match(/https/)) {
-            url = url.toLowerCase().replace(/https:/g, '');
-        } else {
-            url = url.toLowerCase().replace(/http:/g, '');
-        }
-        if ($("#add_website_submit").prop("checked")) {
-            require('ping').sys.probe(url, isAlive => {
-                if (isAlive) page.urls.add(name, require('normalize-url')(url));
-                else $("#add_website_submit").prop('checked', false);
-            });
-        }
+        let delay = setTimeout(() => {
+            let url = $("#add_website_url").val();
+            if (url.length <= 0) {
+                clearpropswebsite();
+            }
+            if ($("#add_website_submit").prop("checked") && url.length > 0) {
+                if (require("valid-url").isWebUri(url)) {
+                    websiteadd(require("url").parse(url).hostname, url);
+                }
+                else {
+                    require('ping').sys.probe(url, isAlive => {
+                        if (isAlive) {
+                            if (url.includes('www.')) url = url.replace('www.', 'https://');
+                            websiteadd(require("url").parse(url).hostname, url);
+                        } else clearpropswebsite();
+                    });
+                }
+            }
+            function websiteadd(name, url) {
+                name = name.toLowerCase().replace(/\s{1,}/g, '');
+                if (name.includes('www')) name = name.substr(4);
+                while (name.includes('.')) {
+                    let i = name.indexOf('.'), l = (() => {
+                        return i < name.lastIndexOf('.') ?
+                            name.lastIndexOf('.') : name.length;
+                    })(),
+                        s = '';
+                    for (; i < l; i++) {
+                        s += name[i];
+                    }
+                    name = name.replace(s, '');
+                }
+
+                page.urls.add(name.charAt(0).toUpperCase() + name.slice(1), url);
+                clearpropswebsite();
+            }
+            function clearpropswebsite() {
+                $("#add_website_url").val('');
+                $("#add_website_submit").prop('checked', false);
+            }
+            return clearTimeout(delay);
+        }, 1000);
     });
 
     $("#menu_hide").click(() => {
