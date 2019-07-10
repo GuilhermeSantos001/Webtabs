@@ -1,6 +1,6 @@
 {
   "name": "webtabs",
-  "version": "2.7.15",
+  "version": "2.7.23",
   "description": "Programa para exibir paginas dinamicamente.",
   "main": "main.js",
   "scripts": {
@@ -12,13 +12,13 @@
   "license": "CC0 1.0 Universal",
   "devDependencies": {
     "electron": "^5.0.6",
-    "electron-packager": "^13.1.1"
+    "electron-packager": "^14.0.1"
   },
   "dependencies": {
     "electron-notify": "^0.1.0",
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0",
-    "nouislider": "^13.1.5",
+    "nouislider": "^14.0.2",
     "ping": "^0.2.2",
     "valid-url": "^1.0.9"
   }
