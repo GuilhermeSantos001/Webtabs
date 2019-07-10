@@ -1,6 +1,6 @@
 {
   "name": "webtabs",
-  "version": "2.6.14",
+  "version": "2.7.15",
   "description": "Programa para exibir paginas dinamicamente.",
   "main": "main.js",
   "scripts": {

@@ -1,13 +1,16 @@
 {
   "websites": [
     "Performancelab",
-    "Pipedrive"
+    "GLPI"
   ],
-  "assembled_count": {},
+  "assembled_count": {
+    "Performancelab": 0,
+    "GLPI": 0
+  },
   "counter": 0,
   "content": [
     "https://sla.performancelab.com.br/vlab_rel_eventos.php",
-    "https://grupomave2.pipedrive.com/progress/reports/deal/started/users-over-time/1/year/all/count/owner/months"
+    "http://192.168.0.173:8080/glpi/"
   ],
   "section": [
     [
@@ -19,10 +22,10 @@
     ],
     [
       1,
-      "Pipedrive",
-      "Pipedrive_section",
-      "Pipedrive_loadURL",
-      "Pipedrive_removeURL"
+      "GLPI",
+      "GLPI_section",
+      "GLPI_loadURL",
+      "GLPI_removeURL"
     ]
   ]
 }
