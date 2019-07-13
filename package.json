@@ -5,14 +5,14 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "pkg-win": "electron-packager . webtabs --overwrite --platform=win32 --arch=ia32 --icon=img/win/icon.ico --prune=true --out=public --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Tutorial App\""
+    "pkg-win": "electron-packager . webtabs --overwrite --platform=win32 --arch=ia32 --icon=img/win/icon.ico --prune=true --out=public --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Webtabs\""
   },
   "repository": "https://github.com/GuilhermeSantos001/Webtabs.git",
   "author": "GuilhermeSantos001",
   "license": "CC0 1.0 Universal",
   "devDependencies": {
     "electron": "^5.0.6",
-    "electron-packager": "^14.0.1"
+    "electron-packager": "^13.1.1"
   },
   "dependencies": {
     "electron-notify": "^0.1.0",
