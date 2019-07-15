@@ -21,7 +21,8 @@
       <!--Lista de sites-->
       <div id="section_websites"></div>
       <div class="section">
-        <button class="btn blue col s12" type="submit" name="action" style="margin-bottom: 10px;" disabled>Carregar
+        <button id="load_more" class="btn blue col s12" type="submit" name="action" style="margin-bottom: 10px;"
+          disabled>Carregar
           Mais!
           <i class="material-icons right">refresh</i>
         </button>
@@ -39,6 +40,12 @@
               Geral
             </div>
             <div class="collapsible-body">
+              <label>Escolha o monitor principal.</label>
+              <p class="range-field">
+                <input type="range" id="display" min="1" value="1" />
+              </p>
+              <p id="display_label" class="grey-text text-darken-1">1° monitor.</p>
+              <div class="divider" style="margin-bottom: 10px;"></div>
               <label>Tempo até a pagina ser alterada.</label>
               <p class="range-field">
                 <input type="range" id="timepage" min="1" max="60" value="2" />

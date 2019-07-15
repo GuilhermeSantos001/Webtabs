@@ -337,9 +337,17 @@ $(document).ready(function () {
     /**
      * Process
      */
+    $('#display').val(settings.geral.display + 1);
+    $('#display').attr('max', require('electron').remote.screen.getAllDisplays().length);
+    $('#display_label').text(`${settings.geral.display + 1}° monitor.`);
+    $('#display').click(() => {
+        let val = $('#display').val();
+        $('#display_label').text(`${parseInt(val)}° monitor.`);
+        ipcRenderer.send('settings_update', ['display', val - 1]);
+    });
     $('#timepage').val(settings.geral.timepage);
     $('#timepage_label').text(`${settings.geral.timepage} min.`);
-    $('#timepage').on('input', () => {
+    $('#timepage').click(() => {
         let val = $('#timepage').val();
         $('#timepage_label').text(`${val} min.`);
         ipcRenderer.send('settings_update', ['timepage', val]);
@@ -347,7 +355,7 @@ $(document).ready(function () {
 
     $('#zoompage').val(settings.geral.zoompage);
     $('#zoompage_label').text(`${settings.geral.zoompage}%`);
-    $('#zoompage').on('input', () => {
+    $('#zoompage').click(() => {
         let val = $('#zoompage').val();
         $('#zoompage_label').text(`${val}%`);
         ipcRenderer.send('settings_update', ['zoompage', val]);
@@ -397,8 +405,38 @@ $(document).ready(function () {
                     }
                     name = name.replace(s, '');
                 }
-
-                page.urls.add(name.charAt(0).toUpperCase() + name.slice(1), url);
+                name = name.charAt(0).toUpperCase() + name.slice(1);
+                if (url.substr(0, 5).includes('http') ||
+                    url.substr(0, 5).includes('https')) {
+                    let i = 0,
+                        d = url.substr(7),
+                        l = d.length,
+                        s = '';
+                    for (; i < l; i++) {
+                        s += d[i];
+                        if (d[i] == '/' || i + 1 >= l) {
+                            if ([
+                                '1', '2',
+                                '3', '4',
+                                '5', '6',
+                                '7', '8',
+                                '9', '0'].filter(n => {
+                                    return s.includes(n);
+                                }).length > 0) {
+                                let w = true;
+                                while (w) {
+                                    if (d.substr(d.lastIndexOf('/')).length == 1) {
+                                        d = d.substr(0, d.lastIndexOf('/'));
+                                    } else {
+                                        w = false;
+                                    }
+                                }
+                                name = d.substr(d.lastIndexOf('/') + 1).toUpperCase();
+                            }
+                        }
+                    }
+                }
+                page.urls.add(name, url);
                 clearpropswebsite();
             }
             function clearpropswebsite() {
@@ -427,16 +465,18 @@ $(document).ready(function () {
     (() => {
         let d = page.urls.data.section,
             i = 0,
-            l = d.length
+            l = d.length,
+            max = 4;
         for (; i < l; i++) {
             let content = d[i];
-            page.section_websites_append(
-                content[0],
-                content[1],
-                content[2],
-                content[3],
-                content[4]
-            );
+            if (i < max)
+                page.section_websites_append(
+                    content[0],
+                    content[1],
+                    content[2],
+                    content[3],
+                    content[4]
+                );
         }
     })();
 

@@ -3,7 +3,10 @@
     "Performancelab",
     "Pipedrive"
   ],
-  "assembled_count": {},
+  "assembled_count": {
+    "Performancelab": 0,
+    "Pipedrive": 0
+  },
   "counter": 0,
   "content": [
     "https://sla.performancelab.com.br/vlab_rel_eventos.php",
