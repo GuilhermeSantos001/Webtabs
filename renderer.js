@@ -337,6 +337,14 @@ $(document).ready(function () {
     /**
      * Process
      */
+    $('#display').val(settings.geral.display + 1);
+    $('#display').attr('max', require('electron').remote.screen.getAllDisplays().length);
+    $('#display_label').text(`${settings.geral.display + 1}° monitor.`);
+    $('#display').on('input', () => {
+        let val = $('#display').val();
+        $('#display_label').text(`${parseInt(val)}° monitor.`);
+        ipcRenderer.send('settings_update', ['display', val - 1]);
+    });
     $('#timepage').val(settings.geral.timepage);
     $('#timepage_label').text(`${settings.geral.timepage} min.`);
     $('#timepage').on('input', () => {

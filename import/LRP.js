@@ -16,7 +16,12 @@ var settings = {
  * Listeners
  */
 ipcMain.on('settings_update', (event, args) => {
+    let reload = false;
     switch (args[0]) {
+        case 'display':
+            settings.geral.display = Number(args[1]);
+            reload = true;
+            break;
         case 'timepage':
             settings.geral.timepage = Number(args[1]);
             break;
@@ -29,6 +34,10 @@ ipcMain.on('settings_update', (event, args) => {
     }
     fs.writeFileSync(path.resolve('settings\\geral.json'),
         JSON.stringify(settings.geral, null, 2));
+    if (reload) {
+        require('electron').app.relaunch();
+        require('electron').app.exit(0);
+    }
 });
 
 ipcMain.on('debug', (event, args) => {

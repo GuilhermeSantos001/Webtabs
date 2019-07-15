@@ -1,15 +1,21 @@
 const { app, BrowserWindow, BrowserView, Menu, globalShortcut } = require('electron');
 const path = require(__dirname + '/import/LocalPath'),
-  nativeImage = require('electron').nativeImage;
+  system = {
+    settings: {
+      geral: require(path.resolve('settings/geral'))
+    }
+  }
 
 require('module').globalPaths.push(path.resolve('node_modules'));
 
 let mainWindow;
 function createWindow() {
-  const { width, height } = require('electron').screen.getPrimaryDisplay().workAreaSize,
+  const { width, height } = require('electron').screen.getAllDisplays()[system.settings.geral.display].workAreaSize,
     settings = {
       width: width,
       height: height,
+      x: require('electron').screen.getAllDisplays()[system.settings.geral.display].workArea.x,
+      y: require('electron').screen.getAllDisplays()[system.settings.geral.display].workArea.y,
       icon: path.resolve('img/icon.ico'),
       resizable: false,
       webPreferences: {
