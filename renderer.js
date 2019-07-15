@@ -340,14 +340,14 @@ $(document).ready(function () {
     $('#display').val(settings.geral.display + 1);
     $('#display').attr('max', require('electron').remote.screen.getAllDisplays().length);
     $('#display_label').text(`${settings.geral.display + 1}° monitor.`);
-    $('#display').on('input', () => {
+    $('#display').click(() => {
         let val = $('#display').val();
         $('#display_label').text(`${parseInt(val)}° monitor.`);
         ipcRenderer.send('settings_update', ['display', val - 1]);
     });
     $('#timepage').val(settings.geral.timepage);
     $('#timepage_label').text(`${settings.geral.timepage} min.`);
-    $('#timepage').on('input', () => {
+    $('#timepage').click(() => {
         let val = $('#timepage').val();
         $('#timepage_label').text(`${val} min.`);
         ipcRenderer.send('settings_update', ['timepage', val]);
@@ -355,7 +355,7 @@ $(document).ready(function () {
 
     $('#zoompage').val(settings.geral.zoompage);
     $('#zoompage_label').text(`${settings.geral.zoompage}%`);
-    $('#zoompage').on('input', () => {
+    $('#zoompage').click(() => {
         let val = $('#zoompage').val();
         $('#zoompage_label').text(`${val}%`);
         ipcRenderer.send('settings_update', ['zoompage', val]);

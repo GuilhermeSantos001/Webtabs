@@ -11,13 +11,13 @@ require('module').globalPaths.push(path.resolve('node_modules'));
 let mainWindow;
 function createWindow() {
   const { width, height } = require('electron').screen.getAllDisplays()[system.settings.geral.display].workAreaSize,
+    { x, y } = require('electron').screen.getAllDisplays()[system.settings.geral.display].workArea,
     settings = {
       width: width,
       height: height,
-      x: require('electron').screen.getAllDisplays()[system.settings.geral.display].workArea.x,
-      y: require('electron').screen.getAllDisplays()[system.settings.geral.display].workArea.y,
+      x: x,
+      y: y,
       icon: path.resolve('img/icon.ico'),
-      resizable: false,
       webPreferences: {
         nodeIntegration: true
       }
@@ -31,11 +31,10 @@ function createWindow() {
     mainWindow = null
   });
 
-  var anchorX = Math.floor((16 * mainWindow.getContentBounds().width) / 100),
-    view = {
-      content: new BrowserView(),
-      hide: false
-    }; viewSetBounds();
+  var view = {
+    content: new BrowserView(),
+    hide: false
+  };
 
   const menu = Menu.buildFromTemplate([
     {
@@ -84,14 +83,23 @@ function createWindow() {
   mainWindow.setBrowserView(view.content);
 
   function viewSetBounds(fullsize) {
+    mainWindow.setBounds({ width: width, height: height, x: x, y: y });
+    mainWindow.setMaximizable(true);
+    mainWindow.maximize();
+    mainWindow.setMaximizable(false);
+    if (view.display != system.settings.geral.display) {
+      view.display = system.settings.geral.display;
+      view.width = mainWindow.getContentBounds().width;
+      view.height = mainWindow.getContentBounds().height;
+    }
     if (!fullsize) {
-      anchorX = Math.floor((16 * mainWindow.getContentBounds().width) / 100) + 10,
-        view.settings = {
-          x: anchorX,
-          y: 0,
-          width: mainWindow.getContentBounds().width - anchorX,
-          height: mainWindow.getContentBounds().height
-        },
+      var anchorX = Math.floor((16 * view.width) / 100) + 10;
+      view.settings = {
+        x: anchorX,
+        y: 0,
+        width: view.width - anchorX,
+        height: view.height
+      },
         view.hide = false;
     }
     else {
