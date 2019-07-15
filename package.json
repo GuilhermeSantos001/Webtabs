@@ -1,11 +1,12 @@
 {
   "name": "webtabs",
-  "version": "2.8.28",
+  "version": "2.9.28",
   "description": "Programa para exibir paginas dinamicamente.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "pkg-win": "electron-packager . webtabs --overwrite --platform=win32 --arch=ia32 --icon=img/win/icon.ico --prune=true --out=public --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Webtabs\""
+    "pkg-win32": "electron-packager . webtabs --overwrite --platform=win32 --arch=ia32 --icon=img/win/icon.ico --prune=true --out=public --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Webtabs\"",
+    "pkg-win64": "electron-packager . webtabs --overwrite --platform=win32 --arch=x64 --icon=img/win/icon.ico --prune=true --out=public --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Webtabs\""
   },
   "repository": "https://github.com/GuilhermeSantos001/Webtabs.git",
   "author": "GuilhermeSantos001",
