@@ -452,8 +452,10 @@ $(document).ready(function () {
             "margin-left": "-=300"
         }, () => {
             ipcRenderer.send('menuhide');
+            ipcRenderer.send('settings_update', ['menu_visible', false]);
         });
     });
+    if (!settings.geral.menu.visible) $("#menu_hide").trigger('click');
 
     $("#exit_app").click(() => {
         remote.getCurrentWindow().close();
@@ -487,9 +489,14 @@ $(document).ready(function () {
         .on('menushow', event => {
             $("#menu").animate({
                 "margin-left": "+=300"
+            }, () => {
+                ipcRenderer.send('settings_update', ['menu_visible', true]);
             });
         })
         .on('togglefullscreen', (event, arg) => {
             $('#fullscreen').prop('checked', Boolean(arg));
+        })
+        .on('menuhide', event => {
+            $("#menu_hide").trigger('click');
         });
 });

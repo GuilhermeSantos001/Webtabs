@@ -1,6 +1,9 @@
 {
-  "display": 0,
+  "display": 1,
   "timepage": 2,
   "zoompage": 100,
-  "fullscreen": false
+  "fullscreen": false,
+  "menu": {
+    "visible": true
+  }
 }
