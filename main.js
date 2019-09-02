@@ -1,4 +1,4 @@
-const { app, BrowserWindow, BrowserView, Menu, globalShortcut } = require('electron');
+const { app, BrowserWindow, BrowserView, globalShortcut } = require('electron');
 const path = require(__dirname + '/import/LocalPath'),
   system = {
     settings: {
@@ -10,6 +10,12 @@ require('module').globalPaths.push(path.resolve('node_modules'));
 
 let mainWindow;
 function createWindow() {
+  while (require('electron').screen.getAllDisplays()[system.settings.geral.display] === undefined) {
+    system.settings.geral.display--;
+    if (require('electron').screen.getAllDisplays()[system.settings.geral.display] != undefined)
+      require('fs').writeFileSync(path.resolve('settings\\geral.json'),
+        JSON.stringify(system.settings.geral, null, 2));
+  }
   const { width, height } = require('electron').screen.getAllDisplays()[system.settings.geral.display].workAreaSize,
     { x, y } = require('electron').screen.getAllDisplays()[system.settings.geral.display].workArea,
     settings = {
@@ -36,31 +42,16 @@ function createWindow() {
     hide: false
   };
 
-  const menu = Menu.buildFromTemplate([
-    {
-      id: "menuback",
-      label: "Menu"
-    },
-    {
-      label: "Sair",
-      role: "close"
-    }
-  ]);
-
-  menu.getMenuItemById('menuback').click = () => {
-    viewSetBounds();
-    mainWindow.webContents.send('menushow');
-    mainWindow.setMenuBarVisibility(false);
-  };
-  Menu.setApplicationMenu(menu);
-
+  globalShortcut
+    .register('CommandOrControl+W', () => {
+      app.quit();
+    });
   globalShortcut
     .register('CommandOrControl+B', () => {
-      if (!view.hide) return;
-      if (mainWindow.isMenuBarVisible())
-        mainWindow.setMenuBarVisibility(false), viewSetBounds(true);
+      if (!system.settings.geral.menu.visible)
+        mainWindow.webContents.send('menushow'), viewSetBounds();
       else
-        mainWindow.setMenuBarVisibility(true), viewSetBounds(true);
+        mainWindow.webContents.send('menuhide');
     })
   globalShortcut
     .register('F11', () => {
@@ -79,7 +70,7 @@ function createWindow() {
         view.content.webContents.reload();
     });
 
-  mainWindow.setMenuBarVisibility(false);
+  mainWindow.removeMenu();
   mainWindow.setBrowserView(view.content);
 
   function viewSetBounds(fullsize) {
@@ -129,7 +120,6 @@ function createWindow() {
     })
     .on('menuhide', event => {
       viewSetBounds(true);
-      mainWindow.setMenuBarVisibility(true);
     });
 
   mainWindow

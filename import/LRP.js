@@ -31,6 +31,9 @@ ipcMain.on('settings_update', (event, args) => {
         case 'fullscreen':
             settings.geral.fullscreen = Boolean(args[1]);
             break;
+        case 'menu_visible':
+            settings.geral.menu.visible = Boolean(args[1]);
+            break;
     }
     fs.writeFileSync(path.resolve('settings\\geral.json'),
         JSON.stringify(settings.geral, null, 2));
