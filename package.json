@@ -12,7 +12,7 @@
   "author": "GuilhermeSantos001",
   "license": "CC0 1.0 Universal",
   "devDependencies": {
-    "electron": "^6.0.5",
+    "electron": "^6.0.11",
     "electron-packager": "^14.0.4"
   },
   "dependencies": {
