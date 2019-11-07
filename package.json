@@ -1,26 +1,83 @@
 {
   "name": "webtabs",
-  "version": "2.10.29",
-  "description": "Programa para exibir paginas dinamicamente.",
-  "main": "main.js",
+  "productName": "webtabs",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": ".webpack/main",
   "scripts": {
-    "start": "electron .",
-    "pkg-win32": "electron-packager . webtabs --overwrite --platform=win32 --arch=ia32 --icon=img/win/icon.ico --prune=true --out=public --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Webtabs\"",
-    "pkg-win64": "electron-packager . webtabs --overwrite --platform=win32 --arch=x64 --icon=img/win/icon.ico --prune=true --out=public --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Webtabs\""
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
-  "repository": "https://github.com/GuilhermeSantos001/Webtabs.git",
-  "author": "GuilhermeSantos001",
-  "license": "CC0 1.0 Universal",
-  "devDependencies": {
-    "electron": "^6.0.11",
-    "electron-packager": "^14.0.4"
+  "keywords": [],
+  "author": "Administrator",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "webtabs"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./src/index.html",
+                  "js": "./src/renderer.js",
+                  "name": "main_window"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
   },
   "dependencies": {
-    "electron-notify": "^0.1.0",
+    "bootstrap": "^4.3.1",
+    "electron-squirrel-startup": "^1.0.0",
     "jquery": "^3.4.1",
-    "materialize-css": "^1.0.0",
-    "nouislider": "^14.0.2",
-    "ping": "^0.2.2",
-    "valid-url": "^1.0.9"
+    "popper.js": "^1.16.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "6.0.0-beta.45",
+    "@electron-forge/maker-deb": "6.0.0-beta.45",
+    "@electron-forge/maker-rpm": "6.0.0-beta.45",
+    "@electron-forge/maker-squirrel": "6.0.0-beta.45",
+    "@electron-forge/maker-zip": "6.0.0-beta.45",
+    "@electron-forge/plugin-webpack": "6.0.0-beta.45",
+    "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
+    "css-loader": "^3.0.0",
+    "electron": "7.1.0",
+    "file-loader": "^4.2.0",
+    "node-loader": "^0.6.0",
+    "style-loader": "^0.23.1",
+    "url-loader": "^2.2.0"
   }
 }
