@@ -11,7 +11,17 @@ let mainWindow;
 
 const createWindow = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  Menu.setApplicationMenu(null);
+  const template = [
+    {
+      label: 'Exibição', submenu: [
+        { label: 'Executar', type: 'radio', checked: true },
+        { id: 'PAUSE', label: 'Pausar', type: 'radio' }
+      ]
+    },
+    { type: 'separator' },
+    { role: 'quit' }];
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: width,
