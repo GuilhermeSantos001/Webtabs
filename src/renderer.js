@@ -13,6 +13,7 @@ import logoIcon from './img/logo.png';
 import * as ConfigGlobal from './config/global';
 import $ from 'jquery/dist/jquery';
 import './modules/loadurls';
+import './modules/editorConfigs';
 
 var logoImg = document.getElementById('logo');
 logoImg.src = logoIcon;
@@ -23,6 +24,6 @@ document.getElementById('title').innerText = ConfigGlobal.TITLE;
 document.getElementById('slogan').innerText = ConfigGlobal.SLOGAN;
 document.getElementById('version').innerText = ConfigGlobal.VERSION;
 
-// $('#layerContent').delay(5000).fadeOut('slow');
+$('#layerContent').delay(5000).fadeOut('slow');
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
