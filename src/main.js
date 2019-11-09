@@ -18,6 +18,48 @@ const createWindow = () => {
         { id: 'PAUSE', label: 'Pausar', type: 'radio' }
       ]
     },
+    {
+      label: 'Frame', submenu: [
+        {
+          label: 'Zoom', submenu: [
+            {
+              label: 'Resetar Zoom',
+              click: () => {
+                mainWindow.webContents.send('render_resetZoom');
+              }
+            },
+            {
+              label: 'Aumentar Zoom',
+              click: () => {
+                mainWindow.webContents.send('render_increaseZoom');
+              }
+            },
+            {
+              label: 'Dimuir Zoom',
+              click: () => {
+                mainWindow.webContents.send('render_reduceZoom');
+              }
+            }
+          ]
+        },
+        {
+          label: 'Transição', submenu: [
+            {
+              label: 'Proximo...',
+              click: () => {
+                mainWindow.webContents.send('render_next');
+              }
+            },
+            {
+              label: '...Anterior',
+              click: () => {
+                mainWindow.webContents.send('render_return');
+              }
+            }
+          ]
+        }
+      ]
+    },
     { type: 'separator' },
     {
       label: 'Abrir Editor',

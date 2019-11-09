@@ -20,10 +20,7 @@ let window_editor;
 
 Electron.ipcRenderer.on('open_editor', () => {
     if (!window_editor) window_editor = new WindowEditor();
-    window_editor.open();
-    window_editor.window.on('close', () => {
-        window_editor = null;
-    });
+    if (!window_editor.isOpen()) window_editor.open();
 });
 
 var logoImg = document.getElementById('logo');
