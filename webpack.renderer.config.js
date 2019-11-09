@@ -1,6 +1,7 @@
 const rules = require('./webpack.rules');
 
 rules.push(
+  { test: /\.json$/, loader: "json", include: '/src/' },
   {
     test: /\.css$/,
     use: [

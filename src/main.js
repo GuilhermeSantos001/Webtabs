@@ -19,7 +19,14 @@ const createWindow = () => {
       ]
     },
     { type: 'separator' },
-    { role: 'quit' }];
+    {
+      label: 'Abrir Editor',
+      click: () => {
+        mainWindow.webContents.send('open_editor');
+      }
+    },
+    { role: 'quit' }
+  ];
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
   // Create the browser window.

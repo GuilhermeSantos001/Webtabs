@@ -10,10 +10,21 @@ import 'bootstrap/dist/js/bootstrap';
  * Render
  */
 import logoIcon from './img/logo.png';
+import * as Electron from 'electron';
 import * as ConfigGlobal from './config/global';
 import $ from 'jquery/dist/jquery';
 import './modules/loadurls';
-import './modules/editorConfigs';
+import WindowEditor from './modules/editorConfigs';
+
+let window_editor;
+
+Electron.ipcRenderer.on('open_editor', () => {
+    if (!window_editor) window_editor = new WindowEditor();
+    window_editor.open();
+    window_editor.window.on('close', () => {
+        window_editor = null;
+    });
+});
 
 var logoImg = document.getElementById('logo');
 logoImg.src = logoIcon;
