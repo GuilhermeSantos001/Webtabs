@@ -1,7 +1,7 @@
-Webtabs :1st_place_medal: :star2: 
+# Webtabs :1st_place_medal: :star2: 
 Visualizar suas páginas favoritas como slides, nunca foi tão fácil.
 
-REQUISITOS :pushpin:
+# REQUISITOS :pushpin:
 - Programas
   - [Winrar](https://www.winrarbrasil.com.br/winrar/download.mv)
 - Computador
