@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'jquery/dist/jquery';
 import 'popper.js/dist/popper';
 import 'bootstrap/dist/js/bootstrap';
+import './index.css';
 
 /**
  * Render
@@ -39,16 +40,15 @@ function titlechange() {
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
     if (fs.existsSync(file)) {
-        fs.writeFile(file, JSON.stringify({
+        fs.writeFileSync(file, JSON.stringify({
             "APPNAME": APPNAME,
             "TITLE": $('#form-title').val(),
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
             "FRAMETIME": FRAMETIME,
             "FRAMETIMETYPE": FRAMETIMETYPE
-        }, null, 2), 'utf8', () => {
-            TITLE = $('#form-title').val();
-        })
+        }, null, 2), 'utf8');
+        TITLE = $('#form-title').val();
     }
 };
 
@@ -65,68 +65,63 @@ function sloganchange() {
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
     if (fs.existsSync(file)) {
-        fs.writeFile(file, JSON.stringify({
+        fs.writeFileSync(file, JSON.stringify({
             "APPNAME": APPNAME,
             "TITLE": TITLE,
             "SLOGAN": $('#form-slogan').val(),
             "VERSION": VERSION,
             "FRAMETIME": FRAMETIME,
             "FRAMETIMETYPE": FRAMETIMETYPE
-        }, null, 2), 'utf8', () => {
-            SLOGAN = $('#form-slogan').val();
-        })
+        }, null, 2), 'utf8');
+        SLOGAN = $('#form-slogan').val();
     }
 };
 
 /**
  * TEMPO DE TRANSIÇÃO DA PAGINA
  */
-
-document.getElementById('input-demo-frametime').innerText = (() => {
+$(function () {
+    document.getElementById('input-demo-frametime').innerText = (() => {
+        switch (FRAMETIMETYPE) {
+            case 1:
+                return $('#input-frametime').val(FRAMETIME / 100000);
+            case 2:
+                return $('#input-frametime').val(FRAMETIME / 10000);
+            case 3:
+                return $('#input-frametime').val(FRAMETIME / 1000);
+        };
+    })();
     switch (FRAMETIMETYPE) {
         case 1:
-            $('#input-frametime').val(FRAMETIME / 1000000);
-            return `Tempo Atual: ${FRAMETIME / 1000000} Hora(s)`;
+            $('#radio_horas').attr('checked', '');
+            $('#label_radio_horas').addClass('active');
+            break;
         case 2:
-            $('#input-frametime').val(FRAMETIME / 10000);
-            return `Tempo Atual: ${FRAMETIME / 10000} Minuto(s)`;
+            $('#radio_minutos').attr('checked', '');
+            $('#label_radio_minutos').addClass('active');
+            break;
         case 3:
-            $('#input-frametime').val(FRAMETIME / 1000);
-            return `Tempo Atual: ${FRAMETIME / 1000} Segundo(s)`;
+            $('#radio_segundos').attr('checked', '');
+            $('#label_radio_segundos').addClass('active');
+            break;
     };
-})();
-
-switch (FRAMETIMETYPE) {
-    case 1:
-        $('#radio_horas').attr('checked', '');
-        $('#label_radio_horas').addClass('active');
-        break;
-    case 2:
-        $('#radio_minutos').attr('checked', '');
-        $('#label_radio_minutos').addClass('active');
-        break;
-    case 3:
-        $('#radio_segundos').attr('checked', '');
-        $('#label_radio_segundos').addClass('active');
-        break;
-};
+});
 
 $("#radio_horas").click(function () {
     let fs = Electron.remote.require('fs'),
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
     if (fs.existsSync(file)) {
-        fs.writeFile(file, JSON.stringify({
+        fs.writeFileSync(file, JSON.stringify({
             "APPNAME": APPNAME,
             "TITLE": TITLE,
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
             "FRAMETIME": $('#input-frametime').val() * 1000000,
             "FRAMETIMETYPE": 1
-        }, null, 2), 'utf8', () => {
-            FRAMETIMETYPE = 1;
-            inputDemoFrametimeInnerText();
-        })
+        }, null, 2), 'utf8');
+        FRAMETIMETYPE = 1;
+        inputDemoFrametimeInnerText();
     }
 });
 
@@ -135,17 +130,16 @@ $("#radio_minutos").click(function () {
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
     if (fs.existsSync(file)) {
-        fs.writeFile(file, JSON.stringify({
+        fs.writeFileSync(file, JSON.stringify({
             "APPNAME": APPNAME,
             "TITLE": TITLE,
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
-            "FRAMETIME": $('#input-frametime').val() * 10000,
+            "FRAMETIME": $('#input-frametime').val() * 100000,
             "FRAMETIMETYPE": 2
-        }, null, 2), 'utf8', () => {
-            FRAMETIMETYPE = 2;
-            inputDemoFrametimeInnerText();
-        })
+        }, null, 2), 'utf8');
+        FRAMETIMETYPE = 2;
+        inputDemoFrametimeInnerText();
     }
 });
 
@@ -154,17 +148,16 @@ $("#radio_segundos").click(function () {
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
     if (fs.existsSync(file)) {
-        fs.writeFile(file, JSON.stringify({
+        fs.writeFileSync(file, JSON.stringify({
             "APPNAME": APPNAME,
             "TITLE": TITLE,
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
-            "FRAMETIME": $('#input-frametime').val() * 1000,
+            "FRAMETIME": $('#input-frametime').val() * 10000,
             "FRAMETIMETYPE": 3
-        }, null, 2), 'utf8', () => {
-            FRAMETIMETYPE = 3;
-            inputDemoFrametimeInnerText();
-        })
+        }, null, 2), 'utf8');
+        FRAMETIMETYPE = 3;
+        inputDemoFrametimeInnerText();
     }
 });
 
@@ -191,24 +184,23 @@ function inputFrametimeChange() {
     if (FRAMETIMETYPE === 1) {
         frametime = $('#input-frametime').val() * 1000000;
     } else if (FRAMETIMETYPE === 2) {
-        frametime = $('#input-frametime').val() * 10000;
+        frametime = $('#input-frametime').val() * 100000;
     } else if (FRAMETIMETYPE === 3) {
-        frametime = $('#input-frametime').val() * 1000;
+        frametime = $('#input-frametime').val() * 10000;
     }
     let fs = Electron.remote.require('fs'),
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
     if (fs.existsSync(file)) {
-        fs.writeFile(file, JSON.stringify({
+        fs.writeFileSync(file, JSON.stringify({
             "APPNAME": APPNAME,
             "TITLE": TITLE,
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
             "FRAMETIME": frametime,
             "FRAMETIMETYPE": FRAMETIMETYPE
-        }, null, 2), 'utf8', () => {
-            inputDemoFrametimeInnerText();
-        })
+        }, null, 2), 'utf8');
+        inputDemoFrametimeInnerText();
     }
 }
 
@@ -220,16 +212,14 @@ Electron.ipcRenderer.on('save_changes', () => {
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
     if (fs.existsSync(file)) {
-        fs.writeFile(file, JSON.stringify({
+        fs.writeFileSync(file, JSON.stringify({
             "APPNAME": APPNAME,
             "TITLE": TITLE,
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
             "FRAMETIME": FRAMETIME,
             "FRAMETIMETYPE": FRAMETIMETYPE
-        }, null, 2), 'utf8', () => {
-
-        });
+        }, null, 2), 'utf8');
     }
 });
 
