@@ -60,7 +60,7 @@ function load() {
  * PROCESS RENDER
  */
 
-//--------------------------------------------------------------------------------------------------
+//-------------------------------------------------
 //  Events
 //
 
@@ -152,7 +152,6 @@ setInterval(function () {
         while (!frame) {
             frame = document.getElementById('frame');
         }
-
 
         if (!frame.fadeInInitial) {
             frame.fadeInInitial = 'processing...';

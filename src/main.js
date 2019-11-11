@@ -79,7 +79,8 @@ const createWindow = () => {
     minHeight: height / 2,
     webPreferences: {
       nodeIntegration: true,
-      webviewTag: true
+      webviewTag: true,
+      webSecurity: false
     }
   });
 

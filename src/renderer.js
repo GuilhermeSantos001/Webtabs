@@ -9,12 +9,12 @@ import 'bootstrap/dist/js/bootstrap';
 /**
  * Render
  */
-import logoIcon from './img/logo.png';
 import * as Electron from 'electron';
 import * as ConfigGlobal from './config/global';
 import $ from 'jquery/dist/jquery';
-import './modules/loadurls';
+import file_logo from './img/logo.png';
 import WindowEditor from './modules/editorConfigs';
+import './modules/loadurls';
 
 let window_editor;
 
@@ -23,8 +23,8 @@ Electron.ipcRenderer.on('open_editor', () => {
     if (!window_editor.isOpen()) window_editor.open();
 });
 
-var logoImg = document.getElementById('logo');
-logoImg.src = logoIcon;
+let logo = document.getElementById('logo');
+logo.src = `${Electron.remote.process.mainModule.path.replace('main', 'renderer')}\\${file_logo}`;
 
 document.title = ConfigGlobal.APPNAME;
 

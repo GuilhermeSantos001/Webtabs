@@ -1,4 +1,5 @@
 const rules = require('./webpack.rules');
+const path = require('path');
 
 rules.push(
   { test: /\.json$/, loader: "json", include: '/src/' },
@@ -14,13 +15,12 @@ rules.push(
     ],
   },
   {
-    test: /\.(png|jp(e*)g|svg)$/,
+    test: /\.(png|svg|jpg|gif)$/,
     use: [
       {
-        loader: 'url-loader',
+        loader: 'file-loader',
         options: {
-          limit: 8000,
-          name: 'images/[hash]-[name].[ext]'
+          name: '[name].[ext]',
         }
       }
     ]

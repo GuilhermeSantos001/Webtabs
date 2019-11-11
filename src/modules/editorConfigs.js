@@ -54,6 +54,7 @@ export default class WindowEditor {
         win.loadURL(EDITOR_WINDOW_WEBPACK_ENTRY);
         win.setMenu(menu);
         win.show();
+        win.webContents.openDevTools();
         win.on('blur', this.blur.bind(this));
         win.on('close', this.close.bind(this));
     }
