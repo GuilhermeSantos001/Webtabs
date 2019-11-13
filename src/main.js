@@ -21,6 +21,13 @@ const createWindow = () => {
     {
       label: 'Frame', submenu: [
         {
+          label: 'Abrir o menu de configurações',
+          sublabel: 'Adicione/Remova os URLs',
+          click: () => {
+            mainWindow.webContents.send('window_configs_urls');
+          }
+        },
+        {
           label: 'Zoom', submenu: [
             {
               label: 'Resetar Zoom',

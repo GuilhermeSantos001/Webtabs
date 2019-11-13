@@ -107,25 +107,7 @@ $(function () {
     };
 });
 
-$("#radio_horas").click(function () {
-    let fs = Electron.remote.require('fs'),
-        path = Electron.remote.require('path'),
-        file = path.resolve('src/config/data/global.json');
-    if (fs.existsSync(file)) {
-        fs.writeFileSync(file, JSON.stringify({
-            "APPNAME": APPNAME,
-            "TITLE": TITLE,
-            "SLOGAN": SLOGAN,
-            "VERSION": VERSION,
-            "FRAMETIME": $('#input-frametime').val() * 1000000,
-            "FRAMETIMETYPE": 1
-        }, null, 2), 'utf8');
-        FRAMETIMETYPE = 1;
-        inputDemoFrametimeInnerText();
-    }
-});
-
-$("#radio_minutos").click(function () {
+document.getElementById("radio_horas").onclick = function () {
     let fs = Electron.remote.require('fs'),
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
@@ -136,14 +118,15 @@ $("#radio_minutos").click(function () {
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
             "FRAMETIME": $('#input-frametime').val() * 100000,
-            "FRAMETIMETYPE": 2
+            "FRAMETIMETYPE": 1
         }, null, 2), 'utf8');
-        FRAMETIMETYPE = 2;
+        FRAMETIME = $('#input-frametime').val() * 100000;
+        FRAMETIMETYPE = 1;
         inputDemoFrametimeInnerText();
     }
-});
+};
 
-$("#radio_segundos").click(function () {
+document.getElementById("radio_minutos").onclick = function () {
     let fs = Electron.remote.require('fs'),
         path = Electron.remote.require('path'),
         file = path.resolve('src/config/data/global.json');
@@ -154,12 +137,32 @@ $("#radio_segundos").click(function () {
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
             "FRAMETIME": $('#input-frametime').val() * 10000,
+            "FRAMETIMETYPE": 2
+        }, null, 2), 'utf8');
+        FRAMETIME = $('#input-frametime').val() * 10000;
+        FRAMETIMETYPE = 2;
+        inputDemoFrametimeInnerText();
+    }
+};
+
+document.getElementById("radio_segundos").onclick = function () {
+    let fs = Electron.remote.require('fs'),
+        path = Electron.remote.require('path'),
+        file = path.resolve('src/config/data/global.json');
+    if (fs.existsSync(file)) {
+        fs.writeFileSync(file, JSON.stringify({
+            "APPNAME": APPNAME,
+            "TITLE": TITLE,
+            "SLOGAN": SLOGAN,
+            "VERSION": VERSION,
+            "FRAMETIME": $('#input-frametime').val() * 1000,
             "FRAMETIMETYPE": 3
         }, null, 2), 'utf8');
+        FRAMETIME = $('#input-frametime').val() * 1000;
         FRAMETIMETYPE = 3;
         inputDemoFrametimeInnerText();
     }
-});
+};
 
 $('#input-frametime')
     .mousemove(inputDemoFrametimeInnerText)
@@ -167,26 +170,26 @@ $('#input-frametime')
     .change(inputFrametimeChange);
 
 function inputDemoFrametimeInnerText() {
-    document.getElementById('input-demo-frametime').innerText = `Tempo Atual: ${$('#input-frametime').val()} ${(() => {
+    console.log($('#input-frametime').val());
+    document.getElementById('input-demo-frametime').innerText = `Tempo Atual: ${(() => {
         switch (FRAMETIMETYPE) {
             case 1:
-                return 'Hora(s)';
+                return `${$('#input-frametime').val()} Hora(s)`;
             case 2:
-                return 'Minuto(s)';
+                return `${$('#input-frametime').val()} Minuto(s)`;
             case 3:
-                return 'Segundo(s)';
+                return `${$('#input-frametime').val()} Segundo(s)`;
         };
     })()}`;
-}
+};
 
 function inputFrametimeChange() {
-    let frametime;
     if (FRAMETIMETYPE === 1) {
-        frametime = $('#input-frametime').val() * 1000000;
+        FRAMETIME = $('#input-frametime').val() * 100000;
     } else if (FRAMETIMETYPE === 2) {
-        frametime = $('#input-frametime').val() * 100000;
+        FRAMETIME = $('#input-frametime').val() * 10000;
     } else if (FRAMETIMETYPE === 3) {
-        frametime = $('#input-frametime').val() * 10000;
+        FRAMETIME = $('#input-frametime').val() * 1000;
     }
     let fs = Electron.remote.require('fs'),
         path = Electron.remote.require('path'),
@@ -197,12 +200,12 @@ function inputFrametimeChange() {
             "TITLE": TITLE,
             "SLOGAN": SLOGAN,
             "VERSION": VERSION,
-            "FRAMETIME": frametime,
+            "FRAMETIME": FRAMETIME,
             "FRAMETIMETYPE": FRAMETIMETYPE
         }, null, 2), 'utf8');
         inputDemoFrametimeInnerText();
     }
-}
+};
 
 /**
  * MENU WINDOW

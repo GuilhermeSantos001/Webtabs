@@ -97,14 +97,25 @@ Electron.ipcRenderer.on('render_reduceZoom', () => {
  * Transition
  */
 Electron.ipcRenderer.on('render_next', () => {
-    if (frame) {
+    if (frame && fileProcess === 'done') {
         removeFrame();
     }
 });
 
 Electron.ipcRenderer.on('render_return', () => {
-    if (frame) {
+    if (frame && fileProcess === 'done') {
         returnFrame();
+    }
+});
+
+/**
+ * URLs
+ */
+Electron.ipcRenderer.on('add_url', () => {
+    if (urls) {
+        while (frame && frame.fadeInInitial === 'processing...' ||
+            frame && frame.removeProcess) return;
+        load();
     }
 });
 
@@ -146,7 +157,7 @@ setInterval(function () {
         if (i >= urls.length) i = 0;
         $('.layerFrame').append(`\
         <webview id="frame" src="${urls[i++][0]}"\
-            style="display:inline-flexbox; width: 100vw; height: 100vh;" nodeintegration nodeintegrationinsubframes plugins\
+            style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh;" nodeintegration nodeintegrationinsubframes plugins\
             disablewebsecurity allowpopups></webview>`.trim());
 
         while (!frame) {
@@ -155,7 +166,7 @@ setInterval(function () {
 
         if (!frame.fadeInInitial) {
             frame.fadeInInitial = 'processing...';
-            $(frame).fadeOut(100).delay(1000).fadeIn('slow', function () {
+            $(frame).fadeOut().delay().fadeIn('slow', function () {
                 frame.fadeInInitial = 'complete!';
             });
         }

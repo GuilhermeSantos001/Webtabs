@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'jquery/dist/jquery';
 import 'popper.js/dist/popper';
 import 'bootstrap/dist/js/bootstrap';
+import './renderer.css'
 
 /**
  * Render
@@ -15,6 +16,7 @@ import $ from 'jquery/dist/jquery';
 import file_logo from './img/logo.png';
 import WindowEditor from './modules/editorConfigs';
 import './modules/loadurls';
+import './modules/configsMain';
 
 let window_editor;
 
