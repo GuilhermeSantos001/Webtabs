@@ -39,11 +39,6 @@ module.exports = {
                             "name": "main_window",
                             "html": "./src/index.html",
                             "js": "./src/renderer.js"
-                        },
-                        {
-                            "name": "editor_window",
-                            "html": "./src/editor/index.html",
-                            "js": "./src/editor/index.js"
                         }
                     ]
                 }

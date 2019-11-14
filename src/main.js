@@ -13,6 +13,14 @@ const createWindow = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const template = [
     {
+      label: 'Janela', submenu: [
+        { label: 'Tela Cheia', role: 'togglefullscreen' },
+        { role: 'toggleDevTools' },
+        { label: 'Recarregar', role: 'reload' },
+        { label: 'Fechar', role: 'close' }
+      ]
+    },
+    {
       label: 'Exibição', submenu: [
         { label: 'Executar', type: 'radio', checked: true },
         { id: 'PAUSE', label: 'Pausar', type: 'radio' }
@@ -21,10 +29,17 @@ const createWindow = () => {
     {
       label: 'Frame', submenu: [
         {
-          label: 'Abrir o menu de configurações',
-          sublabel: 'Adicione/Remova os URLs',
+          label: 'Abrir o menu de ações',
+          accelerator: 'F9',
           click: () => {
             mainWindow.webContents.send('window_configs_urls');
+          }
+        },
+        {
+          label: 'Configurações',
+          accelerator: 'F10',
+          click: () => {
+            mainWindow.webContents.send('window_configs_global');
           }
         },
         {
@@ -66,15 +81,7 @@ const createWindow = () => {
           ]
         }
       ]
-    },
-    { type: 'separator' },
-    {
-      label: 'Abrir Editor',
-      click: () => {
-        mainWindow.webContents.send('open_editor');
-      }
-    },
-    { role: 'quit' }
+    }
   ];
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);

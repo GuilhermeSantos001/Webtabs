@@ -1,8 +1,40 @@
-import * as ConfigGlobal from '../config/global';
 import $ from 'jquery/dist/jquery';
 import * as Electron from 'electron';
-import data_urls from '../config/data/urls.json';
+import { localPath, localPathExists, localPathCreate } from './localPath';
 
+let ConfigGlobal;
+if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
+if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.json'))) {
+    ConfigGlobal = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/global.json'), 'utf8')) || [];
+} else {
+    ConfigGlobal = {
+        "APPNAME": "WEBTABS",
+        "TITLE": "GRUPO MAVE 2019",
+        "SLOGAN": "Você e seu Patrimônio em boas mãos!",
+        "VERSION": "v3.0.0-rebuild",
+        "FRAMETIME": 20000,
+        "FRAMETIMETYPE": 2
+    }
+    Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
+}
+
+let data_urls;
+if (!localPathExists(localPath('src/config/data/urls.json'))) localPathCreate(localPath('src/config/data/urls.json'));
+if (Electron.remote.require('fs').existsSync(localPath('src/config/data/urls.json'))) {
+    data_urls = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/urls.json'), 'utf8')) || [];
+} else {
+    data_urls = [
+        [
+            "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
+            0
+        ],
+        [
+            "https://sla.performancelab.com.br/login.php?uri=%2F",
+            0
+        ]
+    ]
+    Electron.remote.require('fs').writeFileSync(localPath('src/config/data/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
+}
 
 /**
  * VARIABLES SYSTEM
