@@ -12,7 +12,8 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.j
         "TITLE": "GRUPO MAVE 2019",
         "SLOGAN": "Você e seu Patrimônio em boas mãos!",
         "VERSION": "v3.0.0-rebuild",
-        "FRAMETIME": 20000,
+        "FRAMEIDENTIFIER": 2,
+        "FRAMETIME": 120000,
         "FRAMETIMETYPE": 2
     }
     Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
@@ -21,7 +22,16 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.j
 let data_urls;
 if (!localPathExists(localPath('src/config/data/urls.json'))) localPathCreate(localPath('src/config/data/urls.json'));
 if (Electron.remote.require('fs').existsSync(localPath('src/config/data/urls.json'))) {
-    data_urls = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/urls.json'), 'utf8')) || [];
+    data_urls = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/urls.json'), 'utf8')) || [
+        [
+            "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
+            0
+        ],
+        [
+            "https://sla.performancelab.com.br/login.php?uri=%2F",
+            0
+        ]
+    ];
 } else {
     data_urls = [
         [
@@ -32,7 +42,7 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/urls.jso
             "https://sla.performancelab.com.br/login.php?uri=%2F",
             0
         ]
-    ]
+    ];
     Electron.remote.require('fs').writeFileSync(localPath('src/config/data/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
 }
 

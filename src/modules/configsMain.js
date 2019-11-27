@@ -16,7 +16,7 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/urls.jso
             "https://sla.performancelab.com.br/login.php?uri=%2F",
             0
         ]
-    ]
+    ];
     Electron.remote.require('fs').writeFileSync(localPath('src/config/data/urls.json'), JSON.stringify(data, null, 2), 'utf8');
 }
 

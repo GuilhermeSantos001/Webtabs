@@ -8,7 +8,15 @@ import { localPath, localPathExists, localPathCreate } from './localPath';
 let data;
 if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
 if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.json'))) {
-    data = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/global.json'), 'utf8')) || [];
+    data = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/global.json'), 'utf8')) || {
+        "APPNAME": "WEBTABS",
+        "TITLE": "GRUPO MAVE 2019",
+        "SLOGAN": "Você e seu Patrimônio em boas mãos!",
+        "VERSION": "v3.0.0-rebuild",
+        "FRAMEIDENTIFIER": 2,
+        "FRAMETIME": 120000,
+        "FRAMETIMETYPE": 2
+    };
 } else {
     data = {
         "APPNAME": "WEBTABS",

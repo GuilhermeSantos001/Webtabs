@@ -29,7 +29,8 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.j
         "TITLE": "GRUPO MAVE 2019",
         "SLOGAN": "Você e seu Patrimônio em boas mãos!",
         "VERSION": "v3.0.0-rebuild",
-        "FRAMETIME": 20000,
+        "FRAMEIDENTIFIER": 2,
+        "FRAMETIME": 120000,
         "FRAMETIMETYPE": 2
     }
     Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(data, null, 2), 'utf8');
