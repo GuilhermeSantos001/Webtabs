@@ -207,16 +207,22 @@ setInterval(function () {
             console.info('Frame Adicionado!');
             frame.setZoomLevel(urls[i - 1][1]);
             interval = setInterval(function () {
-                console.info('Frame Removido!');
-                if (!frame || frame.isLoading() ||
-                    frame.isLoadingMainFrame() ||
-                    frame.isWaitingForResponse() ||
-                    menu.getMenuItemById('PAUSE').checked ||
-                    frame.fadeInInitial === 'processing...' ||
-                    fileProcess === 'write...' ||
-                    fileProcess === 'reading...') return;
-                removeFrame();
-            }, ConfigGlobal.FRAMETIME);
+                let frametime = ConfigGlobal.FRAMETIME / 1000;
+                if (frame.tick === undefined) frame.tick = 0;
+                if (frame.tick <= frametime) frame.tick++;
+                console.log(frame.tick, frametime);
+                if (frame.tick >= frametime) {
+                    console.info('Frame Removido!');
+                    if (!frame || frame.isLoading() ||
+                        frame.isLoadingMainFrame() ||
+                        frame.isWaitingForResponse() ||
+                        menu.getMenuItemById('PAUSE').checked ||
+                        frame.fadeInInitial === 'processing...' ||
+                        fileProcess === 'write...' ||
+                        fileProcess === 'reading...') return;
+                    removeFrame();
+                }
+            }, 1000);
         });
     }
 }, 1000);

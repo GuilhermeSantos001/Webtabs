@@ -15,7 +15,8 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.j
         "TITLE": "GRUPO MAVE 2019",
         "SLOGAN": "Você e seu Patrimônio em boas mãos!",
         "VERSION": "v3.0.0-rebuild",
-        "FRAMETIME": 20000,
+        "FRAMEIDENTIFIER": 2,
+        "FRAMETIME": 120000,
         "FRAMETIMETYPE": 2
     }
     Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(data, null, 2), 'utf8');
@@ -25,6 +26,7 @@ let APPNAME = data.APPNAME,
     TITLE = data.TITLE,
     SLOGAN = data.SLOGAN,
     VERSION = data.VERSION,
+    FRAMEIDENTIFIER = data.FRAMEIDENTIFIER,
     FRAMETIME = data.FRAMETIME,
     FRAMETIMETYPE = data.FRAMETIMETYPE;
 
@@ -49,6 +51,7 @@ function titlechange() {
         "TITLE": $('#form-title').val(),
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
+        "FRAMEIDENTIFIER": FRAMEIDENTIFIER,
         "FRAMETIME": FRAMETIME,
         "FRAMETIMETYPE": FRAMETIMETYPE
     }, null, 2), 'utf8');
@@ -72,6 +75,7 @@ function sloganchange() {
         "TITLE": TITLE,
         "SLOGAN": $('#form-slogan').val(),
         "VERSION": VERSION,
+        "FRAMEIDENTIFIER": FRAMEIDENTIFIER,
         "FRAMETIME": FRAMETIME,
         "FRAMETIMETYPE": FRAMETIMETYPE
     }, null, 2), 'utf8');
@@ -82,23 +86,9 @@ function sloganchange() {
  * TEMPO DE TRANSIÇÃO DA PAGINA
  */
 $(document).ready(function () {
-    switch (FRAMETIMETYPE) {
-        case 1:
-            $("#input-frametime").attr({
-                "value": `${FRAMETIME / 100000}`
-            });
-            break;
-        case 2:
-            $("#input-frametime").attr({
-                "value": `${FRAMETIME / 10000}`
-            });
-            break;
-        case 3:
-            $("#input-frametime").attr({
-                "value": `${FRAMETIME / 1000}`
-            });
-            break;
-    };
+    $("#input-frametime").attr({
+        "value": `${FRAMEIDENTIFIER}`
+    });
     switch (FRAMETIMETYPE) {
         case 1:
             $('#radio_horas').attr('checked', '');
@@ -128,10 +118,12 @@ document.getElementById("radio_horas").onclick = function () {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
-        "FRAMETIME": $('#input-frametime').val() * 100000,
+        "FRAMEIDENTIFIER": $('#input-frametime').val(),
+        "FRAMETIME": ($('#input-frametime').val() * 60) * 60000,
         "FRAMETIMETYPE": 1
     }, null, 2), 'utf8');
-    FRAMETIME = $('#input-frametime').val() * 100000;
+    FRAMEIDENTIFIER = Number($('#input-frametime').val());
+    FRAMETIME = ($('#input-frametime').val() * 60) * 60000;
     FRAMETIMETYPE = 1;
     inputDemoFrametimeInnerText();
 };
@@ -145,10 +137,12 @@ document.getElementById("radio_minutos").onclick = function () {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
-        "FRAMETIME": $('#input-frametime').val() * 10000,
+        "FRAMEIDENTIFIER": $('#input-frametime').val(),
+        "FRAMETIME": ($('#input-frametime').val() * 60) * 1000,
         "FRAMETIMETYPE": 2
     }, null, 2), 'utf8');
-    FRAMETIME = $('#input-frametime').val() * 10000;
+    FRAMEIDENTIFIER = Number($('#input-frametime').val());
+    FRAMETIME = ($('#input-frametime').val() * 60) * 1000;
     FRAMETIMETYPE = 2;
     inputDemoFrametimeInnerText();
 };
@@ -162,9 +156,11 @@ document.getElementById("radio_segundos").onclick = function () {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
+        "FRAMEIDENTIFIER": $('#input-frametime').val(),
         "FRAMETIME": $('#input-frametime').val() * 1000,
         "FRAMETIMETYPE": 3
     }, null, 2), 'utf8');
+    FRAMEIDENTIFIER = Number($('#input-frametime').val());
     FRAMETIME = $('#input-frametime').val() * 1000;
     FRAMETIMETYPE = 3;
     inputDemoFrametimeInnerText();
@@ -190,12 +186,13 @@ function inputDemoFrametimeInnerText() {
 
 function inputFrametimeChange() {
     if (FRAMETIMETYPE === 1) {
-        FRAMETIME = $('#input-frametime').val() * 100000;
+        FRAMETIME = ($('#input-frametime').val() * 60) * 60000;
     } else if (FRAMETIMETYPE === 2) {
-        FRAMETIME = $('#input-frametime').val() * 10000;
+        FRAMETIME = ($('#input-frametime').val() * 60) * 1000;
     } else if (FRAMETIMETYPE === 3) {
         FRAMETIME = $('#input-frametime').val() * 1000;
     }
+    FRAMEIDENTIFIER = Number($('#input-frametime').val());
     let fs = Electron.remote.require('fs'),
         file = localPath('src/config/data/global.json');
     if (!localPathExists(file)) localPathCreate(file);
@@ -204,6 +201,7 @@ function inputFrametimeChange() {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
+        "FRAMEIDENTIFIER": FRAMEIDENTIFIER,
         "FRAMETIME": FRAMETIME,
         "FRAMETIMETYPE": FRAMETIMETYPE
     }, null, 2), 'utf8');
