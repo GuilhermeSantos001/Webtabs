@@ -2,6 +2,8 @@ import $ from 'jquery/dist/jquery';
 import * as Electron from 'electron';
 import { localPath, localPathExists, localPathCreate } from './localPath';
 
+const THISDEVELOPMENT = require('electron-is-dev');
+
 let ConfigGlobal;
 if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
 if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.json'))) {
@@ -73,9 +75,8 @@ load();
  */
 function save() {
     let fs = Electron.remote.require('fs'),
-        path = Electron.remote.require('path'),
-        file = path.resolve('src/config/data/urls.json');
-    if (fs.existsSync(file)) {
+        file = localPath('src/config/data/urls.json');
+    if (localPathExists(file)) {
         fileProcess = 'write...';
         fs.writeFile(file, JSON.stringify(urls, null, 2), 'utf8', () => {
             fileProcess = 'done';
@@ -86,9 +87,8 @@ function save() {
 
 function load() {
     let fs = Electron.remote.require('fs'),
-        path = Electron.remote.require('path'),
-        file = path.resolve('src/config/data/urls.json');
-    if (fs.existsSync(file)) {
+        file = localPath('src/config/data/urls.json');
+    if (localPathExists(file)) {
         fileProcess = 'reading...';
         let data = JSON.parse(fs.readFileSync(file, { encoding: 'utf8' }));
         if (data instanceof Array === true) {
@@ -214,15 +214,15 @@ setInterval(function () {
         }
 
         frame.addEventListener('did-finish-load', () => {
-            console.info('Frame Adicionado!');
+            if (THISDEVELOPMENT) console.info('Frame Adicionado!');
             frame.setZoomLevel(urls[i - 1][1]);
             interval = setInterval(function () {
                 let frametime = ConfigGlobal.FRAMETIME / 1000;
                 if (frame.tick === undefined) frame.tick = 0;
                 if (frame.tick <= frametime) frame.tick++;
-                console.log(frame.tick, frametime);
+                if (THISDEVELOPMENT) console.log(frame.tick, frametime);
                 if (frame.tick >= frametime) {
-                    console.info('Frame Removido!');
+                    if (THISDEVELOPMENT) console.info('Frame Removido!');
                     if (!frame || frame.isLoading() ||
                         frame.isLoadingMainFrame() ||
                         frame.isWaitingForResponse() ||

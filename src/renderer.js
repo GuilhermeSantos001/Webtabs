@@ -18,6 +18,7 @@ import './modules/configsMain';
 import './modules/configsGlobal';
 import { localPath, localPathExists, localPathCreate } from './modules/localPath';
 
+const THISDEVELOPMENT = require('electron-is-dev');
 
 let data;
 if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
@@ -47,4 +48,4 @@ document.getElementById('version').innerText = data.VERSION;
 
 $('#layerContent').delay(5000).fadeOut('slow');
 
-console.log('👋 This message is being logged by "renderer.js", included via webpack');
+if (THISDEVELOPMENT) console.log('👋 This message is being logged by "renderer.js", included via webpack');

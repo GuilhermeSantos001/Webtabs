@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
     "packagerConfig": {},
     "electronPackagerConfig": {
-        "icon": path.resolve(__dirname, 'src/img/win/icon.ico')
+        "packageManager": 'npm',
+        "icon": path.resolve(__dirname, "src/img/logo")
     },
     "makers": [
         {
