@@ -10,3 +10,7 @@ Visualizar suas páginas favoritas como slides, nunca foi tão fácil.
   - 2 GB de espaço em disco disponível
   - Suporte para DirectX v9.0c ou melhor
   - Windows 7, Windows 8 ou Windows 10
+
+### :computer: [Ir a versão de Desenvolvimento] :computer:
+
+[Ir a versão de Desenvolvimento]: https://github.com/GuilhermeSantos001/Webtabs/tree/prod
