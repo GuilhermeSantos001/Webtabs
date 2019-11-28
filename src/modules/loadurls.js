@@ -173,8 +173,10 @@ function removeFrame() {
             urls[i - 1][0] = frame.getURL();
             urls[i - 1][1] = frame.getZoomLevel();
             save();
-            frame.remove(), frame = null;
             clearInterval(interval), interval = null;
+            frame.removeEventListener('did-finish-load', frame.listener);
+            frame.remove();
+            frame = null;
         });
     }
 };
@@ -188,8 +190,10 @@ function returnFrame() {
             urls[i - 1][0] = frame.getURL();
             urls[i - 1][1] = frame.getZoomLevel();
             i = i - 2; save();
-            frame.remove(), frame = null;
             clearInterval(interval), interval = null;
+            frame.removeEventListener('did-finish-load', frame.listener);
+            frame.remove();
+            frame = null;
         });
     }
 };
@@ -197,10 +201,7 @@ function returnFrame() {
 setInterval(function () {
     if (!frame) {
         if (i >= urls.length) i = 0;
-        $('.layerFrame').append(`\
-        <webview id="frame" src="${urls[i++][0]}"\
-            style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh;" nodeintegration nodeintegrationinsubframes plugins\
-            disablewebsecurity allowpopups></webview>`.trim());
+        $('.layerFrame').append(`<webview id="frame" src="${urls[i++][0]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh;"></webview>`);
 
         while (!frame) {
             frame = document.getElementById('frame');
@@ -213,7 +214,7 @@ setInterval(function () {
             });
         }
 
-        frame.addEventListener('did-finish-load', () => {
+        frame.listener = function () {
             if (THISDEVELOPMENT) console.info('Frame Adicionado!');
             frame.setZoomLevel(urls[i - 1][1]);
             interval = setInterval(function () {
@@ -233,6 +234,7 @@ setInterval(function () {
                     removeFrame();
                 }
             }, 1000);
-        });
+        }
+        frame.addEventListener('did-finish-load', frame.listener);
     }
 }, 1000);
