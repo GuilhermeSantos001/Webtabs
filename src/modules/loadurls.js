@@ -215,15 +215,32 @@ setInterval(function () {
         }
 
         frame.listener = function () {
-            if (THISDEVELOPMENT) console.info('Frame Adicionado!');
+            if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
             frame.setZoomLevel(urls[i - 1][1]);
             interval = setInterval(function () {
                 let frametime = ConfigGlobal.FRAMETIME / 1000;
-                if (frame.tick === undefined) frame.tick = 0;
-                if (frame.tick <= frametime) frame.tick++;
-                if (THISDEVELOPMENT) console.log(frame.tick, frametime);
+                if (frame.tick === undefined ||
+                    !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
+                    if (frame.tickReset) frame.tickReset = null;
+                    frame.tick = 0;
+                }
+                if (frame.tick <= frametime) {
+                    if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
+                    else frame.tick++;
+                }
+                if (THISDEVELOPMENT) {
+                    if (menu.getMenuItemById('PAUSE').checked)
+                        console.log(
+                            '%c➠ LOG: ⚠ O frame está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                            'color: #e39b0b; padding: 8px; font-size: 150%;'
+                        );
+                    console.log(
+                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                        'color: #405cff; padding: 8px; font-size: 150%;'
+                    );
+                }
                 if (frame.tick >= frametime) {
-                    if (THISDEVELOPMENT) console.info('Frame Removido!');
+                    if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
                     if (!frame || frame.isLoading() ||
                         frame.isLoadingMainFrame() ||
                         frame.isWaitingForResponse() ||

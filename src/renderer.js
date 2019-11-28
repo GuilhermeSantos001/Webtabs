@@ -48,4 +48,16 @@ document.getElementById('version').innerText = data.VERSION;
 
 $('#layerContent').delay(5000).fadeOut('slow');
 
-if (THISDEVELOPMENT) console.log('👋 This message is being logged by "renderer.js", included via webpack');
+if (THISDEVELOPMENT) {
+    console.log(
+        '%c✩%c✩%c✩ %cWEBTABS %c✩%c✩%c✩',
+        'font-size: 250%; color: #292929;',
+        'font-size: 290%; color: #292929;',
+        'font-size: 250%; color: #292929;',
+        'color: #501cc9; font-size: 300%;',
+        'font-size: 250%; color: #292929;',
+        'font-size: 290%; color: #292929;',
+        'font-size: 250%; color: #292929;',
+    );
+    console.log('%c✨ AMBIENTE DE DESENVOLVIMENTO ✨', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+}
