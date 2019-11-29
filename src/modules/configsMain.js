@@ -43,8 +43,52 @@ $(document).ready(function () {
             });
         }
     };
+    SCREEN_SELECTION_UPDATE();
 });
 
 Electron.ipcRenderer.on('window_configs_urls', () => {
+    SCREEN_SELECTION_UPDATE();
     $('#layerUrladd').show("fast");
 });
+
+/**
+ * Functions
+ */
+
+function BTN_SCREEN_SELECTION_EXIST(id, name) {
+    for (const btn of data) {
+        if (typeof btn[0] === 'object')
+            if (btn[0].id === id && btn[0].name === name) return true;
+    }
+    return false;
+}
+
+function SCREEN_SELECTION_UPDATE() {
+    const { desktopCapturer } = Electron;
+    desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+        for (const source of sources) {
+            console.log(source);
+            if (document.getElementById(source.id) === null && source.id.includes('screen')) {
+                $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">${source.name}</button>`);
+                let btn = document.getElementById(source.id);
+                btn.onclick = function () {
+                    let fs = Electron.remote.require('fs'),
+                        file = localPath('src/config/data/urls.json');
+                    if (!localPathExists(file)) localPathCreate(file);
+                    if (fs.existsSync(file)) {
+                        data.push([{
+                            id: source.id,
+                            name: source.name
+                        }]);
+                        fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
+                            $(btn).prop('disabled', true);
+                            mainWindow.webContents.send('add_url');
+                        });
+                    }
+                };
+                if (BTN_SCREEN_SELECTION_EXIST(source.id, source.name))
+                    $(btn).prop('disabled', true);
+            }
+        }
+    });
+}

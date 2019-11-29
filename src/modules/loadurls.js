@@ -170,13 +170,20 @@ function removeFrame() {
         if (frame.removeProcess || frame.fadeInInitial === 'processing...') return;
         frame.removeProcess = true;
         $(frame).fadeOut('slow', function () {
-            urls[i - 1][0] = frame.getURL();
-            urls[i - 1][1] = frame.getZoomLevel();
-            save();
-            clearInterval(interval), interval = null;
-            frame.removeEventListener('did-finish-load', frame.listener);
-            frame.remove();
-            frame = null;
+            if (typeof urls[i - 1][0] === 'string') {
+                urls[i - 1][0] = frame.getURL();
+                urls[i - 1][1] = frame.getZoomLevel();
+                save();
+                clearInterval(interval), interval = null;
+                frame.removeEventListener('did-finish-load', frame.listener);
+                frame.remove();
+                frame = null;
+            } else if (typeof urls[i - 1][0] === 'object') {
+                save();
+                clearInterval(interval), interval = null;
+                frame.remove();
+                frame = null;
+            }
         });
     }
 };
@@ -187,71 +194,166 @@ function returnFrame() {
         if (frame.removeProcess || frame.fadeInInitial === 'processing...') return;
         frame.removeProcess = true;
         $(frame).fadeOut('slow', function () {
-            urls[i - 1][0] = frame.getURL();
-            urls[i - 1][1] = frame.getZoomLevel();
-            i = i - 2; save();
-            clearInterval(interval), interval = null;
-            frame.removeEventListener('did-finish-load', frame.listener);
-            frame.remove();
-            frame = null;
+            if (typeof urls[i - 1][0] === 'string') {
+                urls[i - 1][0] = frame.getURL();
+                urls[i - 1][1] = frame.getZoomLevel();
+                i = i - 2; save();
+                clearInterval(interval), interval = null;
+                frame.removeEventListener('did-finish-load', frame.listener);
+                frame.remove();
+                frame = null;
+            } else if (typeof urls[i - 1][0] === 'object') {
+                i = i - 2; save();
+                clearInterval(interval), interval = null;
+                frame.remove();
+                frame = null;
+            }
         });
     }
 };
 
-setInterval(function () {
-    if (!frame) {
-        if (i >= urls.length) i = 0;
-        $('.layerFrame').append(`<webview id="frame" src="${urls[i++][0]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh;"></webview>`);
+function DESKTOPCAPTURER() {
+    const { desktopCapturer } = Electron;
+    desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+        for (const source of sources) {
+            console.log('teste', i);
+            if (source.id === urls[i][0]["id"] && source.name === urls[i][0]["name"]) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        audio: false,
+                        video: {
+                            mandatory: {
+                                chromeMediaSource: 'desktop',
+                                chromeMediaSourceId: source.id,
+                                maxWidth: 1980,
+                                maxHeight: 1080,
+                                minWidth: 1280,
+                                minHeight: 720
+                            }
+                        }
+                    });
+                    desktopCapturer_handleStream(stream);
+                    break;
+                } catch (e) {
+                    desktopCapturer_handleError(e);
+                    break;
+                }
+            }
+        }
+    });
+
+    function desktopCapturer_handleStream(stream) {
+        $('.layerFrame').append(`<video id="video" style="z-index: 1; display:inline-flexbox; width: 100vw; filter:opacity(0%);" />`);
 
         while (!frame) {
-            frame = document.getElementById('frame');
+            frame = document.getElementById('video');
         }
+
+        frame.srcObject = stream;
+        frame.onloadedmetadata = (e) => frame.play();
 
         if (!frame.fadeInInitial) {
             frame.fadeInInitial = 'processing...';
-            $(frame).fadeOut().delay().fadeIn('slow', function () {
+            $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
                 frame.fadeInInitial = 'complete!';
+                if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                interval = setInterval(function () {
+                    let frametime = ConfigGlobal.FRAMETIME / 1000;
+                    if (frame.tick === undefined ||
+                        !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
+                        if (frame.tickReset) frame.tickReset = null;
+                        frame.tick = 0;
+                    }
+                    if (frame.tick <= frametime) {
+                        if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
+                        else frame.tick++;
+                    }
+                    if (THISDEVELOPMENT) {
+                        if (menu.getMenuItemById('PAUSE').checked)
+                            console.log(
+                                '%c➠ LOG: ⚠ O frame(Stream) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                                'color: #e39b0b; padding: 8px; font-size: 150%;'
+                            );
+                        console.log(
+                            `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                            'color: #405cff; padding: 8px; font-size: 150%;'
+                        );
+                    }
+                    if (frame.tick >= frametime) {
+                        if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Video) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                        if (!frame || menu.getMenuItemById('PAUSE').checked ||
+                            frame.fadeInInitial === 'processing...' ||
+                            fileProcess === 'write...' ||
+                            fileProcess === 'reading...') return;
+                        removeFrame();
+                    }
+                }, 1000);
             });
         }
+        i++;
+    };
 
-        frame.listener = function () {
-            if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
-            frame.setZoomLevel(urls[i - 1][1]);
-            interval = setInterval(function () {
-                let frametime = ConfigGlobal.FRAMETIME / 1000;
-                if (frame.tick === undefined ||
-                    !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
-                    if (frame.tickReset) frame.tickReset = null;
-                    frame.tick = 0;
-                }
-                if (frame.tick <= frametime) {
-                    if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
-                    else frame.tick++;
-                }
-                if (THISDEVELOPMENT) {
-                    if (menu.getMenuItemById('PAUSE').checked)
+    function desktopCapturer_handleError(e) {
+        console.error(e);
+    };
+}
+
+setInterval(function () {
+    if (!frame) {
+        if (i >= urls.length) i = 0;
+        if (typeof urls[i][0] === 'string') {
+            $('.layerFrame').append(`<webview id="frame" src="${urls[i++][0]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);"></webview>`);
+
+            while (!frame) {
+                frame = document.getElementById('frame');
+            }
+
+            if (!frame.fadeInInitial) {
+                frame.fadeInInitial = 'processing...';
+                $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
+                    frame.fadeInInitial = 'complete!';
+                });
+            }
+
+            frame.listener = function () {
+                if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                frame.setZoomLevel(urls[i - 1][1]);
+                interval = setInterval(function () {
+                    let frametime = ConfigGlobal.FRAMETIME / 1000;
+                    if (frame.tick === undefined ||
+                        !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
+                        if (frame.tickReset) frame.tickReset = null;
+                        frame.tick = 0;
+                    }
+                    if (frame.tick <= frametime) {
+                        if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
+                        else frame.tick++;
+                    }
+                    if (THISDEVELOPMENT) {
+                        if (menu.getMenuItemById('PAUSE').checked)
+                            console.log(
+                                '%c➠ LOG: ⚠ O frame está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                                'color: #e39b0b; padding: 8px; font-size: 150%;'
+                            );
                         console.log(
-                            '%c➠ LOG: ⚠ O frame está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                            'color: #e39b0b; padding: 8px; font-size: 150%;'
+                            `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                            'color: #405cff; padding: 8px; font-size: 150%;'
                         );
-                    console.log(
-                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                        'color: #405cff; padding: 8px; font-size: 150%;'
-                    );
-                }
-                if (frame.tick >= frametime) {
-                    if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
-                    if (!frame || frame.isLoading() ||
-                        frame.isLoadingMainFrame() ||
-                        frame.isWaitingForResponse() ||
-                        menu.getMenuItemById('PAUSE').checked ||
-                        frame.fadeInInitial === 'processing...' ||
-                        fileProcess === 'write...' ||
-                        fileProcess === 'reading...') return;
-                    removeFrame();
-                }
-            }, 1000);
-        }
-        frame.addEventListener('did-finish-load', frame.listener);
+                    }
+                    if (frame.tick >= frametime) {
+                        if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                        if (!frame || frame.isLoading() ||
+                            frame.isLoadingMainFrame() ||
+                            frame.isWaitingForResponse() ||
+                            menu.getMenuItemById('PAUSE').checked ||
+                            frame.fadeInInitial === 'processing...' ||
+                            fileProcess === 'write...' ||
+                            fileProcess === 'reading...') return;
+                        removeFrame();
+                    }
+                }, 1000);
+            }
+            frame.addEventListener('did-finish-load', frame.listener);
+        } else if (typeof urls[i][0] === 'object') { DESKTOPCAPTURER() }
     }
 }, 1000);
