@@ -7,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 
-<body>
-  <div class="container-fluid">
+<body style="background-color: #232323;">
+  <div id="layerContainer" class="container-fluid" style="filter:opacity(0%);">
     <div id="layerContent" class="row">
       <div class="col-12 bg-dark text-white">
         <img id="logo" height="155px" width="164px" class="rounded-circle float-left m-2">
@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="col-2 position-absolute" style="margin-top: 8rem; margin-left: 83vw; transform: scale(0.7, 0.7);">
+      <div class="col-2 position-absolute" style="margin-top: 7.9rem; margin-left: 83vw; transform: scale(0.7, 0.7);">
         <div id="version" class="alert alert-secondary text-center" role="alert"></div>
       </div>
     </div>
@@ -47,6 +47,21 @@
             </label>
           </div>
           <div id="screen_selection"></div>
+          <div class="border border-light p-2 mt-2">
+            <h4 class="text-uppercase font-weight-bold">Imagem</h4>
+            <label for="input_add_url">
+              Adicione suas belas fotos!
+              <p class="mb-0" style="font-size: small;">
+                Escreva/Cole o URL
+              </p>
+            </label>
+          </div>
+          <input type="text" class="form-control border border-light bg-dark text-white mt-2" id="input_add_url"
+            placeholder="Insira o url...">
+          <div class="form-control custom-file border border-light bg-dark text-white mt-2">
+            <input type="file" class="custom-file-input" id="search_image_from_computer">
+            <label class="custom-file-label" for="search_image_from_computer">Seleccionar Archivo</label>
+          </div>
           <button type="button" class="btn btn-lg btn-block btn-outline-light mt-2"
             id="button_add_url">Adicionar</button>
         </div>

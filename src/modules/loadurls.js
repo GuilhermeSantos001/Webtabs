@@ -178,7 +178,11 @@ function removeFrame() {
                 frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
-            } else if (typeof urls[i - 1][0] === 'object') {
+            } else if (
+                typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'stream' ||
+                typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'image' ||
+                typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'video'
+            ) {
                 save();
                 clearInterval(interval), interval = null;
                 frame.remove();
@@ -202,7 +206,11 @@ function returnFrame() {
                 frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
-            } else if (typeof urls[i - 1][0] === 'object') {
+            } else if (
+                typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'stream' ||
+                typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'image' ||
+                typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'video'
+            ) {
                 i = i - 2; save();
                 clearInterval(interval), interval = null;
                 frame.remove();
@@ -243,10 +251,10 @@ function DESKTOPCAPTURER() {
     });
 
     function desktopCapturer_handleStream(stream) {
-        $('.layerFrame').append(`<video id="video" style="z-index: 1; display:inline-flexbox; width: 100vw; filter:opacity(0%);" />`);
+        $('.layerFrame').append(`<video id="stream" style="z-index: 1; display:inline-flexbox; width: 100vw; filter:opacity(0%);" />`);
 
         while (!frame) {
-            frame = document.getElementById('video');
+            frame = document.getElementById('stream');
         }
 
         frame.srcObject = stream;
@@ -280,7 +288,7 @@ function DESKTOPCAPTURER() {
                         );
                     }
                     if (frame.tick >= frametime) {
-                        if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Video) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                        if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Stream) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
                         if (!frame || menu.getMenuItemById('PAUSE').checked ||
                             frame.fadeInInitial === 'processing...' ||
                             fileProcess === 'write...' ||
@@ -296,6 +304,102 @@ function DESKTOPCAPTURER() {
     function desktopCapturer_handleError(e) {
         console.error(e);
     };
+}
+
+function IMGRENDER() {
+    $('.layerFrame').append(`<img id="image" src="${urls[i][0]["url"]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);" />`);
+
+    while (!frame) {
+        frame = document.getElementById('image');
+    }
+
+    if (!frame.fadeInInitial) {
+        frame.fadeInInitial = 'processing...';
+        $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
+            frame.fadeInInitial = 'complete!';
+            if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            interval = setInterval(function () {
+                let frametime = ConfigGlobal.FRAMETIME / 1000;
+                if (frame.tick === undefined ||
+                    !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
+                    if (frame.tickReset) frame.tickReset = null;
+                    frame.tick = 0;
+                }
+                if (frame.tick <= frametime) {
+                    if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
+                    else frame.tick++;
+                }
+                if (THISDEVELOPMENT) {
+                    if (menu.getMenuItemById('PAUSE').checked)
+                        console.log(
+                            '%c➠ LOG: ⚠ O frame(Imagem) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                            'color: #e39b0b; padding: 8px; font-size: 150%;'
+                        );
+                    console.log(
+                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                        'color: #405cff; padding: 8px; font-size: 150%;'
+                    );
+                }
+                if (frame.tick >= frametime) {
+                    if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Imagem) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                    if (!frame || menu.getMenuItemById('PAUSE').checked ||
+                        frame.fadeInInitial === 'processing...' ||
+                        fileProcess === 'write...' ||
+                        fileProcess === 'reading...') return;
+                    removeFrame();
+                }
+            }, 1000);
+        });
+    }
+    i++;
+}
+
+function VIDEORENDER() {
+    $('.layerFrame').append(`<iframe id="video" src="${urls[i][0]["url"]}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen autoplay style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);"></iframe>`);
+
+    while (!frame) {
+        frame = document.getElementById('video');
+    }
+
+    if (!frame.fadeInInitial) {
+        frame.fadeInInitial = 'processing...';
+        $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
+            frame.fadeInInitial = 'complete!';
+            if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            interval = setInterval(function () {
+                let frametime = ConfigGlobal.FRAMETIME / 1000;
+                if (frame.tick === undefined ||
+                    !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
+                    if (frame.tickReset) frame.tickReset = null;
+                    frame.tick = 0;
+                }
+                if (frame.tick <= frametime) {
+                    if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
+                    else frame.tick++;
+                }
+                if (THISDEVELOPMENT) {
+                    if (menu.getMenuItemById('PAUSE').checked)
+                        console.log(
+                            '%c➠ LOG: ⚠ O frame(Video) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                            'color: #e39b0b; padding: 8px; font-size: 150%;'
+                        );
+                    console.log(
+                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                        'color: #405cff; padding: 8px; font-size: 150%;'
+                    );
+                }
+                if (frame.tick >= frametime) {
+                    if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Video) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                    if (!frame || menu.getMenuItemById('PAUSE').checked ||
+                        frame.fadeInInitial === 'processing...' ||
+                        fileProcess === 'write...' ||
+                        fileProcess === 'reading...') return;
+                    removeFrame();
+                }
+            }, 1000);
+        });
+    }
+    i++;
 }
 
 setInterval(function () {
@@ -354,6 +458,12 @@ setInterval(function () {
                 }, 1000);
             }
             frame.addEventListener('did-finish-load', frame.listener);
-        } else if (typeof urls[i][0] === 'object') { DESKTOPCAPTURER() }
+        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'stream') {
+            DESKTOPCAPTURER()
+        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'image') {
+            IMGRENDER();
+        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'video') {
+            VIDEORENDER();
+        }
     }
 }, 1000);

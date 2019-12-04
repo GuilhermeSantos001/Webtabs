@@ -46,7 +46,12 @@ document.getElementById('title').innerText = data.TITLE;
 document.getElementById('slogan').innerText = data.SLOGAN;
 document.getElementById('version').innerText = data.VERSION;
 
-$('#layerContent').delay(5000).fadeOut('slow');
+let height = $('#layerContent').height();
+$('#layerContent').delay(3500).animate({ "margin-top": `-=${height}`, opacity: 0 }, 'slow');
+
+$(document).ready(function () {
+    $('#layerContainer').fadeOut(function () { $('#layerContainer').css('filter', 'opacity(100%)'); }).delay().fadeIn('slow');
+});
 
 if (THISDEVELOPMENT) {
     console.log(
@@ -61,3 +66,16 @@ if (THISDEVELOPMENT) {
     );
     console.log('%c✨ AMBIENTE DE DESENVOLVIMENTO ✨', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 }
+
+/**
+ * Menu Events
+ */
+Electron.ipcRenderer.on('show_scroll_page', () => {
+    $('html, body').css('overflowX', 'auto');
+    $('html, body').css('overflowY', 'auto');
+});
+
+Electron.ipcRenderer.on('hide_scroll_page', () => {
+    $('html, body').css('overflowX', 'hidden');
+    $('html, body').css('overflowY', 'hidden');
+});

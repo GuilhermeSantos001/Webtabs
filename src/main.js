@@ -44,6 +44,22 @@ const createWindow = () => {
           }
         },
         {
+          label: 'Barra de Rolagem', submenu: [
+            {
+              label: 'Exibir',
+              click: () => {
+                mainWindow.webContents.send('show_scroll_page');
+              }
+            },
+            {
+              label: 'Ocultar',
+              click: () => {
+                mainWindow.webContents.send('hide_scroll_page');
+              }
+            }
+          ]
+        },
+        {
           label: 'Zoom', submenu: [
             {
               label: 'Resetar Zoom',
