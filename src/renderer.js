@@ -47,7 +47,9 @@ document.getElementById('slogan').innerText = data.SLOGAN;
 document.getElementById('version').innerText = data.VERSION;
 
 let height = $('#layerContent').height();
-$('#layerContent').delay(3500).animate({ "margin-top": `-=${height}`, opacity: 0 }, 'slow');
+$('#layerContent').delay(3500).animate({ "margin-top": `-=${height}`, opacity: 0 }, 'slow', function () {
+    $('#layerContent').hide();
+});
 
 $(document).ready(function () {
     $('#layerContainer').fadeOut(function () { $('#layerContainer').css('filter', 'opacity(100%)'); }).delay().fadeIn('slow');

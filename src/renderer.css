@@ -8,16 +8,14 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     position: fixed;
     padding: 1rem;
     margin-left: -1rem;
-    top: 0rem;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 
 #layerConfigs {
     position: fixed;
     padding: 1rem;
     margin-left: -1rem;
-    top: 0rem;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 }

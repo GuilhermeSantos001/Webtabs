@@ -26,101 +26,98 @@
       </div>
     </div>
     <div id="layerUrladd" class="bg-dark text-white" style="z-index: 2;">
-      <div class="form-group">
+      <div class="container-fluid">
         <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Ações</h1>
-        <div class="mt-0">
-          <div class="border border-light p-2">
-            <h4 class="text-uppercase font-weight-bold">Pagina</h4>
-            <label for="input_add_url">
-              Adicionar novo URL
-              <p class="mb-0" style="font-size: small;">
-                Escreva/Cole o URL
-              </p>
-            </label>
-          </div>
-          <input type="text" class="form-control border border-light bg-dark text-white mt-2" id="input_add_url"
-            placeholder="Insira o url...">
-          <div class="border border-light p-2 mt-2">
-            <h4 class="text-uppercase font-weight-bold">Capturar</h4>
-            <label for="input_add_url">
-              Faça a captura da tela do seu monitor ou de uma janela aberta.
-            </label>
-          </div>
-          <div id="screen_selection"></div>
-          <div class="border border-light p-2 mt-2">
-            <h4 class="text-uppercase font-weight-bold">Imagem</h4>
-            <label for="input_add_url">
-              Adicione suas belas fotos!
-              <p class="mb-0" style="font-size: small;">
-                Escreva/Cole o URL
-              </p>
-            </label>
-          </div>
-          <input type="text" class="form-control border border-light bg-dark text-white mt-2" id="input_add_url"
-            placeholder="Insira o url...">
-          <div class="form-control custom-file border border-light bg-dark text-white mt-2">
+        <div class="border border-light p-2">
+          <h4 class="text-uppercase font-weight-bold">Pagina</h4>
+          <label for="input_add_url">
+            Adicionar novo URL
+            <p class="mb-0" style="font-size: small;">
+              Escreva/Cole o URL
+            </p>
+          </label>
+        </div>
+        <input type="text" class="form-control border border-light bg-dark text-white mt-2" id="input_add_url"
+          placeholder="Insira o url...">
+        <button type="button" class="btn btn-lg btn-block btn-outline-light mt-2" id="button_add_url">Adicionar</button>
+        <div class="border border-light p-2 mt-2">
+          <h4 class="text-uppercase font-weight-bold">Capturar</h4>
+          <label for="screen_selection">
+            Faça a captura da tela do seu monitor ou de uma janela aberta.
+          </label>
+        </div>
+        <div id="screen_selection"></div>
+        <div class="border border-light p-2 mt-2">
+          <h4 class="text-uppercase font-weight-bold">Imagem</h4>
+          <label for="input_add_photo">
+            Adicione suas belas fotos!
+            <p class="mb-0" style="font-size: small;">
+              Escreva/Cole o URL
+            </p>
+          </label>
+        </div>
+        <input type="text" class="form-control border border-light bg-dark text-white mt-2" id="input_add_photo"
+          placeholder="Insira o url...">
+        <!-- <div class="form-control custom-file border border-light bg-dark text-white mt-2">
             <input type="file" class="custom-file-input" id="search_image_from_computer">
             <label class="custom-file-label" for="search_image_from_computer">Seleccionar Archivo</label>
-          </div>
-          <button type="button" class="btn btn-lg btn-block btn-outline-light mt-2"
-            id="button_add_url">Adicionar</button>
-        </div>
+          </div> -->
         <button type="button" class="btn btn-lg btn-block btn-outline-light mt-2" id="button_exit_url">Voltar</button>
       </div>
     </div>
     <div id="layerConfigs" class="bg-dark text-white" style="z-index: 2;">
-      <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Configurações</h1>
-      <ul class="list-group">
-        <li class="list-group-item border border-light bg-dark text-white mb-2">
-          <div class="form-group">
-            <label for="form-title">
-              Titulo
-              <p class="mb-0">
-                Esse titulo é usado no cabeçalho da janela inicial do programa.
-              </p>
-            </label>
-            <input type="text" class="form-control border border-light bg-dark text-white" id="form-title"
-              placeholder="Insira um titulo...">
-          </div>
-        </li>
-        <li class="list-group-item border border-light bg-dark text-white mb-2">
-          <div class="form-group">
-            <label for="form-slogan">
-              Slogan
-              <p class="mb-0">
-                Esse slogan é usado a baixo do titulo no cabeçalho da janela inicial do programa.
-              </p>
-            </label>
-            <input type="text" class="form-control border border-light bg-dark text-white" id="form-slogan"
-              placeholder="Insira um slogan...">
-          </div>
-        </li>
-        <li class="list-group-item border border-light bg-dark text-white mb-2">
-          <div class="form-group">
-            <label for="form-frametime">
-              Tempo de transição
-              <p class="mb-0">
-                Defina o tempo que o site deve ficar visivel até que outro seja exibido.
-              </p>
-            </label>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="radio_horas" name="customRadio" class="custom-control-input">
-              <label id="label_radio_horas" class="custom-control-label" for="radio_horas">Horas</label>
+      <div class="container-fluid">
+        <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Configurações</h1>
+        <ul class="list-group">
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-title">
+                Titulo
+                <p class="mb-0">
+                  Esse titulo é usado no cabeçalho da janela inicial do programa.
+                </p>
+              </label>
+              <input type="text" class="form-control border border-light bg-dark text-white" id="form-title"
+                placeholder="Insira um titulo...">
             </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="radio_minutos" name="customRadio" class="custom-control-input">
-              <label id="label_radio_minutos" class="custom-control-label" for="radio_minutos">Minutos</label>
+          </li>
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-slogan">
+                Slogan
+                <p class="mb-0">
+                  Esse slogan é usado a baixo do titulo no cabeçalho da janela inicial do programa.
+                </p>
+              </label>
+              <input type="text" class="form-control border border-light bg-dark text-white" id="form-slogan"
+                placeholder="Insira um slogan...">
             </div>
-            <div class="custom-control custom-radio">
-              <input type="radio" id="radio_segundos" name="customRadio" class="custom-control-input">
-              <label id="label_radio_segundos" class="custom-control-label" for="radio_segundos">Segundos</label>
+          </li>
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-frametime">
+                Tempo de transição
+                <p class="mb-0">
+                  Defina o tempo que o site deve ficar visivel até que outro seja exibido.
+                </p>
+              </label>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="radio_horas" name="customRadio" class="custom-control-input">
+                <label id="label_radio_horas" class="custom-control-label" for="radio_horas">Horas</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="radio_minutos" name="customRadio" class="custom-control-input">
+                <label id="label_radio_minutos" class="custom-control-label" for="radio_minutos">Minutos</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="radio_segundos" name="customRadio" class="custom-control-input">
+                <label id="label_radio_segundos" class="custom-control-label" for="radio_segundos">Segundos</label>
+              </div>
+              <input id="input-frametime" type="range" min="1" max="60" value="1" class="custom-range">
+              <p id="input-demo-frametime" class="mb-0"></p>
             </div>
-            <input id="input-frametime" type="range" min="1" max="60" value="1" class="custom-range">
-            <p id="input-demo-frametime" class="mb-0"></p>
-          </div>
-        </li>
-      </ul>
-      <div>
+          </li>
+        </ul>
         <button type="button" class="btn btn-lg btn-block btn-outline-light" id="button_exit_global">Voltar</button>
       </div>
     </div>
