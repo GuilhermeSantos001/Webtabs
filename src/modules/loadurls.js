@@ -98,6 +98,22 @@ function load() {
     }
 };
 
+function remove_url(index) {
+    let fs = Electron.remote.require('fs'),
+        file = localPath('src/config/data/urls.json');
+    if (localPathExists(file)) {
+        fileProcess = 'reading...';
+        let data = JSON.parse(fs.readFileSync(file, { encoding: 'utf8' }));
+        if (data instanceof Array === true) {
+            fileProcess = 'done';
+            data.splice(index, 1);
+            urls = data;
+            save();
+        }
+    }
+
+};
+
 /**
  * PROCESS RENDER
  */
@@ -224,7 +240,6 @@ function DESKTOPCAPTURER() {
     const { desktopCapturer } = Electron;
     desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
         for (const source of sources) {
-            console.log('teste', i);
             if (source.id === urls[i][0]["id"] && source.name === urls[i][0]["name"]) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
@@ -246,6 +261,23 @@ function DESKTOPCAPTURER() {
                     desktopCapturer_handleError(e);
                     break;
                 }
+            } else {
+                /**
+                 * Faz a exclusão do monitor no arquivo de configuração
+                 * caso o mesmo não seja encontrado no sistema.
+                 */
+                let remove;
+                sources.map(source => {
+                    if (urls[i][0]["type_url"] === "stream") {
+                        if (source.id != urls[i][0]["id"] &&
+                            source.name === urls[i][0]["name"] ||
+                            source.name != urls[i][0]["name"] &&
+                            source.id === urls[i][0]["id"]) {
+                            remove = true;
+                        }
+                    }
+                });
+                if (remove) remove_url(i);
             }
         }
     });
@@ -412,15 +444,14 @@ setInterval(function () {
                 frame = document.getElementById('frame');
             }
 
-            if (!frame.fadeInInitial) {
-                frame.fadeInInitial = 'processing...';
-                $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
-                    frame.fadeInInitial = 'complete!';
-                });
-            }
-
             frame.listener = function () {
                 if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                if (!frame.fadeInInitial) {
+                    frame.fadeInInitial = 'processing...';
+                    $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
+                        frame.fadeInInitial = 'complete!';
+                    });
+                }
                 frame.setZoomLevel(urls[i - 1][1]);
                 interval = setInterval(function () {
                     let frametime = ConfigGlobal.FRAMETIME / 1000;
