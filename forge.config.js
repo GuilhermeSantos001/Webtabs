@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
     "packagerConfig": {},
     "electronPackagerConfig": {
-        "icon": path.resolve(__dirname, 'src/img/win/icon.ico')
+        "packageManager": 'npm',
+        "icon": path.resolve(__dirname, "src/img/logo")
     },
     "makers": [
         {
@@ -39,11 +40,6 @@ module.exports = {
                             "name": "main_window",
                             "html": "./src/index.html",
                             "js": "./src/renderer.js"
-                        },
-                        {
-                            "name": "editor_window",
-                            "html": "./src/editor/index.html",
-                            "js": "./src/editor/index.js"
                         }
                     ]
                 }

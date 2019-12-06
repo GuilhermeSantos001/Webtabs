@@ -1,4 +1,5 @@
 const { app, screen, Menu, BrowserWindow } = require('electron');
+const THISDEVELOPMENT = require('electron-is-dev');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -13,6 +14,14 @@ const createWindow = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   const template = [
     {
+      label: 'Janela', submenu: [
+        { label: 'Tela Cheia', role: 'togglefullscreen' },
+        { role: 'toggleDevTools' },
+        { label: 'Recarregar', role: 'reload' },
+        { label: 'Fechar', role: 'close' }
+      ]
+    },
+    {
       label: 'Exibição', submenu: [
         { label: 'Executar', type: 'radio', checked: true },
         { id: 'PAUSE', label: 'Pausar', type: 'radio' }
@@ -20,6 +29,36 @@ const createWindow = () => {
     },
     {
       label: 'Frame', submenu: [
+        {
+          label: 'Abrir o menu de ações',
+          accelerator: 'F9',
+          click: () => {
+            mainWindow.webContents.send('window_configs_urls');
+          }
+        },
+        {
+          label: 'Configurações',
+          accelerator: 'F10',
+          click: () => {
+            mainWindow.webContents.send('window_configs_global');
+          }
+        },
+        {
+          label: 'Barra de Rolagem', submenu: [
+            {
+              label: 'Exibir',
+              click: () => {
+                mainWindow.webContents.send('show_scroll_page');
+              }
+            },
+            {
+              label: 'Ocultar',
+              click: () => {
+                mainWindow.webContents.send('hide_scroll_page');
+              }
+            }
+          ]
+        },
         {
           label: 'Zoom', submenu: [
             {
@@ -59,15 +98,7 @@ const createWindow = () => {
           ]
         }
       ]
-    },
-    { type: 'separator' },
-    {
-      label: 'Abrir Editor',
-      click: () => {
-        mainWindow.webContents.send('open_editor');
-      }
-    },
-    { role: 'quit' }
+    }
   ];
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
@@ -88,7 +119,7 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (THISDEVELOPMENT) mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
