@@ -1,6 +1,7 @@
 import $ from 'jquery/dist/jquery';
 import * as Electron from 'electron';
 import { localPath, localPathExists, localPathCreate } from './localPath';
+import * as Alert from './alert';
 
 let data;
 if (!localPathExists(localPath('src/config/data/urls.json'))) localPathCreate(localPath('src/config/data/urls.json'));
@@ -39,17 +40,7 @@ $(document).ready(function () {
             data.push([url, 0]);
             fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
                 $('#input_add_url').val('');
-                $('#layerContainer').append(`\
-                <div id="layerAlert" class="alert alert-warning border border-light bg-dark text-white" role="alert" \
-                style="z-index: 99; width: 98vw; \
-                filter:opacity(0%); position: fixed; top: 1rem; \
-                left: 1rem; padding: 1rem;"> \
-                <strong id="alert_text">Testando um Alerta!!!</strong> \
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
-                    <span aria-hidden="true">&times;</span> \
-                </button> \
-                </div>`.replace(/\s{2,}/g, ''));
-                $('#layerAlert').hide().delay().css('filter', 'opacity(100%)').delay().fadeIn('slow');
+                Alert.info(`A URL "${url}" foi adicionada com sucesso!!!`);
                 mainWindow.webContents.send('add_url');
             });
         }

@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'jquery/dist/jquery';
 import 'popper.js/dist/popper';
 import 'bootstrap/dist/js/bootstrap';
+import 'material-design-icons/iconfont/material-icons.css';
 import './renderer.css'
 
 /**
