@@ -2,6 +2,7 @@ import $ from 'jquery/dist/jquery';
 import * as Electron from 'electron';
 import { localPath, localPathExists, localPathCreate } from './localPath';
 import * as Alert from './alert';
+import chkurl from './checking_url';
 
 let data;
 if (!localPathExists(localPath('src/config/data/urls.json'))) localPathCreate(localPath('src/config/data/urls.json'));
@@ -37,6 +38,9 @@ $(document).ready(function () {
         if (fs.existsSync(file)) {
             let url = $('#input_add_url').val() || '';
             if (!url || typeof url != 'string' || url.length <= 0) return;
+            return chkurl(url, e => {
+                console.log(e);
+            });
             data.push([url, 0]);
             fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
                 $('#input_add_url').val('');

@@ -20,9 +20,8 @@ function info(text) {
         $(`#layerAlert${index}`).fadeOut("slow", function () {
             $(this).hide();
             clearTimeout(event);
-            if (document.getElementById(`layerAlert${index}`)) {
+            if (document.getElementById(`layerAlert${index}`))
                 document.getElementById(`layerAlert${index}`).remove();
-            }
         });
     }
     document.getElementById(`alert_close${i}`).onclick = alertClose.bind();
