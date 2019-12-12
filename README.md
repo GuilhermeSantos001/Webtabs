@@ -1,17 +1,26 @@
-# :rocket: [Ir a versão de Produção] :rocket:
+# !!! ATENÇÂO !!!
+Você está visualizando a versão em desenvolvimento e a mesma pode apresentar
+falhas.
 
-# :warning:ATENÇÂO:warning: 
-#### :heavy_exclamation_mark:Você está visualizando a versão em desenvolvimento e a mesma pode apresentar falhas.:heavy_exclamation_mark:
+# Introdução
+Faça parte do desenvolvimento, seja um colaborador.
 
-# Webtabs :1st_place_medal: :star2: 
-Visualizar suas páginas favoritas como slides, nunca foi tão fácil.
+# REQUISITOS
+- Programas
+  - [Atom]
+  - [Git]
+    - [GitAhead]
+  - [Node.js]
+    - [Node-gyp]
+  - [Yarn]
+  - [Winrar]
 
-# REQUISITOS :pushpin:
-- Computador
-  - Processador de 3 GHz (com suporte ao conjunto de instruções SSE2 ou superior)
-  - 2 GB de RAM
-  - 2 GB de espaço em disco disponível
-  - Suporte para DirectX v9.0c ou melhor
-  - Windows 7, Windows 8 ou Windows 10
-  
-  [Ir a versão de Produção]: https://github.com/GuilhermeSantos001/Webtabs/tree/master
+###### [Ir a versão de Produção]
+[Ir a versão de Produção]: https://github.com/GuilhermeSantos001/Webtabs/tree/master
+[Atom]: https://atom.io/
+[Git]: https://git-scm.com/
+[GitAhead]: https://gitahead.github.io/gitahead.com/
+[Node.js]: https://nodejs.org/
+[Node-gyp]: https://github.com/nodejs/node-gyp#installation
+[Yarn]: https://yarnpkg.com/pt-BR/docs/install
+[Winrar]: https://www.win-rar.com
