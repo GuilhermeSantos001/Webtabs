@@ -1,27 +1,27 @@
-import * as NormalizeUrl from 'normalize-url';
-import * as ping from 'net-ping';
-import * as request from 'resquest';
+import * as Electron from 'electron';
 
 export default function chkurl(url, callback) {
     if (typeof url != 'string' ||
         typeof url === 'string' &&
         url.length <= 0) return;
 
-    url = NormalizeUrl(url);
+    let http;
+    if (url.substring(0, 5).match(/https/)) {
+        http = Electron.remote.require('https');
+    } else {
+        http = Electron.remote.require('http');
+    }
 
-    var session = ping.createSession();
+    if (!http) return callback(false);
 
-    session.pingHost(url, error => {
-        if (error)
-            callback(false);
-        else {
-            request({ method: 'HEAD', uri: url }, function (error, response) {
-                if (!error && response.statusCode >= 200 && response.statusCode <= 205) {
-                    callback(true);
-                } else {
-                    callback(false);
-                }
-            })
+    http.get(url, res => {
+        const { statusCode } = res;
+        if (statusCode >= 200 && statusCode <= 205) {
+            return callback(true);
+        } else {
+            return callback(false);
         }
+    }).on('error', (e) => {
+        return callback(false);
     });
 }

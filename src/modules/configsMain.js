@@ -38,14 +38,14 @@ $(document).ready(function () {
         if (fs.existsSync(file)) {
             let url = $('#input_add_url').val() || '';
             if (!url || typeof url != 'string' || url.length <= 0) return;
-            return chkurl(url, e => {
-                console.log(e);
-            });
-            data.push([url, 0]);
-            fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
-                $('#input_add_url').val('');
-                Alert.info(`A URL "${url}" foi adicionada com sucesso!!!`);
-                mainWindow.webContents.send('add_url');
+            chkurl(url, e => {
+                if (!e) return;
+                data.push([url, 0]);
+                fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
+                    $('#input_add_url').val('');
+                    Alert.info(`A URL "${url}" foi adicionada com sucesso!!!`);
+                    mainWindow.webContents.send('add_url');
+                });
             });
         }
     };

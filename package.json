@@ -22,10 +22,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "jquery": "^3.4.1",
     "material-design-icons": "^3.0.1",
-    "net-ping": "^1.2.3",
-    "normalize-url": "^4.5.0",
-    "popper.js": "^1.16.0",
-    "request": "^2.88.0"
+    "popper.js": "^1.16.0"
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.45",
@@ -35,7 +32,7 @@
     "@electron-forge/maker-zip": "6.0.0-beta.45",
     "@electron-forge/plugin-webpack": "6.0.0-beta.45",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
-    "css-loader": "^3.2.1",
+    "css-loader": "^3.3.2",
     "electron": "7.1.0",
     "electron-is-dev": "^1.1.0",
     "file-loader": "^4.3.0",
