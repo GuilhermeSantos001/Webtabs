@@ -39,7 +39,9 @@ $(document).ready(function () {
             let url = $('#input_add_url').val() || '';
             if (!url || typeof url != 'string' || url.length <= 0) return;
             chkurl(url, e => {
-                if (!e) return;
+                if (!e) {
+                    return Alert.info(`A URL "${url}" não pode ser adicionada!!!`);
+                }
                 data.push([url, 0]);
                 fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
                     $('#input_add_url').val('');

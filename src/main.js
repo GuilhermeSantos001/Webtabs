@@ -63,18 +63,21 @@ const createWindow = () => {
           label: 'Zoom', submenu: [
             {
               label: 'Resetar Zoom',
+              accelerator: 'CommandOrControl+nummult',
               click: () => {
                 mainWindow.webContents.send('render_resetZoom');
               }
             },
             {
               label: 'Aumentar Zoom',
+              accelerator: 'CommandOrControl+numadd',
               click: () => {
                 mainWindow.webContents.send('render_increaseZoom');
               }
             },
             {
               label: 'Dimuir Zoom',
+              accelerator: 'CommandOrControl+numsub',
               click: () => {
                 mainWindow.webContents.send('render_reduceZoom');
               }
@@ -85,12 +88,14 @@ const createWindow = () => {
           label: 'Transição', submenu: [
             {
               label: 'Proximo...',
+              accelerator: 'CommandOrControl+Right',
               click: () => {
                 mainWindow.webContents.send('render_next');
               }
             },
             {
               label: '...Anterior',
+              accelerator: 'CommandOrControl+Left',
               click: () => {
                 mainWindow.webContents.send('render_return');
               }

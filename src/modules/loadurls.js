@@ -127,7 +127,7 @@ function remove_url(index) {
  */
 Electron.ipcRenderer.on('render_resetZoom', () => {
     if (frame) {
-        if (!frame.removeProcess) {
+        if (!frame.removeProcess && typeof frame.setZoomLevel === 'function') {
             frame.setZoomLevel(0);
         }
     }
@@ -135,18 +135,22 @@ Electron.ipcRenderer.on('render_resetZoom', () => {
 
 Electron.ipcRenderer.on('render_increaseZoom', () => {
     if (frame) {
-        if (!frame.removeProcess) {
-            let zoom = frame.getZoomLevel();
-            frame.setZoomLevel(zoom + (frame.getZoomFactor() / 2));
+        if (!frame.removeProcess && typeof frame.getZoomLevel === 'function') {
+            let zoom = frame.getZoomLevel(),
+                value = zoom + (frame.getZoomFactor() / 2);
+            if (Math.floor(value) < 12)
+                frame.setZoomLevel(value);
         }
     }
 });
 
 Electron.ipcRenderer.on('render_reduceZoom', () => {
     if (frame) {
-        if (!frame.removeProcess) {
-            let zoom = frame.getZoomLevel();
-            frame.setZoomLevel(zoom - (frame.getZoomFactor() / 2));
+        if (!frame.removeProcess && typeof frame.getZoomLevel === 'function') {
+            let zoom = frame.getZoomLevel(),
+                value = zoom - (frame.getZoomFactor() / 2);
+            if (Math.floor(value) > -8)
+                frame.setZoomLevel(value);
         }
     }
 });

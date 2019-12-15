@@ -14,14 +14,18 @@ export default function chkurl(url, callback) {
 
     if (!http) return callback(false);
 
-    http.get(url, res => {
-        const { statusCode } = res;
-        if (statusCode >= 200 && statusCode <= 205) {
-            return callback(true);
-        } else {
+    try {
+        http.get(url, res => {
+            const { statusCode } = res;
+            if (statusCode >= 200 && statusCode <= 205) {
+                return callback(true);
+            } else {
+                return callback(false);
+            }
+        }).on('error', (e) => {
             return callback(false);
-        }
-    }).on('error', (e) => {
+        });
+    } catch (e) {
         return callback(false);
-    });
+    }
 }

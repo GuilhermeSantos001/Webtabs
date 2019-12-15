@@ -67,7 +67,7 @@ if (THISDEVELOPMENT) {
         'font-size: 290%; color: #292929;',
         'font-size: 250%; color: #292929;',
     );
-    console.log('%c✨ AMBIENTE DE DESENVOLVIMENTO ✨', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+    console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 3.0.0-beta.4 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 }
 
 /**
@@ -76,9 +76,11 @@ if (THISDEVELOPMENT) {
 Electron.ipcRenderer.on('show_scroll_page', () => {
     $('html, body').css('overflowX', 'auto');
     $('html, body').css('overflowY', 'auto');
+    try { $('.layerFrame').children()[0].insertCSS('body, html { overflow-y: auto; overflow-x: auto; }'); } catch (e) { };
 });
 
 Electron.ipcRenderer.on('hide_scroll_page', () => {
     $('html, body').css('overflowX', 'hidden');
     $('html, body').css('overflowY', 'hidden');
+    try { $('.layerFrame').children()[0].insertCSS('body, html { overflow-y: hidden; overflow-x: hidden; }'); } catch (e) { };
 });
