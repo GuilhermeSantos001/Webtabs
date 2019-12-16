@@ -6,7 +6,7 @@
   [
     {
       "type_url": "video",
-      "url": "https://www.youtube.com/embed/lgtpOMQMUsY?autoplay=1&loop=1&playlist=lgtpOMQMUsY&color=white&controls=2"
+      "url": "https://www.youtube.com/embed/Bey4XXJAqS8?autoplay=1&loop=1&playlist=lgtpOMQMUsY&color=white&controls=2&start=8"
     }
   ],
   [
@@ -17,7 +17,7 @@
   ],
   [
     "https://sla.performancelab.com.br/login.php?uri=%2Fvlab_rel_eventos.php",
-    -0.047722557505166074
+    0
   ],
   [
     "https://jsbin.com/hihogozocu/1/edit?html,css,js",

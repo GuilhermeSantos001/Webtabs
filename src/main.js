@@ -18,7 +18,28 @@ const createWindow = () => {
         { label: 'Tela Cheia', role: 'togglefullscreen' },
         { role: 'toggleDevTools' },
         { label: 'Recarregar', role: 'reload' },
-        { label: 'Fechar', role: 'close' }
+        { label: 'Fechar', role: 'close' },
+        {
+          label: 'Barra de menu',
+          submenu: [
+            {
+              label: 'Exibir',
+              accelerator: 'Shift+F1',
+              click: () => {
+                mainWindow.setMenuBarVisibility(true);
+                mainWindow.setAutoHideMenuBar(false);
+              }
+            },
+            {
+              label: 'Ocultar',
+              accelerator: 'CommandOrControl+F1',
+              click: () => {
+                mainWindow.setMenuBarVisibility(false);
+                mainWindow.setAutoHideMenuBar(true);
+              }
+            }
+          ]
+        }
       ]
     },
     {
