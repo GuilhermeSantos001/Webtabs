@@ -18,7 +18,6 @@ const createWindow = () => {
         { label: 'Tela Cheia', role: 'togglefullscreen' },
         { role: 'toggleDevTools' },
         { label: 'Recarregar', role: 'reload' },
-        { label: 'Fechar', role: 'close' },
         {
           label: 'Barra de menu',
           submenu: [
@@ -39,7 +38,8 @@ const createWindow = () => {
               }
             }
           ]
-        }
+        },
+        { label: 'Fechar', role: 'close' }
       ]
     },
     {
