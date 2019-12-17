@@ -2,7 +2,7 @@ import $ from 'jquery/dist/jquery';
 import * as Electron from 'electron';
 import { localPath, localPathExists, localPathCreate } from './localPath';
 
-const THISDEVELOPMENT = require('electron-is-dev');
+const THISDEVELOPMENT = Electron.remote.require('electron-is-dev');
 
 let ConfigGlobal;
 if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
