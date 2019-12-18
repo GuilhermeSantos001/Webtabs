@@ -19,8 +19,6 @@ import './modules/configsMain';
 import './modules/configsGlobal';
 import { localPath, localPathExists, localPathCreate } from './modules/localPath';
 
-const THISDEVELOPMENT = require('electron-is-dev');
-
 let data;
 if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
 if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.json'))) {
@@ -56,19 +54,17 @@ $(document).ready(function () {
     $('#layerContainer').fadeOut(function () { $('#layerContainer').css('filter', 'opacity(100%)'); }).delay().fadeIn('slow');
 });
 
-if (THISDEVELOPMENT) {
-    console.log(
-        '%c✩%c✩%c✩ %cWEBTABS %c✩%c✩%c✩',
-        'font-size: 250%; color: #292929;',
-        'font-size: 290%; color: #292929;',
-        'font-size: 250%; color: #292929;',
-        'color: #501cc9; font-size: 300%;',
-        'font-size: 250%; color: #292929;',
-        'font-size: 290%; color: #292929;',
-        'font-size: 250%; color: #292929;',
-    );
-    console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 3.0.0-beta.4 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
-}
+console.log(
+    '%c✩%c✩%c✩ %cWEBTABS %c✩%c✩%c✩',
+    'font-size: 250%; color: #292929;',
+    'font-size: 290%; color: #292929;',
+    'font-size: 250%; color: #292929;',
+    'color: #501cc9; font-size: 300%;',
+    'font-size: 250%; color: #292929;',
+    'font-size: 290%; color: #292929;',
+    'font-size: 250%; color: #292929;',
+);
+console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 3.0.0-beta.4 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 
 /**
  * Menu Events

@@ -2,8 +2,6 @@ import $ from 'jquery/dist/jquery';
 import * as Electron from 'electron';
 import { localPath, localPathExists, localPathCreate } from './localPath';
 
-const THISDEVELOPMENT = Electron.remote.require('electron-is-dev');
-
 let ConfigGlobal;
 if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
 if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.json'))) {
@@ -300,7 +298,7 @@ function DESKTOPCAPTURER() {
             frame.fadeInInitial = 'processing...';
             $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
                 frame.fadeInInitial = 'complete!';
-                if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
                 interval = setInterval(function () {
                     let frametime = ConfigGlobal.FRAMETIME / 1000;
                     if (frame.tick === undefined ||
@@ -312,19 +310,17 @@ function DESKTOPCAPTURER() {
                         if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
                         else frame.tick++;
                     }
-                    if (THISDEVELOPMENT) {
-                        if (menu.getMenuItemById('PAUSE').checked)
-                            console.log(
-                                '%c➠ LOG: ⚠ O frame(Stream) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                                'color: #e39b0b; padding: 8px; font-size: 150%;'
-                            );
+                    if (menu.getMenuItemById('PAUSE').checked)
                         console.log(
-                            `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                            'color: #405cff; padding: 8px; font-size: 150%;'
+                            '%c➠ LOG: ⚠ O frame(Stream) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                            'color: #e39b0b; padding: 8px; font-size: 150%;'
                         );
-                    }
+                    console.log(
+                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                        'color: #405cff; padding: 8px; font-size: 150%;'
+                    );
                     if (frame.tick >= frametime) {
-                        if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Stream) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                        console.log('%c➠ LOG: Frame(Stream) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
                         if (!frame || menu.getMenuItemById('PAUSE').checked ||
                             frame.fadeInInitial === 'processing...' ||
                             fileProcess === 'write...' ||
@@ -353,7 +349,7 @@ function IMGRENDER() {
         frame.fadeInInitial = 'processing...';
         $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
-            if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
             interval = setInterval(function () {
                 let frametime = ConfigGlobal.FRAMETIME / 1000;
                 if (frame.tick === undefined ||
@@ -365,19 +361,17 @@ function IMGRENDER() {
                     if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
                     else frame.tick++;
                 }
-                if (THISDEVELOPMENT) {
-                    if (menu.getMenuItemById('PAUSE').checked)
-                        console.log(
-                            '%c➠ LOG: ⚠ O frame(Imagem) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                            'color: #e39b0b; padding: 8px; font-size: 150%;'
-                        );
+                if (menu.getMenuItemById('PAUSE').checked)
                     console.log(
-                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                        'color: #405cff; padding: 8px; font-size: 150%;'
+                        '%c➠ LOG: ⚠ O frame(Imagem) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                        'color: #e39b0b; padding: 8px; font-size: 150%;'
                     );
-                }
+                console.log(
+                    `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                    'color: #405cff; padding: 8px; font-size: 150%;'
+                );
                 if (frame.tick >= frametime) {
-                    if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Imagem) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                    console.log('%c➠ LOG: Frame(Imagem) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
                     if (!frame || menu.getMenuItemById('PAUSE').checked ||
                         frame.fadeInInitial === 'processing...' ||
                         fileProcess === 'write...' ||
@@ -401,7 +395,7 @@ function VIDEORENDER() {
         frame.fadeInInitial = 'processing...';
         $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
-            if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
             interval = setInterval(function () {
                 let frametime = ConfigGlobal.FRAMETIME / 1000;
                 if (frame.tick === undefined ||
@@ -413,19 +407,17 @@ function VIDEORENDER() {
                     if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
                     else frame.tick++;
                 }
-                if (THISDEVELOPMENT) {
-                    if (menu.getMenuItemById('PAUSE').checked)
-                        console.log(
-                            '%c➠ LOG: ⚠ O frame(Video) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                            'color: #e39b0b; padding: 8px; font-size: 150%;'
-                        );
+                if (menu.getMenuItemById('PAUSE').checked)
                     console.log(
-                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                        'color: #405cff; padding: 8px; font-size: 150%;'
+                        '%c➠ LOG: ⚠ O frame(Video) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                        'color: #e39b0b; padding: 8px; font-size: 150%;'
                     );
-                }
+                console.log(
+                    `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                    'color: #405cff; padding: 8px; font-size: 150%;'
+                );
                 if (frame.tick >= frametime) {
-                    if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame(Video) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                    console.log('%c➠ LOG: Frame(Video) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
                     if (!frame || menu.getMenuItemById('PAUSE').checked ||
                         frame.fadeInInitial === 'processing...' ||
                         fileProcess === 'write...' ||
@@ -449,7 +441,7 @@ setInterval(function () {
             }
 
             frame.listener = function () {
-                if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
                 if (!frame.fadeInInitial) {
                     frame.fadeInInitial = 'processing...';
                     $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
@@ -468,19 +460,17 @@ setInterval(function () {
                         if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
                         else frame.tick++;
                     }
-                    if (THISDEVELOPMENT) {
-                        if (menu.getMenuItemById('PAUSE').checked)
-                            console.log(
-                                '%c➠ LOG: ⚠ O frame está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                                'color: #e39b0b; padding: 8px; font-size: 150%;'
-                            );
+                    if (menu.getMenuItemById('PAUSE').checked)
                         console.log(
-                            `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                            'color: #405cff; padding: 8px; font-size: 150%;'
+                            '%c➠ LOG: ⚠ O frame está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
+                            'color: #e39b0b; padding: 8px; font-size: 150%;'
                         );
-                    }
+                    console.log(
+                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
+                        'color: #405cff; padding: 8px; font-size: 150%;'
+                    );
                     if (frame.tick >= frametime) {
-                        if (THISDEVELOPMENT) console.log('%c➠ LOG: Frame Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
+                        console.log('%c➠ LOG: Frame Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
                         if (!frame || frame.isLoading() ||
                             frame.isLoadingMainFrame() ||
                             frame.isWaitingForResponse() ||
