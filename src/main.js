@@ -64,6 +64,25 @@ const createWindow = () => {
           }
         },
         {
+          label: 'Mouse',
+          submenu: [
+            {
+              label: 'Exibir',
+              accelerator: 'Shift+F2',
+              click: () => {
+                mainWindow.webContents.send('window_show_cursor');
+              }
+            },
+            {
+              label: 'Ocultar',
+              accelerator: 'CommandOrControl+F2',
+              click: () => {
+                mainWindow.webContents.send('window_hide_cursor');
+              }
+            }
+          ]
+        },
+        {
           label: 'Barra de Rolagem', submenu: [
             {
               label: 'Exibir',

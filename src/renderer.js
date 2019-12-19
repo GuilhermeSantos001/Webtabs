@@ -73,10 +73,19 @@ Electron.ipcRenderer.on('show_scroll_page', () => {
     $('html, body').css('overflowX', 'auto');
     $('html, body').css('overflowY', 'auto');
     try { $('.layerFrame').children()[0].insertCSS('body, html { overflow-y: auto; overflow-x: auto; }'); } catch (e) { };
+
 });
 
 Electron.ipcRenderer.on('hide_scroll_page', () => {
     $('html, body').css('overflowX', 'hidden');
     $('html, body').css('overflowY', 'hidden');
     try { $('.layerFrame').children()[0].insertCSS('body, html { overflow-y: hidden; overflow-x: hidden; }'); } catch (e) { };
+});
+
+Electron.ipcRenderer.on('window_show_cursor', () => {
+    Electron.remote.getCurrentWindow().webContents.insertCSS('* { cursor: auto; pointer-events: auto; user-select: auto;}');
+});
+
+Electron.ipcRenderer.on('window_hide_cursor', () => {
+    Electron.remote.getCurrentWindow().webContents.insertCSS('* { cursor: none; pointer-events: none; user-select: none;}');
 });

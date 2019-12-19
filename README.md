@@ -13,6 +13,7 @@ Faça parte do desenvolvimento, seja um colaborador.
   - [Node.js]
     - [Node-gyp]
   - [Winrar]
+  - [Inno Setup]
 
 ###### [Ir a versão de Produção]
 [Ir a versão de Produção]: https://github.com/GuilhermeSantos001/Webtabs/tree/master
@@ -22,3 +23,4 @@ Faça parte do desenvolvimento, seja um colaborador.
 [Node.js]: https://nodejs.org/
 [Node-gyp]: https://github.com/nodejs/node-gyp#installation
 [Winrar]: https://www.win-rar.com
+[Inno Setup]: http://www.jrsoftware.org/isdl.php
