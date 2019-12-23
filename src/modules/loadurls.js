@@ -358,14 +358,14 @@ function frameInterval(type) {
         !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
         if (frame.tickReset) frame.tickReset = null;
         frame.tick = (() => {
-            const date = new Date();
+            let date = new Date();
             if (frametimetype === 1) {
                 date.setHours(date.getHours() + frametime);
             } else if (frametimetype === 2) {
-                date.setHours(date.getMinutes() + frametime);
+                date.setMinutes(date.getMinutes() + frametime);
 
             } else if (frametimetype === 3) {
-                date.setHours(date.getSeconds() + frametime);
+                date.setSeconds(date.getSeconds() + frametime);
             }
             let days = [
                 'Domingo',
@@ -393,7 +393,7 @@ function frameInterval(type) {
             return `${days[date.getDay()]} ${months[date.getMonth()]} ${date.getDate()} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
         })();
         frame.ticknow = () => {
-            const date = new Date();
+            let date = new Date();
             let days = [
                 'Domingo',
                 'Segunda',
