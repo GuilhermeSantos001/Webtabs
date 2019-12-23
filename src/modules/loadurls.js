@@ -3,21 +3,23 @@ import * as Electron from 'electron';
 import { localPath, localPathExists, localPathCreate } from './localPath';
 
 let ConfigGlobal;
-if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
-if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.json'))) {
-    ConfigGlobal = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/global.json'), 'utf8')) || [];
-} else {
-    ConfigGlobal = {
-        "APPNAME": "WEBTABS",
-        "TITLE": "GRUPO MAVE 2019",
-        "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-        "VERSION": "v3.0.0-rebuild",
-        "FRAMEIDENTIFIER": 2,
-        "FRAMETIME": 120000,
-        "FRAMETIMETYPE": 2
+loadConfigGlobal();
+function loadConfigGlobal() {
+    if (!localPathExists(localPath('src/config/data/global.json'))) localPathCreate(localPath('src/config/data/global.json'));
+    if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.json'))) {
+        ConfigGlobal = JSON.parse(Electron.remote.require('fs').readFileSync(localPath('src/config/data/global.json'), 'utf8')) || [];
+    } else {
+        ConfigGlobal = {
+            "APPNAME": "WEBTABS",
+            "TITLE": "GRUPO MAVE 2019",
+            "SLOGAN": "Você e seu Patrimônio em boas mãos!",
+            "VERSION": "v3.0.0-rebuild",
+            "FRAMETIME": 2,
+            "FRAMETIMETYPE": 2
+        }
+        Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
     }
-    Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
-}
+};
 
 let data_urls;
 if (!localPathExists(localPath('src/config/data/urls.json'))) localPathCreate(localPath('src/config/data/urls.json'));
@@ -299,35 +301,7 @@ function DESKTOPCAPTURER() {
             $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
                 frame.fadeInInitial = 'complete!';
                 console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
-                interval = setInterval(function () {
-                    let frametime = ConfigGlobal.FRAMETIME / 1000;
-                    if (frame.tick === undefined ||
-                        !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
-                        if (frame.tickReset) frame.tickReset = null;
-                        frame.tick = 0;
-                    }
-                    if (frame.tick <= frametime) {
-                        if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
-                        else frame.tick++;
-                    }
-                    if (menu.getMenuItemById('PAUSE').checked)
-                        console.log(
-                            '%c➠ LOG: ⚠ O frame(Stream) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                            'color: #e39b0b; padding: 8px; font-size: 150%;'
-                        );
-                    console.log(
-                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                        'color: #405cff; padding: 8px; font-size: 150%;'
-                    );
-                    if (frame.tick >= frametime) {
-                        console.log('%c➠ LOG: Frame(Stream) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
-                        if (!frame || menu.getMenuItemById('PAUSE').checked ||
-                            frame.fadeInInitial === 'processing...' ||
-                            fileProcess === 'write...' ||
-                            fileProcess === 'reading...') return;
-                        removeFrame();
-                    }
-                }, 1000);
+                interval = setInterval(frameInterval.bind(this, 'Stream'), 1000);
             });
         }
         i++;
@@ -350,35 +324,7 @@ function IMGRENDER() {
         $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
             console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
-            interval = setInterval(function () {
-                let frametime = ConfigGlobal.FRAMETIME / 1000;
-                if (frame.tick === undefined ||
-                    !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
-                    if (frame.tickReset) frame.tickReset = null;
-                    frame.tick = 0;
-                }
-                if (frame.tick <= frametime) {
-                    if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
-                    else frame.tick++;
-                }
-                if (menu.getMenuItemById('PAUSE').checked)
-                    console.log(
-                        '%c➠ LOG: ⚠ O frame(Imagem) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                        'color: #e39b0b; padding: 8px; font-size: 150%;'
-                    );
-                console.log(
-                    `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                    'color: #405cff; padding: 8px; font-size: 150%;'
-                );
-                if (frame.tick >= frametime) {
-                    console.log('%c➠ LOG: Frame(Imagem) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
-                    if (!frame || menu.getMenuItemById('PAUSE').checked ||
-                        frame.fadeInInitial === 'processing...' ||
-                        fileProcess === 'write...' ||
-                        fileProcess === 'reading...') return;
-                    removeFrame();
-                }
-            }, 1000);
+            interval = setInterval(frameInterval.bind(this, 'Imagem'), 1000);
         });
     }
     i++;
@@ -396,39 +342,119 @@ function VIDEORENDER() {
         $(frame).fadeOut(function () { $(frame).css('filter', 'opacity(100%)'); }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
             console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
-            interval = setInterval(function () {
-                let frametime = ConfigGlobal.FRAMETIME / 1000;
-                if (frame.tick === undefined ||
-                    !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
-                    if (frame.tickReset) frame.tickReset = null;
-                    frame.tick = 0;
-                }
-                if (frame.tick <= frametime) {
-                    if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
-                    else frame.tick++;
-                }
-                if (menu.getMenuItemById('PAUSE').checked)
-                    console.log(
-                        '%c➠ LOG: ⚠ O frame(Video) está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                        'color: #e39b0b; padding: 8px; font-size: 150%;'
-                    );
-                console.log(
-                    `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                    'color: #405cff; padding: 8px; font-size: 150%;'
-                );
-                if (frame.tick >= frametime) {
-                    console.log('%c➠ LOG: Frame(Video) Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
-                    if (!frame || menu.getMenuItemById('PAUSE').checked ||
-                        frame.fadeInInitial === 'processing...' ||
-                        fileProcess === 'write...' ||
-                        fileProcess === 'reading...') return;
-                    removeFrame();
-                }
-            }, 1000);
+            interval = setInterval(frameInterval.bind(this, 'video'), 1000);
         });
     }
     i++;
 }
+
+function frameInterval(type) {
+    let frametime = ConfigGlobal.FRAMETIME,
+        frametimetype = ConfigGlobal.FRAMETIMETYPE,
+        frametype = () => {
+            return String(type).toLowerCase() === 'frame' ? 'Frame' : `Frame(${type})`;
+        };
+    if (frame.tick === undefined ||
+        !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
+        if (frame.tickReset) frame.tickReset = null;
+        frame.tick = (() => {
+            const date = new Date();
+            if (frametimetype === 1) {
+                date.setHours(date.getHours() + frametime);
+            } else if (frametimetype === 2) {
+                date.setHours(date.getMinutes() + frametime);
+
+            } else if (frametimetype === 3) {
+                date.setHours(date.getSeconds() + frametime);
+            }
+            let days = [
+                'Domingo',
+                'Segunda',
+                'Terça',
+                'Quarta',
+                'Quinta',
+                'Sexta',
+                'Sabado'
+            ],
+                months = [
+                    'Janeiro',
+                    'Fevereiro',
+                    'Março',
+                    'Abril',
+                    'Maio',
+                    'Junho',
+                    'Julho',
+                    'Agosto',
+                    'Setembro',
+                    'Outubro',
+                    'Novembro',
+                    'Dezembro'
+                ]
+            return `${days[date.getDay()]} ${months[date.getMonth()]} ${date.getDate()} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        })();
+        frame.ticknow = () => {
+            const date = new Date();
+            let days = [
+                'Domingo',
+                'Segunda',
+                'Terça',
+                'Quarta',
+                'Quinta',
+                'Sexta',
+                'Sabado'
+            ],
+                months = [
+                    'Janeiro',
+                    'Fevereiro',
+                    'Março',
+                    'Abril',
+                    'Maio',
+                    'Junho',
+                    'Julho',
+                    'Agosto',
+                    'Setembro',
+                    'Outubro',
+                    'Novembro',
+                    'Dezembro'
+                ]
+            return `${days[date.getDay()]} ${months[date.getMonth()]} ${date.getDate()} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+        }
+    }
+    if (menu.getMenuItemById('PAUSE').checked) {
+        if (!frame.tickReset) frame.tickReset = true;
+        console.log(
+            `%c➠ LOG: ⚠ O ${frametype()} está parado, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠`,
+            'color: #e39b0b; padding: 8px; font-size: 150%;'
+        );
+    }
+    console.log(
+        `%c➠ LOG: Se ${frame.ticknow()} for igual a ${frame.tick}, mude o slide ⌛ `,
+        'color: #405cff; padding: 8px; font-size: 150%;'
+    );
+    if (frame.tick === frame.ticknow()) {
+        console.log(`%c➠ LOG: ${frametype()} Removido ✘`, 'color: #405cff; padding: 8px; font-size: 150%;');
+        if (String(type).toLowerCase() === 'frame') {
+            if (!frame || frame.isLoading() ||
+                frame.isLoadingMainFrame() ||
+                frame.isWaitingForResponse() ||
+                menu.getMenuItemById('PAUSE').checked ||
+                frame.fadeInInitial === 'processing...' ||
+                fileProcess === 'write...' ||
+                fileProcess === 'reading...') return;
+            removeFrame();
+        } else if (
+            String(type).toLowerCase() === 'stream' ||
+            String(type).toLowerCase() === 'imagem' ||
+            String(type).toLowerCase() === 'video'
+        ) {
+            if (!frame || menu.getMenuItemById('PAUSE').checked ||
+                frame.fadeInInitial === 'processing...' ||
+                fileProcess === 'write...' ||
+                fileProcess === 'reading...') return;
+            removeFrame();
+        }
+    }
+};
 
 setInterval(function () {
     if (!frame) {
@@ -449,38 +475,7 @@ setInterval(function () {
                     });
                 }
                 frame.setZoomLevel(urls[i - 1][1]);
-                interval = setInterval(function () {
-                    let frametime = ConfigGlobal.FRAMETIME / 1000;
-                    if (frame.tick === undefined ||
-                        !menu.getMenuItemById('PAUSE').checked && frame.tickReset) {
-                        if (frame.tickReset) frame.tickReset = null;
-                        frame.tick = 0;
-                    }
-                    if (frame.tick <= frametime) {
-                        if (menu.getMenuItemById('PAUSE').checked) { if (!frame.tickReset) frame.tickReset = true; }
-                        else frame.tick++;
-                    }
-                    if (menu.getMenuItemById('PAUSE').checked)
-                        console.log(
-                            '%c➠ LOG: ⚠ O frame está em Pause, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠',
-                            'color: #e39b0b; padding: 8px; font-size: 150%;'
-                        );
-                    console.log(
-                        `%c➠ LOG: Quando ${frame.tick} for maior/igual que ${frametime}, mude o slide ⌛ `,
-                        'color: #405cff; padding: 8px; font-size: 150%;'
-                    );
-                    if (frame.tick >= frametime) {
-                        console.log('%c➠ LOG: Frame Removido ✘', 'color: #405cff; padding: 8px; font-size: 150%;');
-                        if (!frame || frame.isLoading() ||
-                            frame.isLoadingMainFrame() ||
-                            frame.isWaitingForResponse() ||
-                            menu.getMenuItemById('PAUSE').checked ||
-                            frame.fadeInInitial === 'processing...' ||
-                            fileProcess === 'write...' ||
-                            fileProcess === 'reading...') return;
-                        removeFrame();
-                    }
-                }, 1000);
+                interval = setInterval(frameInterval.bind(this, 'Frame'), 1000);
             }
             frame.addEventListener('did-finish-load', frame.listener);
         } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'stream') {
@@ -492,3 +487,10 @@ setInterval(function () {
         }
     }
 }, 1000);
+
+
+
+Electron.ipcRenderer.on('frame_time_refresh', () => {
+    if (!frame.tickReset) frame.tickReset = true;
+    loadConfigGlobal();
+});

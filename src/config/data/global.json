@@ -3,7 +3,6 @@
   "TITLE": "GRUPO MAVE 2019",
   "SLOGAN": "Você e seu Patrimônio em boas mãos!",
   "VERSION": "v3.0.0-rebuild",
-  "FRAMEIDENTIFIER": 2,
-  "FRAMETIME": 120000,
-  "FRAMETIMETYPE": 2
+  "FRAMETIME": 60,
+  "FRAMETIMETYPE": 1
 }

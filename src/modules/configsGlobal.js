@@ -13,8 +13,7 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.j
         "TITLE": "GRUPO MAVE 2019",
         "SLOGAN": "Você e seu Patrimônio em boas mãos!",
         "VERSION": "v3.0.0-rebuild",
-        "FRAMEIDENTIFIER": 2,
-        "FRAMETIME": 120000,
+        "FRAMETIME": 2,
         "FRAMETIMETYPE": 2
     };
 } else {
@@ -23,8 +22,7 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.j
         "TITLE": "GRUPO MAVE 2019",
         "SLOGAN": "Você e seu Patrimônio em boas mãos!",
         "VERSION": "v3.0.0-rebuild",
-        "FRAMEIDENTIFIER": 2,
-        "FRAMETIME": 120000,
+        "FRAMETIME": 2,
         "FRAMETIMETYPE": 2
     }
     Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(data, null, 2), 'utf8');
@@ -34,7 +32,6 @@ let APPNAME = data.APPNAME,
     TITLE = data.TITLE,
     SLOGAN = data.SLOGAN,
     VERSION = data.VERSION,
-    FRAMEIDENTIFIER = data.FRAMEIDENTIFIER,
     FRAMETIME = data.FRAMETIME,
     FRAMETIMETYPE = data.FRAMETIMETYPE;
 
@@ -59,7 +56,6 @@ function titlechange() {
         "TITLE": $('#form-title').val(),
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
-        "FRAMEIDENTIFIER": FRAMEIDENTIFIER,
         "FRAMETIME": FRAMETIME,
         "FRAMETIMETYPE": FRAMETIMETYPE
     }, null, 2), 'utf8');
@@ -83,7 +79,6 @@ function sloganchange() {
         "TITLE": TITLE,
         "SLOGAN": $('#form-slogan').val(),
         "VERSION": VERSION,
-        "FRAMEIDENTIFIER": FRAMEIDENTIFIER,
         "FRAMETIME": FRAMETIME,
         "FRAMETIMETYPE": FRAMETIMETYPE
     }, null, 2), 'utf8');
@@ -95,7 +90,7 @@ function sloganchange() {
  */
 $(document).ready(function () {
     $("#input-frametime").attr({
-        "value": `${FRAMEIDENTIFIER}`
+        "value": `${FRAMETIME}`
     });
     switch (FRAMETIMETYPE) {
         case 1:
@@ -126,14 +121,13 @@ document.getElementById("radio_horas").onclick = function () {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
-        "FRAMEIDENTIFIER": $('#input-frametime').val(),
-        "FRAMETIME": ($('#input-frametime').val() * 60) * 60000,
+        "FRAMETIME": Number($('#input-frametime').val()),
         "FRAMETIMETYPE": 1
     }, null, 2), 'utf8');
-    FRAMEIDENTIFIER = Number($('#input-frametime').val());
-    FRAMETIME = ($('#input-frametime').val() * 60) * 60000;
+    FRAMETIME = Number($('#input-frametime').val());
     FRAMETIMETYPE = 1;
     inputDemoFrametimeInnerText();
+    Electron.remote.getCurrentWindow().webContents.send('frame_time_refresh');
 };
 
 document.getElementById("radio_minutos").onclick = function () {
@@ -145,14 +139,13 @@ document.getElementById("radio_minutos").onclick = function () {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
-        "FRAMEIDENTIFIER": $('#input-frametime').val(),
-        "FRAMETIME": ($('#input-frametime').val() * 60) * 1000,
+        "FRAMETIME": Number($('#input-frametime').val()),
         "FRAMETIMETYPE": 2
     }, null, 2), 'utf8');
-    FRAMEIDENTIFIER = Number($('#input-frametime').val());
-    FRAMETIME = ($('#input-frametime').val() * 60) * 1000;
+    FRAMETIME = Number($('#input-frametime').val());
     FRAMETIMETYPE = 2;
     inputDemoFrametimeInnerText();
+    Electron.remote.getCurrentWindow().webContents.send('frame_time_refresh');
 };
 
 document.getElementById("radio_segundos").onclick = function () {
@@ -164,14 +157,13 @@ document.getElementById("radio_segundos").onclick = function () {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
-        "FRAMEIDENTIFIER": $('#input-frametime').val(),
-        "FRAMETIME": $('#input-frametime').val() * 1000,
+        "FRAMETIME": Number($('#input-frametime').val()),
         "FRAMETIMETYPE": 3
     }, null, 2), 'utf8');
-    FRAMEIDENTIFIER = Number($('#input-frametime').val());
-    FRAMETIME = $('#input-frametime').val() * 1000;
+    FRAMETIME = Number($('#input-frametime').val());
     FRAMETIMETYPE = 3;
     inputDemoFrametimeInnerText();
+    Electron.remote.getCurrentWindow().webContents.send('frame_time_refresh');
 };
 
 $('#input-frametime')
@@ -193,14 +185,7 @@ function inputDemoFrametimeInnerText() {
 };
 
 function inputFrametimeChange() {
-    if (FRAMETIMETYPE === 1) {
-        FRAMETIME = ($('#input-frametime').val() * 60) * 60000;
-    } else if (FRAMETIMETYPE === 2) {
-        FRAMETIME = ($('#input-frametime').val() * 60) * 1000;
-    } else if (FRAMETIMETYPE === 3) {
-        FRAMETIME = $('#input-frametime').val() * 1000;
-    }
-    FRAMEIDENTIFIER = Number($('#input-frametime').val());
+    FRAMETIME = Number($('#input-frametime').val());
     let fs = Electron.remote.require('fs'),
         file = localPath('src/config/data/global.json');
     if (!localPathExists(file)) localPathCreate(file);
@@ -209,11 +194,11 @@ function inputFrametimeChange() {
         "TITLE": TITLE,
         "SLOGAN": SLOGAN,
         "VERSION": VERSION,
-        "FRAMEIDENTIFIER": FRAMEIDENTIFIER,
         "FRAMETIME": FRAMETIME,
         "FRAMETIMETYPE": FRAMETIMETYPE
     }, null, 2), 'utf8');
     inputDemoFrametimeInnerText();
+    Electron.remote.getCurrentWindow().webContents.send('frame_time_refresh');
 };
 
 Electron.ipcRenderer.on('window_configs_global', () => {

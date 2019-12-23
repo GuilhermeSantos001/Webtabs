@@ -29,8 +29,7 @@ if (Electron.remote.require('fs').existsSync(localPath('src/config/data/global.j
         "TITLE": "GRUPO MAVE 2019",
         "SLOGAN": "Você e seu Patrimônio em boas mãos!",
         "VERSION": "v3.0.0-rebuild",
-        "FRAMEIDENTIFIER": 2,
-        "FRAMETIME": 120000,
+        "FRAMETIME": 2,
         "FRAMETIMETYPE": 2
     }
     Electron.remote.require('fs').writeFileSync(localPath('src/config/data/global.json'), JSON.stringify(data, null, 2), 'utf8');
@@ -64,7 +63,7 @@ console.log(
     'font-size: 290%; color: #292929;',
     'font-size: 250%; color: #292929;',
 );
-console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 3.0.0-beta.4 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 3.0.0-beta.5 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 
 /**
  * Menu Events
