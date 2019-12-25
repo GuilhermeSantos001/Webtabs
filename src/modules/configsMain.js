@@ -74,8 +74,8 @@ function BTN_SCREEN_SELECTION_EXIST(id, name) {
 function SCREEN_SELECTION_UPDATE() {
     const { desktopCapturer } = Electron;
     desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+        console.log(sources);
         for (const source of sources) {
-            console.log(source);
             if (document.getElementById(source.id) === null && source.id.includes('screen')) {
                 $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">${source.name}</button>`);
                 let btn = document.getElementById(source.id);
@@ -85,6 +85,7 @@ function SCREEN_SELECTION_UPDATE() {
                     if (!localPathExists(file)) localPathCreate(file);
                     if (fs.existsSync(file)) {
                         data.push([{
+                            type_url: 'stream',
                             id: source.id,
                             name: source.name
                         }]);

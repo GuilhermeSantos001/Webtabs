@@ -653,7 +653,7 @@ setInterval(function () {
                 frame.addEventListener('did-finish-load', frame.listener);
             }
         } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'stream') {
-            DESKTOPCAPTURER()
+            DESKTOPCAPTURER();
         } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'image') {
             IMGRENDER();
         } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'video') {

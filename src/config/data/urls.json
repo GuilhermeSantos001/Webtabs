@@ -1,5 +1,12 @@
 [
   [
+    {
+      "type_url": "stream",
+      "id": "screen:0:0",
+      "name": "Entire Screen"
+    }
+  ],
+  [
     "https://www.youtube.com/",
     0
   ],
