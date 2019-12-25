@@ -85,10 +85,10 @@ let [
     cookies,
     i
 ] = [
-    data_urls,
-    web_cookies,
-    0
-]
+        data_urls,
+        web_cookies,
+        0
+    ]
 
 load();
 
@@ -251,8 +251,8 @@ function removeFrame() {
                 urls[i - 1][1] = frame.getZoomLevel();
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 Electron.remote.getCurrentWindow().webContents.session.cookies.get({
-                        url: urls[i - 1][0]
-                    })
+                    url: urls[i - 1][0]
+                })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         save();
@@ -453,14 +453,14 @@ function frameInterval(type) {
                     date.setSeconds(date.getSeconds() + frametime);
                 }
                 let days = [
-                        'Domingo',
-                        'Segunda',
-                        'Terça',
-                        'Quarta',
-                        'Quinta',
-                        'Sexta',
-                        'Sabado'
-                    ],
+                    'Domingo',
+                    'Segunda',
+                    'Terça',
+                    'Quarta',
+                    'Quinta',
+                    'Sexta',
+                    'Sabado'
+                ],
                     months = [
                         'Janeiro',
                         'Fevereiro',
@@ -480,14 +480,14 @@ function frameInterval(type) {
             frame.ticknow = () => {
                 let date = new Date();
                 let days = [
-                        'Domingo',
-                        'Segunda',
-                        'Terça',
-                        'Quarta',
-                        'Quinta',
-                        'Sexta',
-                        'Sabado'
-                    ],
+                    'Domingo',
+                    'Segunda',
+                    'Terça',
+                    'Quarta',
+                    'Quinta',
+                    'Sexta',
+                    'Sabado'
+                ],
                     months = [
                         'Janeiro',
                         'Fevereiro',
@@ -553,14 +553,13 @@ setInterval(function () {
              * Limpa os cookies da pagina do Hard Disk (HD)
              */
             Electron.remote.getCurrentWindow().webContents.session.clearStorageData({
-                    storages: 'cookies'
-                })
+                storages: 'cookies'
+            })
                 .then(() => {
-                    console.log(new Date().getSeconds());
                     if (typeof urls[i][2] === 'string') {
                         let cookie = {
                             i: 0,
-                            l: cookies[urls[i][2]].length,
+                            l: cookies[urls[i][2]].length - 1,
                             values: cookies[urls[i][2]],
                             callers: {
                                 listen: 0,
@@ -573,15 +572,15 @@ setInterval(function () {
                              * Define os cookies da pagina
                              */
                             Electron.remote.getCurrentWindow().webContents.session.cookies.set({
-                                    url: urls[i][0],
-                                    name: cookie.values[cookie.i]['name'],
-                                    value: cookie.values[cookie.i]['value'],
-                                    domain: cookie.values[cookie.i]['domain'],
-                                    path: cookie.values[cookie.i]['path'],
-                                    secure: cookie.values[cookie.i]['secure'],
-                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                    expirationDate: cookie.values[cookie.i]['expirationDate']
-                                })
+                                url: urls[i][0],
+                                name: cookie.values[cookie.i]['name'],
+                                value: cookie.values[cookie.i]['value'],
+                                domain: cookie.values[cookie.i]['domain'],
+                                path: cookie.values[cookie.i]['path'],
+                                secure: cookie.values[cookie.i]['secure'],
+                                httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                expirationDate: cookie.values[cookie.i]['expirationDate']
+                            })
                                 .then(() => {
                                     cookie.callers.sucess++;
                                 })
@@ -592,9 +591,13 @@ setInterval(function () {
                                     cookie.callers.listen++;
                                     if (cookie.callers.listen >= cookie.l) {
                                         /**
-                                         * Se todas as chamadas foram atendidas com exito!
+                                         * Se chamadas foram atendidas com exito!
                                          */
-                                        if (cookie.callers.sucess >= cookie.l) {
+                                        console.log(`HISTORICO DE CHAMADAS:`);
+                                        console.log(`Atendidas: ${cookie.callers.listen}`);
+                                        console.log(`Sucesso: ${cookie.callers.sucess}`);
+                                        console.log(`Erros: ${cookie.callers.error}`);
+                                        if (cookie.callers.sucess > 0) {
                                             /**
                                              * Escreve os cookies da pagina no Hard Disk (HD)
                                              */
@@ -607,14 +610,12 @@ setInterval(function () {
                                                 });
                                         }
                                         /**
-                                         * Se existem chamadas não atendidas com exito!
+                                         * Se não existe chamadas atendidas com exito!
                                          */
                                         else {
                                             /**
                                              * Limpa o cookie da pagina no sistema. 
                                              */
-                                            delete cookies[urls[i][2]];
-                                            urls[i].splice(2, 1);
                                             ProcessInterval = null;
                                             save();
                                         }
