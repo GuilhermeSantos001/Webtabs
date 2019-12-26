@@ -1,9 +1,12 @@
 [
   [
     {
-      "type_url": "stream",
-      "id": "screen:0:0",
-      "name": "Entire Screen"
+      "type_url": "camera",
+      "username": "admin",
+      "password": "Secret12345",
+      "ip_address": "192.168.0.38",
+      "port": "1025",
+      "cam_id": "1"
     }
   ],
   [
@@ -23,19 +26,5 @@
       "type_url": "video",
       "url": "https://www.youtube.com/embed/Bey4XXJAqS8?autoplay=1&loop=1&playlist=lgtpOMQMUsY&color=white&controls=2&start=8"
     }
-  ],
-  [
-    {
-      "type_url": "image",
-      "url": "https://media1.giphy.com/media/26tOVxw5cTv22Z2rS/giphy.gif"
-    }
-  ],
-  [
-    "https://sla.performancelab.com.br/login.php?uri=%2Fvlab_rel_eventos.php",
-    0
-  ],
-  [
-    "https://jsbin.com/hihogozocu/1/edit?html,css,js",
-    0
   ]
 ]

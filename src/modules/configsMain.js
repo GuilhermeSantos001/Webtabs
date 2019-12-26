@@ -86,8 +86,7 @@ function SCREEN_SELECTION_UPDATE() {
                     if (fs.existsSync(file)) {
                         data.push([{
                             type_url: 'stream',
-                            id: source.id,
-                            name: source.name
+                            id: source.id
                         }]);
                         fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
                             $(btn).prop('disabled', true);

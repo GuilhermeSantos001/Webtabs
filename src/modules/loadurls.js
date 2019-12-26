@@ -3,6 +3,7 @@
  */
 import $ from 'jquery/dist/jquery';
 import * as Electron from 'electron';
+import * as jsmpeg from 'jsmpeg';
 import {
     localPath,
     localPathExists,
@@ -322,7 +323,7 @@ function DESKTOPCAPTURER() {
         types: ['window', 'screen']
     }).then(async sources => {
         for (const source of sources) {
-            if (source.id === urls[i][0]["id"] && source.name === urls[i][0]["name"]) {
+            if (source.id === urls[i][0]["id"]) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
                         audio: false,
@@ -348,14 +349,11 @@ function DESKTOPCAPTURER() {
                  * Faz a exclusão do monitor no arquivo de configuração
                  * caso o mesmo não seja encontrado no sistema.
                  */
-                let remove;
+                let remove = true;
                 sources.map(source => {
                     if (urls[i][0]["type_url"] === "stream") {
-                        if (source.id != urls[i][0]["id"] &&
-                            source.name === urls[i][0]["name"] ||
-                            source.name != urls[i][0]["name"] &&
-                            source.id === urls[i][0]["id"]) {
-                            remove = true;
+                        if (source.id == urls[i][0]["id"]) {
+                            remove = false;
                         }
                     }
                 });
@@ -429,6 +427,42 @@ function VIDEORENDER() {
             interval = setInterval(frameInterval.bind(this, 'video'), 1000);
         });
     }
+    i++;
+}
+
+function CAMERARENDER() {
+    const Recorder = Electron.remote.require('node-rtsp-recorder').Recorder;
+
+    const settings = {
+        username: urls[i][0]["username"],
+        password: urls[i][0]["password"],
+        ip_address: urls[i][0]["ip_address"],
+        port: urls[i][0]["port"],
+        cam_id: urls[i][0]["cam_id"],
+    }
+
+    // 'rtsp://admin:Secret12345@192.168.0.38:1025/Streaming/Channels/201'
+
+    const rec = new Recorder({
+        url: `rtsp://${settings.username}:${settings.password}@${settings.ip_address}/Streaming/Channels/${settings.cam_id}01`,
+        folder: localPath('cameras'),
+        name: `cam_${settings.cam_id}`,
+        type: 'image'
+    });
+
+    let tickFrameCam = setInterval(() => {
+        rec.captureImage(() => {
+            console.log('Image Captured');
+        });
+    }, 60);
+
+    $('.layerFrame').append(`<img id="camera" src="" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);" />`);
+
+    while (!frame) {
+        frame = document.getElementById('camera');
+    }
+
+    console.log('%c➠ LOG: Frame(Camera) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
     i++;
 }
 
@@ -658,6 +692,8 @@ setInterval(function () {
             IMGRENDER();
         } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'video') {
             VIDEORENDER();
+        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'camera') {
+            CAMERARENDER();
         }
     }
 }, 1000);
