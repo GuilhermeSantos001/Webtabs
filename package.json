@@ -9,34 +9,18 @@
   },
   "repository": "https://github.com/GuilhermeSantos001/Webtabs",
   "keywords": [
-    "webtabs",
-    "electron"
+    "Webtabs",
+    "Electron"
   ],
   "author": "GuilhermeSantos001",
-  "license": "GNU General Public License v3.0",
-  "config": {
-    "forge": "./forge.config.js"
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "electron": "^7.1.7"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "bufferutil": "^4.0.1",
-    "electron-squirrel-startup": "^1.0.0",
-    "file-on-write": "^1.1.1",
-    "image-downloader": "^3.5.0",
     "jquery": "^3.4.1",
-    "jsmpeg": "^1.0.0",
     "material-design-icons": "^3.0.1",
-    "mjpeg-camera": "^2.0.0",
-    "mjpeg-consumer": "^2.0.0",
-    "node-cam": "0.0.1",
-    "node-hikvision-api": "0.0.2",
-    "node-onvif": "^0.1.7",
-    "node-rtsp-recorder": "^1.0.3",
-    "node-rtsp-stream": "0.0.8",
-    "popper.js": "^1.16.0",
-    "utf-8-validate": "^5.0.2"
-  },
-  "devDependencies": {
-    "electron": "^7.1.7"
+    "node-rtsp-recorder": "^1.0.3"
   }
 }
