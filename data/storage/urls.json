@@ -1,0 +1,20 @@
+[
+  [
+    {
+      "type_url": "camera",
+      "username": "admin",
+      "password": "Secret12345",
+      "ip_address": "192.168.0.38",
+      "port": "1025",
+      "cam_id": "1"
+    }
+  ],
+  [
+    "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
+    0
+  ],
+  [
+    "https://sla.performancelab.com.br/login.php?uri=%2F",
+    0
+  ]
+]
