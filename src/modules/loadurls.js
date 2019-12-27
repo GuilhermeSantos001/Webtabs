@@ -431,8 +431,13 @@ function VIDEORENDER() {
 }
 
 function CAMERARENDER() {
-    const Recorder = Electron.remote.require('node-rtsp-recorder').Recorder;
+    $('.layerFrame').append(`<img id="camera" src="" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(100%);" />`);
 
+    while (!frame) {
+        frame = document.getElementById('camera');
+    }
+
+    const Recorder = Electron.remote.require('node-rtsp-recorder').Recorder;
     const settings = {
         username: urls[i][0]["username"],
         password: urls[i][0]["password"],
@@ -440,27 +445,25 @@ function CAMERARENDER() {
         port: urls[i][0]["port"],
         cam_id: urls[i][0]["cam_id"],
     }
-
     // 'rtsp://admin:Secret12345@192.168.0.38:1025/Streaming/Channels/201'
-
-    const rec = new Recorder({
-        url: `rtsp://${settings.username}:${settings.password}@${settings.ip_address}/Streaming/Channels/${settings.cam_id}01`,
-        folder: localPath('cameras'),
-        name: `cam_${settings.cam_id}`,
-        type: 'image'
-    });
-
+    if (!localPathExists(localPath('src/cameras/'))) localPathCreate(localPath('src/cameras/'));
     let tickFrameCam = setInterval(() => {
+        let rec = new Recorder({
+            url: `rtsp://${settings.username}:${settings.password}@${settings.ip_address}:${settings.port}/Streaming/Channels/${settings.cam_id}01`,
+            folder: localPath('src/cameras/'),
+            directoryPathFormat: 'D',
+            fileNameFormat: 'D',
+            name: `cam${settings.cam_id}`,
+            type: 'image'
+        });
         rec.captureImage(() => {
             console.log('Image Captured');
         });
+        let file = localPath(`src/cameras/cam${settings.cam_id}/${new Date().getDate()}/image/${new Date().getDate()}.jpg`);
+        if (Electron.remote.require('fs').existsSync(file)) {
+            frame.src = file;
+        }
     }, 60);
-
-    $('.layerFrame').append(`<img id="camera" src="" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);" />`);
-
-    while (!frame) {
-        frame = document.getElementById('camera');
-    }
 
     console.log('%c➠ LOG: Frame(Camera) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
     i++;
