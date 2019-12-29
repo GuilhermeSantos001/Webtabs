@@ -86,7 +86,7 @@ console.log(
     'font-size: 290%; color: #292929;',
     'font-size: 250%; color: #292929;',
 );
-console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 3.0.0-beta.5 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 4.1.0-beta.5 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 
 /**
  * Events
