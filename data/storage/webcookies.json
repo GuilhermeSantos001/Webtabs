@@ -1,3 +1,299 @@
 {
-  "size": 0
+  "size": 2,
+  "cookie_1": [
+    {
+      "name": "",
+      "value": "",
+      "domain": "www.facebook.com",
+      "hostOnly": true,
+      "path": "/tr",
+      "secure": false,
+      "httpOnly": false,
+      "session": true
+    },
+    {
+      "name": "_gcl_au",
+      "value": "1.1.621066329.1577600870",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1585376869
+    },
+    {
+      "name": "ajs_user_id",
+      "value": "null",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1609143147
+    },
+    {
+      "name": "ajs_group_id",
+      "value": "null",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1609143147
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.2.1156173721.1577600870",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1640679147
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.2.1875457630.1577600870",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577693547
+    },
+    {
+      "name": "ajs_anonymous_id",
+      "value": "%22221bc5ca-daf9-41d1-a08a-176f7e66af8a%22",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1609143147
+    },
+    {
+      "name": "_fbp",
+      "value": "fb.1.1577600869882.460475679",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1585383148
+    },
+    {
+      "name": "redirect-url",
+      "value": "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": true,
+      "session": false,
+      "expirationDate": 1577607446.664151
+    },
+    {
+      "name": "pipe-verify",
+      "value": "hNPsJYBT7BG96Gu3kBBW",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577608946.664203
+    },
+    {
+      "name": "_gat",
+      "value": "1",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577607207
+    },
+    {
+      "name": "fr",
+      "value": "0XDaDwGKGldid6Jkj..BeCF_q...1.0.BeCF_q.",
+      "domain": ".facebook.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": true,
+      "session": false,
+      "expirationDate": 1585383147.511381
+    },
+    {
+      "name": "IDE",
+      "value": "AHWqTUnSVfccu0hvgpVgjzvPPeH26INUEmI_MjF2NeDXJmFTKB5-Of6JFsk28Mg9",
+      "domain": ".doubleclick.net",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": true,
+      "session": false,
+      "expirationDate": 1640679147.706286
+    },
+    {
+      "name": "li_sugr",
+      "value": "63d28fd7-2b02-4b8d-aa34-58cf4848ffd4",
+      "domain": ".linkedin.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1585383148.951513
+    },
+    {
+      "name": "lang",
+      "value": "v=2&lang=pt-br",
+      "domain": ".ads.linkedin.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": true
+    },
+    {
+      "name": "lidc",
+      "value": "\"b=VGST08:g=1509:u=1:i=1577607146:t=1577693546:s=AQFn2B-Rwla6Wu4F8oonXeEcAqjwbe0R\"",
+      "domain": ".linkedin.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577693547.872747
+    },
+    {
+      "name": "UserMatchHistory",
+      "value": "AQKgaErc0xTM6wAAAW9Qtq39Dc9l1j0D2Bk2TXTLQTEA_xr7n4D2JaHR61z8x5-R4KGISJHGimk",
+      "domain": ".linkedin.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1580199148.129102
+    },
+    {
+      "name": "lang",
+      "value": "v=2&lang=pt-br",
+      "domain": ".linkedin.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": true
+    },
+    {
+      "name": "bcookie",
+      "value": "\"v=2&07587ddc-2c97-49cd-88d4-eca4731d4d0b\"",
+      "domain": ".linkedin.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1640721000.69716
+    },
+    {
+      "name": "bscookie",
+      "value": "\"v=1&2019122908122711c7ed82-431f-4eb8-8a9f-ca9bd1f52419AQGhk10XG70uQvPH0KBwSaCsxGvu8AQJ\"",
+      "domain": ".www.linkedin.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": true,
+      "session": false,
+      "expirationDate": 1640721000.69722
+    },
+    {
+      "name": "cf_ob_info",
+      "value": "504:54ca4f231e64f6cf:GRU",
+      "domain": "p.adsymptotic.com",
+      "hostOnly": true,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577607179.095342
+    },
+    {
+      "name": "cf_use_ob",
+      "value": "443",
+      "domain": "p.adsymptotic.com",
+      "hostOnly": true,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577607179.095362
+    }
+  ],
+  "cookie_2": [
+    {
+      "name": "PHPSESSID",
+      "value": "a67i1f9hgfmu4mjdcvjohodvo3",
+      "domain": "sla.performancelab.com.br",
+      "hostOnly": true,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": true
+    },
+    {
+      "name": "b_Admin_visibility",
+      "value": "hidden",
+      "domain": "sla.performancelab.com.br",
+      "hostOnly": true,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": true
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.3.1929120185.1577601708",
+      "domain": ".performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1640673708
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.3.1733554188.1577601708",
+      "domain": ".performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577688108
+    },
+    {
+      "name": "_gat",
+      "value": "1",
+      "domain": ".performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1577601768
+    }
+  ]
 }

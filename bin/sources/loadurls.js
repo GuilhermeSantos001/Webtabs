@@ -5,7 +5,8 @@ const [
     {
         remote,
         ipcRenderer,
-        desktopCapturer
+        desktopCapturer,
+        session
     },
     path,
     fs
@@ -145,7 +146,7 @@ function loadDataURLs() {
  * Webcookies
  */
 function saveWebCookies() {
-    let file = path.localPath('data/storage/cookies.json');
+    let file = path.localPath('data/storage/webcookies.json');
     if (path.localPathExists(file)) {
         fileProcess = 'write...';
         fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
@@ -155,7 +156,7 @@ function saveWebCookies() {
 };
 
 function loadWebCookies() {
-    let file = path.localPath('data/storage/cookies.json');
+    let file = path.localPath('data/storage/webcookies.json');
     if (path.localPathExists(file)) {
         fileProcess = 'reading...';
         let data = JSON.parse(fs.readFileSync(file, {
@@ -187,6 +188,7 @@ function removeFrame() {
                 urls[i - 1][0] = frame.getURL();
                 urls[i - 1][1] = frame.getZoomLevel();
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
+                if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
                     url: urls[i - 1][0]
                 })
@@ -205,8 +207,12 @@ function removeFrame() {
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'image' ||
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'video'
             ) {
+                finish(false);
+            }
+            function finish(listener) {
                 saveDataURLs();
                 clearInterval(interval), interval = null;
+                if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
             }
@@ -227,15 +233,11 @@ function returnFrame() {
                 urls[i - 1][0] = frame.getURL();
                 urls[i - 1][1] = frame.getZoomLevel();
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
+                if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({})
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
-                        i = i - 2;
-                        saveDataURLs();
-                        clearInterval(interval), interval = null;
-                        frame.removeEventListener('did-finish-load', frame.listener);
-                        frame.remove();
-                        frame = null;
+                        finish(true);
                     }).catch((error) => {
                         console.log(error);
                     });
@@ -244,9 +246,13 @@ function returnFrame() {
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'image' ||
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'video'
             ) {
+                finish(false);
+            }
+            function finish(listener) {
                 i = i - 2;
                 saveDataURLs();
                 clearInterval(interval), interval = null;
+                if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
             }
@@ -363,45 +369,6 @@ function VIDEORENDER() {
             interval = setInterval(frameInterval.bind(this, 'video'), 1000);
         });
     }
-    i++;
-}
-
-function CAMERARENDER() {
-    $('.layerFrame').append(`<img id="camera" src="" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(100%);" />`);
-
-    if (!frame) {
-        frame = document.getElementById('camera');
-    }
-
-    const Recorder = require('node-rtsp-recorder').Recorder;
-    const settings = {
-        username: urls[i][0]["username"],
-        password: urls[i][0]["password"],
-        ip_address: urls[i][0]["ip_address"],
-        port: urls[i][0]["port"],
-        cam_id: urls[i][0]["cam_id"],
-    }
-
-    if (!path.localPathExists(path.localPath('data/storage/cam/'))) path.localPathCreate(path.localPath('data/storage/cam/'));
-    let tickFrameCam = setInterval(() => {
-        let rec = new Recorder({
-            url: `rtsp://${settings.username}:${settings.password}@${settings.ip_address}:${settings.port}/Streaming/Channels/${settings.cam_id}01`,
-            folder: path.localPath('data/storage/cam/'),
-            directoryPathFormat: 'D',
-            fileNameFormat: 'D',
-            name: `cam${settings.cam_id}`,
-            type: 'image'
-        });
-        rec.captureImage(() => {
-            console.log('Image Captured');
-        });
-        let file = path.localPath(`data/storage/cam/cam${settings.cam_id}/${new Date().getDate()}/image/${new Date().getDate()}.jpg`);
-        if (fs.existsSync(file)) {
-            frame.src = file;
-        }
-    }, 60);
-
-    console.log('%c➠ LOG: Frame(Camera) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
     i++;
 }
 
@@ -537,6 +504,22 @@ setInterval(() => {
         if (typeof urls[i][0] === 'string') {
             ProcessInterval = 'processing...';
             /**
+             * Exceções
+             */
+            switch (String(urls[i][2]).toLowerCase()) {
+                /**
+                 * D-Guard
+                 */
+                case 'dguard':
+                    let __cookies = JSON.parse(fs.readFileSync(path.localPath('data/frames/storage/cookies.json'))) || {},
+                        __file = fs.readFileSync(path.localPath('data/frames/scripts/dguard.js')).toString();
+                    __file = __file.replace('__NAME__VALUE__', __cookies['dguard']['username']);
+                    __file = __file.replace('__PASS__VALUE__', __cookies['dguard']['password']);
+                    __file = __file.replace('__CAM__VALUE__', __cookies['dguard']['cam']);
+                    __file = __file.replace('__LAYOUT_CAM__VALUE__', __cookies['dguard']['layout_cam']);
+                    return render(['dguard', __file]);
+            }
+            /**
              * Limpa os cookies da pagina do Hard Disk (HD)
              */
             remote.getCurrentWindow().webContents.session.clearStorageData({
@@ -616,7 +599,7 @@ setInterval(() => {
                     console.error(e);
                 });
 
-            function render() {
+            function render(exception) {
                 $('.layerFrame').append(`<webview id="frame" src="${urls[i++][0]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);"></webview>`);
 
                 if (!frame) {
@@ -629,6 +612,11 @@ setInterval(() => {
                         frame.fadeInInitial = 'processing...';
                         $(frame).fadeOut(function () {
                             $(frame).css('filter', 'opacity(100%)');
+                            if (exception instanceof Array) {
+                                if (exception[0] === 'dguard') {
+                                    frame.executeJavaScript(exception[1]);
+                                }
+                            }
                         }).delay().fadeIn('slow', function () {
                             frame.fadeInInitial = 'complete!';
                             ProcessInterval = null;
@@ -645,8 +633,6 @@ setInterval(() => {
             IMGRENDER();
         } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'video') {
             VIDEORENDER();
-        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'camera') {
-            CAMERARENDER();
         }
     }
 }, 1000);
@@ -703,4 +689,30 @@ ipcRenderer
     .on('frame_time_refresh', () => {
         if (!frame.tickReset) frame.tickReset = true;
         createConfigGlobal();
+    })
+    .on('extension_dguard', (event, cam) => {
+        let interval = setInterval(new Promise((resolve, rejec) => {
+            if (typeof cam === 'number') {
+                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                frame.executeJavaScript(`setTimeout(function () {document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();}, 500);`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('data/frames/storage/cookies.json'))) || {};
+                __cookies['dguard']['cam'] = cam;
+            } else if (typeof cam === 'string') {
+                if (cam === 'layout_1') {
+                    cam = 1;
+                } else if (cam === 'layout_2') {
+                    cam = 2;
+                } else if (cam === 'layout_3') {
+                    cam = 3;
+                }
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('data/frames/storage/cookies.json'))) || {};
+                __cookies['dguard']['layout_cam'] = cam;
+            }
+            fs.writeFileSync(path.localPath('data/frames/storage/cookies.json'), JSON.stringify(__cookies, null, 2));
+            resolve();
+        })
+            .then(() => {
+                clearInterval(interval);
+            }), 1000);
     });

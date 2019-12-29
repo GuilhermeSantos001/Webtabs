@@ -7,15 +7,26 @@ const {
 } = require('electron');
 
 const [
-  path,
-  template
+  template,
+  fs
 ] = [
-    require('path'),
-    require('./bin/template/main')
+    require('./bin/template/main'),
+    require('fs')
   ];
 
+/**
+ * Menu
+ */
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
+
+const __frame__cookies = JSON.parse(fs.readFileSync('./data/frames/storage/cookies.json')) || {};
+
+if (menu.getMenuItemById(`layout_${__frame__cookies["dguard"]["layout_cam"]}`))
+  menu.getMenuItemById(`layout_${__frame__cookies["dguard"]["layout_cam"]}`).checked = true;
+
+if (menu.getMenuItemById(`cam_${__frame__cookies["dguard"]["cam"]}`))
+  menu.getMenuItemById(`cam_${__frame__cookies["dguard"]["cam"]}`).checked = true;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

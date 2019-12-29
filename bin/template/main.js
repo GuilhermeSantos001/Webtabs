@@ -1,3 +1,8 @@
+/**
+ * Import
+ */
+const { BrowserWindow } = require('electron');
+
 const template = [
     {
         label: 'Janela', submenu: [
@@ -11,16 +16,16 @@ const template = [
                         label: 'Exibir',
                         accelerator: 'Shift+F1',
                         click: () => {
-                            mainWindow.setMenuBarVisibility(true);
-                            mainWindow.setAutoHideMenuBar(false);
+                            BrowserWindow.getFocusedWindow().setMenuBarVisibility(true);
+                            BrowserWindow.getFocusedWindow().setAutoHideMenuBar(false);
                         }
                     },
                     {
                         label: 'Ocultar',
                         accelerator: 'CommandOrControl+F1',
                         click: () => {
-                            mainWindow.setMenuBarVisibility(false);
-                            mainWindow.setAutoHideMenuBar(true);
+                            BrowserWindow.getFocusedWindow().setMenuBarVisibility(false);
+                            BrowserWindow.getFocusedWindow().setAutoHideMenuBar(true);
                         }
                     }
                 ]
@@ -40,14 +45,14 @@ const template = [
                 label: 'Abrir o menu de ações',
                 accelerator: 'F9',
                 click: () => {
-                    mainWindow.webContents.send('window_configs_urls');
+                    BrowserWindow.getFocusedWindow().webContents.send('window_configs_urls');
                 }
             },
             {
                 label: 'Configurações',
                 accelerator: 'F10',
                 click: () => {
-                    mainWindow.webContents.send('window_configs_global');
+                    BrowserWindow.getFocusedWindow().webContents.send('window_configs_global');
                 }
             },
             {
@@ -57,14 +62,14 @@ const template = [
                         label: 'Exibir',
                         accelerator: 'Shift+F2',
                         click: () => {
-                            mainWindow.webContents.send('window_show_cursor');
+                            BrowserWindow.getFocusedWindow().webContents.send('window_show_cursor');
                         }
                     },
                     {
                         label: 'Ocultar',
                         accelerator: 'CommandOrControl+F2',
                         click: () => {
-                            mainWindow.webContents.send('window_hide_cursor');
+                            BrowserWindow.getFocusedWindow().webContents.send('window_hide_cursor');
                         }
                     }
                 ]
@@ -74,13 +79,13 @@ const template = [
                     {
                         label: 'Exibir',
                         click: () => {
-                            mainWindow.webContents.send('show_scroll_page');
+                            BrowserWindow.getFocusedWindow().webContents.send('show_scroll_page');
                         }
                     },
                     {
                         label: 'Ocultar',
                         click: () => {
-                            mainWindow.webContents.send('hide_scroll_page');
+                            BrowserWindow.getFocusedWindow().webContents.send('hide_scroll_page');
                         }
                     }
                 ]
@@ -91,21 +96,21 @@ const template = [
                         label: 'Resetar Zoom',
                         accelerator: 'CommandOrControl+nummult',
                         click: () => {
-                            mainWindow.webContents.send('render_resetZoom');
+                            BrowserWindow.getFocusedWindow().webContents.send('render_resetZoom');
                         }
                     },
                     {
                         label: 'Aumentar Zoom',
                         accelerator: 'CommandOrControl+numadd',
                         click: () => {
-                            mainWindow.webContents.send('render_increaseZoom');
+                            BrowserWindow.getFocusedWindow().webContents.send('render_increaseZoom');
                         }
                     },
                     {
                         label: 'Dimuir Zoom',
                         accelerator: 'CommandOrControl+numsub',
                         click: () => {
-                            mainWindow.webContents.send('render_reduceZoom');
+                            BrowserWindow.getFocusedWindow().webContents.send('render_reduceZoom');
                         }
                     }
                 ]
@@ -116,15 +121,224 @@ const template = [
                         label: 'Proximo...',
                         accelerator: 'CommandOrControl+Right',
                         click: () => {
-                            mainWindow.webContents.send('render_next');
+                            BrowserWindow.getFocusedWindow().webContents.send('render_next');
                         }
                     },
                     {
                         label: '...Anterior',
                         accelerator: 'CommandOrControl+Left',
                         click: () => {
-                            mainWindow.webContents.send('render_return');
+                            BrowserWindow.getFocusedWindow().webContents.send('render_return');
                         }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        label: 'Extensões',
+        submenu: [
+            {
+                label: 'D-Guard',
+                submenu: [
+                    {
+                        label: 'Câmeras',
+                        submenu: [
+                            {
+                                label: 'Layout',
+                                submenu: [
+                                    {
+                                        label: '1 Câmera',
+                                        id: 'layout_1',
+                                        type: 'radio',
+                                        checked: false,
+                                        click: () => {
+                                            BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', "layout_1");
+                                        }
+                                    },
+                                    {
+                                        label: '4 Câmeras',
+                                        id: 'layout_2',
+                                        type: 'radio',
+                                        checked: false,
+                                        click: () => {
+                                            BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', "layout_2");
+                                        }
+                                    },
+                                    {
+                                        label: '16 Câmeras',
+                                        id: 'layout_3',
+                                        type: 'radio',
+                                        checked: false,
+                                        click: () => {
+                                            BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', "layout_3");
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                label: '0054 - KOLPING',
+                                id: 'cam_0',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 0);
+                                }
+                            },
+                            {
+                                label: '0042 - SABÓ LAPA',
+                                id: 'cam_1',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 1);
+                                }
+                            },
+                            {
+                                label: '0006 - Drava Metais',
+                                id: 'cam_2',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 2);
+                                }
+                            },
+                            {
+                                label: 'BASE MAVE 1',
+                                id: 'cam_3',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 3);
+                                }
+                            },
+                            {
+                                label: 'V. MAVE 1',
+                                id: 'cam_4',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 4);
+                                }
+                            },
+                            {
+                                label: 'BASE MAVE 2',
+                                id: 'cam_5',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 5);
+                                }
+                            },
+                            {
+                                label: 'MONITOR 1',
+                                id: 'cam_6',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 6);
+                                }
+                            },
+                            {
+                                label: '0053 - FORRESTPARK',
+                                id: 'cam_7',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 7);
+                                }
+                            },
+                            {
+                                label: 'V. MAVE 2',
+                                id: 'cam_8',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 8);
+                                }
+                            },
+                            {
+                                label: '0031 - CLINICA ERGO',
+                                id: 'cam_9',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 9);
+                                }
+                            },
+                            {
+                                label: '0067 - SUMARÉ',
+                                id: 'cam_10',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 10);
+                                }
+                            },
+                            {
+                                label: '0004 - PRESTIGE',
+                                id: 'cam_11',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 11);
+                                }
+                            },
+                            {
+                                label: '0007 - FOCUS',
+                                id: 'cam_12',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 12);
+                                }
+                            },
+                            {
+                                label: 'MONITOR 3',
+                                id: 'cam_13',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 13);
+                                }
+                            },
+                            {
+                                label: '0064 - LEXUS',
+                                id: 'cam_14',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 14);
+                                }
+                            },
+                            {
+                                label: '0068 - RESIDENCIA RENATA',
+                                id: 'cam_15',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 15);
+                                }
+                            },
+                            {
+                                label: '0017 - DRASTOSA ATALIBA',
+                                id: 'cam_16',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 16);
+                                }
+                            },
+                            {
+                                label: 'MONITOR 2',
+                                id: 'cam_17',
+                                type: 'radio',
+                                checked: false,
+                                click: () => {
+                                    BrowserWindow.getFocusedWindow().webContents.send('extension_dguard', 17);
+                                }
+                            }
+                        ]
                     }
                 ]
             }

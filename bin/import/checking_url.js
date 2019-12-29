@@ -1,4 +1,4 @@
-module.exports = (url, callback) => {
+function direct(url, callback) {
     if (
         typeof url != 'string' ||
         typeof url === 'string' &&
@@ -28,3 +28,29 @@ module.exports = (url, callback) => {
         return callback(false);
     }
 };
+
+function getDomain(url, callback) {
+    if (
+        typeof url != 'string' ||
+        typeof url === 'string' &&
+        url.length <= 0
+    ) return;
+    let http;
+    if (url.substring(0, 5).match(/https/)) {
+        http = require('https');
+    } else {
+        http = require('http');
+    }
+
+    if (!http) return callback(false);
+
+    try {
+        const { URL } = require('url');
+        const { hostname } = new URL(url);
+        callback(hostname);
+    } catch (e) {
+        return callback(false);
+    }
+};
+
+module.exports = { direct, getDomain }

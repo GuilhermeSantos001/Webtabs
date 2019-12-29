@@ -120,7 +120,7 @@ $(document).ready(function () {
         if (fs.existsSync(file)) {
             let url = $('#input_add_url').val() || '';
             if (!url || typeof url != 'string' || url.length <= 0) return;
-            chkurl(url, e => {
+            chkurl.direct(url, e => {
                 if (!e) {
                     return ALERT.info(`A URL "${url}" não pode ser adicionada!!!`);
                 }
