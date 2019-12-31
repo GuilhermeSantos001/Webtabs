@@ -18,19 +18,8 @@ const [
  * Variables
  */
 let [
-    ConfigGlobal,
-    APPNAME,
-    TITLE,
-    SLOGAN,
-    VERSION,
-    FRAMETIME,
-    FRAMETIMETYPE
+    ConfigGlobal
 ] = [
-        null,
-        null,
-        null,
-        null,
-        null,
         null
     ]
 
@@ -65,33 +54,33 @@ function titlechange() {
     let file = path.localPath('data/configs/global.json');
     if (!path.localPathExists(file)) path.localPathCreate(file);
     fs.writeFileSync(file, JSON.stringify({
-        "APPNAME": APPNAME,
+        "APPNAME": ConfigGlobal.APPNAME,
         "TITLE": $('#form-title').val(),
-        "SLOGAN": SLOGAN,
-        "VERSION": VERSION,
-        "FRAMETIME": FRAMETIME,
-        "FRAMETIMETYPE": FRAMETIMETYPE
+        "SLOGAN": ConfigGlobal.SLOGAN,
+        "VERSION": ConfigGlobal.VERSION,
+        "FRAMETIME": ConfigGlobal.FRAMETIME,
+        "FRAMETIMETYPE": ConfigGlobal.FRAMETIMETYPE
     }, null, 2), 'utf8');
-    TITLE = $('#form-title').val();
+    ConfigGlobal.TITLE = $('#form-title').val();
 };
 
 function sloganchange() {
     let file = path.localPath('data/configs/global.json');
     if (!path.localPathExists(file)) path.localPathCreate(file);
     fs.writeFileSync(file, JSON.stringify({
-        "APPNAME": APPNAME,
-        "TITLE": TITLE,
+        "APPNAME": ConfigGlobal.APPNAME,
+        "TITLE": ConfigGlobal.TITLE,
         "SLOGAN": $('#form-slogan').val(),
-        "VERSION": VERSION,
-        "FRAMETIME": FRAMETIME,
-        "FRAMETIMETYPE": FRAMETIMETYPE
+        "VERSION": ConfigGlobal.VERSION,
+        "FRAMETIME": ConfigGlobal.FRAMETIME,
+        "FRAMETIMETYPE": ConfigGlobal.FRAMETIMETYPE
     }, null, 2), 'utf8');
-    SLOGAN = $('#form-slogan').val();
+    ConfigGlobal.SLOGAN = $('#form-slogan').val();
 };
 
 function inputDemoFrametimeInnerText() {
     document.getElementById('input-demo-frametime').innerText = `Tempo Atual: ${(() => {
-        switch (FRAMETIMETYPE) {
+        switch (ConfigGlobal.FRAMETIMETYPE) {
             case 1:
                 return `${$('#input-frametime').val()} Hora(s)`;
             case 2:
@@ -103,16 +92,16 @@ function inputDemoFrametimeInnerText() {
 };
 
 function inputFrametimeChange() {
-    FRAMETIME = Number($('#input-frametime').val());
+    ConfigGlobal.FRAMETIME = Number($('#input-frametime').val());
     let file = path.localPath('data/configs/global.json');
     if (!path.localPathExists(file)) path.localPathCreate(file);
     fs.writeFileSync(file, JSON.stringify({
-        "APPNAME": APPNAME,
-        "TITLE": TITLE,
-        "SLOGAN": SLOGAN,
-        "VERSION": VERSION,
-        "FRAMETIME": FRAMETIME,
-        "FRAMETIMETYPE": FRAMETIMETYPE
+        "APPNAME": ConfigGlobal.APPNAME,
+        "TITLE": ConfigGlobal.TITLE,
+        "SLOGAN": ConfigGlobal.SLOGAN,
+        "VERSION": ConfigGlobal.VERSION,
+        "FRAMETIME": ConfigGlobal.FRAMETIME,
+        "FRAMETIMETYPE": ConfigGlobal.FRAMETIMETYPE
     }, null, 2), 'utf8');
     inputDemoFrametimeInnerText();
     remote.getCurrentWindow().webContents.send('frame_time_refresh');
@@ -124,8 +113,8 @@ function inputFrametimeChange() {
 $('#layerConfigs').hide();
 
 $(document).ready(function () {
-    $('#form-title').val(TITLE);
-    $('#form-slogan').val(SLOGAN);
+    $('#form-title').val(ConfigGlobal.TITLE);
+    $('#form-slogan').val(ConfigGlobal.SLOGAN);
 
     $('#form-title')
         .keypress(titlechange)
@@ -138,10 +127,10 @@ $(document).ready(function () {
         .keyup(sloganchange);
 
     $("#input-frametime").attr({
-        "value": `${FRAMETIME}`
+        "value": `${ConfigGlobal.FRAMETIME}`
     });
 
-    switch (FRAMETIMETYPE) {
+    switch (ConfigGlobal.FRAMETIMETYPE) {
         case 1:
             $('#radio_horas').attr('checked', '');
             $('#label_radio_horas').addClass('active');
@@ -166,15 +155,15 @@ $(document).ready(function () {
         let file = path.localPath('data/configs/global.json');
         if (!path.localPathExists(file)) path.localPathCreate(file);
         fs.writeFileSync(file, JSON.stringify({
-            "APPNAME": APPNAME,
-            "TITLE": TITLE,
-            "SLOGAN": SLOGAN,
-            "VERSION": VERSION,
+            "APPNAME": ConfigGlobal.APPNAME,
+            "TITLE": ConfigGlobal.TITLE,
+            "SLOGAN": ConfigGlobal.SLOGAN,
+            "VERSION": ConfigGlobal.VERSION,
             "FRAMETIME": Number($('#input-frametime').val()),
             "FRAMETIMETYPE": 1
         }, null, 2), 'utf8');
-        FRAMETIME = Number($('#input-frametime').val());
-        FRAMETIMETYPE = 1;
+        ConfigGlobal.FRAMETIME = Number($('#input-frametime').val());
+        ConfigGlobal.FRAMETIMETYPE = 1;
         inputDemoFrametimeInnerText();
         remote.getCurrentWindow().webContents.send('frame_time_refresh');
     };
@@ -183,15 +172,15 @@ $(document).ready(function () {
         let file = path.localPath('data/configs/global.json');
         if (!path.localPathExists(file)) path.localPathCreate(file);
         fs.writeFileSync(file, JSON.stringify({
-            "APPNAME": APPNAME,
-            "TITLE": TITLE,
-            "SLOGAN": SLOGAN,
-            "VERSION": VERSION,
+            "APPNAME": ConfigGlobal.APPNAME,
+            "TITLE": ConfigGlobal.TITLE,
+            "SLOGAN": ConfigGlobal.SLOGAN,
+            "VERSION": ConfigGlobal.VERSION,
             "FRAMETIME": Number($('#input-frametime').val()),
             "FRAMETIMETYPE": 2
         }, null, 2), 'utf8');
-        FRAMETIME = Number($('#input-frametime').val());
-        FRAMETIMETYPE = 2;
+        ConfigGlobal.FRAMETIME = Number($('#input-frametime').val());
+        ConfigGlobal.FRAMETIMETYPE = 2;
         inputDemoFrametimeInnerText();
         remote.getCurrentWindow().webContents.send('frame_time_refresh');
     };
@@ -200,15 +189,15 @@ $(document).ready(function () {
         let file = path.localPath('data/configs/global.json');
         if (!path.localPathExists(file)) path.localPathCreate(file);
         fs.writeFileSync(file, JSON.stringify({
-            "APPNAME": APPNAME,
-            "TITLE": TITLE,
-            "SLOGAN": SLOGAN,
-            "VERSION": VERSION,
+            "APPNAME": ConfigGlobal.APPNAME,
+            "TITLE": ConfigGlobal.TITLE,
+            "SLOGAN": ConfigGlobal.SLOGAN,
+            "VERSION": ConfigGlobal.VERSION,
             "FRAMETIME": Number($('#input-frametime').val()),
             "FRAMETIMETYPE": 3
         }, null, 2), 'utf8');
-        FRAMETIME = Number($('#input-frametime').val());
-        FRAMETIMETYPE = 3;
+        ConfigGlobal.FRAMETIME = Number($('#input-frametime').val());
+        ConfigGlobal.FRAMETIMETYPE = 3;
         inputDemoFrametimeInnerText();
         remote.getCurrentWindow().webContents.send('frame_time_refresh');
     };

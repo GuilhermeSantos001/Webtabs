@@ -34,7 +34,8 @@ const template = [
         ]
     },
     {
-        label: 'Exibição', submenu: [
+        label: 'Exibição',
+        submenu: [
             { label: 'Executar', type: 'radio', checked: true },
             { id: 'PAUSE', label: 'Pausar', type: 'radio' }
         ]
