@@ -1,16 +1,4 @@
 /**
- * Import Sources
- */
-require('./bin/sources/loadurls');
-require('./bin/sources/configsMain');
-require('./bin/sources/configsGlobal');
-
-/**
- * Import Extensions
- */
-require('./bin/extensions/load');
-
-/**
  * Import
  */
 const [
@@ -57,7 +45,7 @@ function loadConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v3.0.0-rebuild",
+            "VERSION": "v4.2.6-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -105,7 +93,7 @@ console.log(
 console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 4.1.0-beta.5 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 
 /**
- * Events
+ * Events & Callers
  */
 ipcRenderer
     .on('show_scroll_page', () => {
@@ -125,3 +113,17 @@ ipcRenderer
     .on('window_hide_cursor', () => {
         remote.getCurrentWindow().webContents.insertCSS('* { cursor: none; pointer-events: none; user-select: none;}');
     });
+
+ipcRenderer.send('menu_started');
+
+/**
+ * Import Sources
+ */
+require('./bin/sources/loadurls');
+require('./bin/sources/configsMain');
+require('./bin/sources/configsGlobal');
+
+/**
+ * Import Extensions
+ */
+require('./bin/extensions/load');

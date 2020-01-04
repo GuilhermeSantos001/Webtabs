@@ -19,6 +19,7 @@ $(document).ready(() => {
             intervals[1] = setInterval(function () {
                 try {
                     document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')['__CAM__VALUE__'].click();
+                    document.webtabs = true;
                     clearInterval(intervals[1]);
                     intervals = null;
                 } catch (e) { console.error(e); }

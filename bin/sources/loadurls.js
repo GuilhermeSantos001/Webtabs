@@ -5,8 +5,7 @@ const [
     {
         remote,
         ipcRenderer,
-        desktopCapturer,
-        session
+        desktopCapturer
     },
     path,
     fs
@@ -42,7 +41,7 @@ let [
         null,
         null,
         0,
-        null
+        null,
     ];
 
 /**
@@ -67,7 +66,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v3.0.0-rebuild",
+            "VERSION": "v4.2.6-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -629,6 +628,38 @@ setInterval(() => {
                             if (exception instanceof Array) {
                                 if (exception[0] === 'dguard') {
                                     frame.executeJavaScript(exception[1]);
+                                    frame.openDevTools();
+                                    frame.executeJavaScript(`
+                                        new Promise((resolve, reject) => {
+                                            let interval = setInterval(()=> {
+                                                if (document.webtabs) {
+                                                    let contents = document.getElementsByTagName('md-content')[1].getElementsByClassName('md-virtual-repeat-container md-orient-vertical ng-scope layout-align-center-stretch layout-row flex')[0].getElementsByClassName('md-virtual-repeat-scroller')[0].getElementsByClassName('md-virtual-repeat-offsetter')[0].children,
+                                                    i = 0,
+                                                    l = contents.length,
+                                                    menus = [];
+                                                    for (; i < l; i++) {
+                                                        menus.push(contents[i].getElementsByTagName('span')[0].innerText);
+                                                    }
+                                                    resolve(menus);
+                                                    clearInterval(interval);
+                                                }
+                                            }, 1000)
+                                        });
+                                    `).then(r => {
+                                        let menus = r;
+                                        if (menus instanceof Array) {
+                                            let items = [];
+                                            menus.map((label, id) => {
+                                                items.push({
+                                                    label: label,
+                                                    id: `cam_${id}`,
+                                                    type: 'radio',
+                                                    checked: false
+                                                });
+                                            });
+                                            ipcRenderer.send('extensions_dguard_menu_update', items);
+                                        }
+                                    });
                                 }
                             }
                         }).delay().fadeIn('slow', function () {
@@ -707,8 +738,8 @@ ipcRenderer
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, rejec) => {
             if (typeof cam === 'number') {
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
                 frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                frame.executeJavaScript(`setTimeout(function () {document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();}, 500);`);
                 var __cookies = JSON.parse(fs.readFileSync(path.localPath('data/extensions/storage/dguard.json'))) || {};
                 __cookies['cam'] = cam;
             } else if (typeof cam === 'string') {

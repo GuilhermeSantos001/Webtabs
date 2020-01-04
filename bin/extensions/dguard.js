@@ -80,12 +80,6 @@ function passwordchange() {
 $('#layerExtension-DGuard').hide();
 
 $(document).ready(() => {
-    if (remote.Menu.getApplicationMenu().getMenuItemById(`layout_${data["layout_cam"]}`))
-        remote.Menu.getApplicationMenu().getMenuItemById(`layout_${data["layout_cam"]}`).checked = true;
-
-    if (remote.Menu.getApplicationMenu().getMenuItemById(`cam_${data["cam"]}`))
-        remote.Menu.getApplicationMenu().getMenuItemById(`cam_${data["cam"]}`).checked = true;
-
     $('#form-dguard-username').val(data['username']);
     $('#form-dguard-password').val(data['password']);
 
@@ -132,4 +126,11 @@ $(document).ready(() => {
 ipcRenderer
     .on('extensions_dguard_window_configs', () => {
         $('#layerExtension-DGuard').show("fast");
+    })
+    .on('extensions_dguard_menu_update_checked', () => {
+        if (remote.Menu.getApplicationMenu().getMenuItemById(`layout_${data["layout_cam"]}`))
+            remote.Menu.getApplicationMenu().getMenuItemById(`layout_${data["layout_cam"]}`).checked = true;
+
+        if (remote.Menu.getApplicationMenu().getMenuItemById(`cam_${data["cam"]}`))
+            remote.Menu.getApplicationMenu().getMenuItemById(`cam_${data["cam"]}`).checked = true;
     });
