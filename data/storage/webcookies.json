@@ -2,39 +2,6 @@
   "size": 2,
   "cookie_1": [
     {
-      "name": "_gcl_au",
-      "value": "1.1.661090005.1577637775",
-      "domain": ".pipedrive.com",
-      "hostOnly": false,
-      "path": "/",
-      "secure": false,
-      "httpOnly": false,
-      "session": false,
-      "expirationDate": 1585413775
-    },
-    {
-      "name": "_gat",
-      "value": "1",
-      "domain": ".pipedrive.com",
-      "hostOnly": false,
-      "path": "/",
-      "secure": false,
-      "httpOnly": false,
-      "session": false,
-      "expirationDate": 1577771763
-    },
-    {
-      "name": "redirect-url",
-      "value": "https://grupomave2.pipedrive.com/progress/reports/deal/started/users-over-time/1/custom_2019-01-01_2020-01-01/all/count/owner/months",
-      "domain": ".pipedrive.com",
-      "hostOnly": false,
-      "path": "/",
-      "secure": true,
-      "httpOnly": true,
-      "session": false,
-      "expirationDate": 1577772049.180137
-    },
-    {
       "name": "ajs_user_id",
       "value": "null",
       "domain": ".pipedrive.com",
@@ -43,7 +10,7 @@
       "secure": false,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1609307749
+      "expirationDate": 1609629778
     },
     {
       "name": "ajs_group_id",
@@ -54,92 +21,92 @@
       "secure": false,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1609307749
+      "expirationDate": 1609629778
     },
     {
       "name": "_ga",
-      "value": "GA1.2.832619954.1577637775",
+      "value": "GA1.2.823699197.1578087989",
       "domain": ".pipedrive.com",
       "hostOnly": false,
       "path": "/",
       "secure": false,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1640843749
+      "expirationDate": 1641165778
     },
     {
       "name": "_gid",
-      "value": "GA1.2.1109715642.1577637775",
+      "value": "GA1.2.802202975.1578087989",
       "domain": ".pipedrive.com",
       "hostOnly": false,
       "path": "/",
       "secure": false,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1577858149
+      "expirationDate": 1578180178
     },
     {
       "name": "ajs_anonymous_id",
-      "value": "%22633bbcd6-392b-4464-92ae-5368f8771672%22",
+      "value": "%22f6171eea-c900-4022-b63c-e59ebe40341a%22",
       "domain": ".pipedrive.com",
       "hostOnly": false,
       "path": "/",
       "secure": false,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1609307749
+      "expirationDate": 1609629778
+    },
+    {
+      "name": "_gcl_au",
+      "value": "1.1.122864893.1578087989",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1585863989
+    },
+    {
+      "name": "redirect-url",
+      "value": "https://grupomave2.pipedrive.com/progress/reports/deal/started/users-over-time/1/custom_2019-01-01_2020-01-01/all/count/owner/months",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": true,
+      "session": false,
+      "expirationDate": 1578094077.907183
     },
     {
       "name": "pipe-verify",
-      "value": "iqykmVxNLVbhKsNGRQs9",
+      "value": "5BjpWMKTsmzCwqKwcXjR",
       "domain": ".pipedrive.com",
       "hostOnly": false,
       "path": "/",
       "secure": true,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1577773549.180544
+      "expirationDate": 1578095577.907247
     },
     {
       "name": "_fbp",
-      "value": "fb.1.1577771749907.1582111579",
+      "value": "fb.1.1578093778937.404432702",
       "domain": ".pipedrive.com",
       "hostOnly": false,
       "path": "/",
       "secure": false,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1585547751
+      "expirationDate": 1585869780
     }
   ],
   "cookie_2": [
     {
-      "name": "_ga",
-      "value": "GA1.3.1773471902.1577638391",
-      "domain": ".performancelab.com.br",
-      "hostOnly": false,
-      "path": "/",
-      "secure": false,
-      "httpOnly": false,
-      "session": false,
-      "expirationDate": 1640842418
-    },
-    {
-      "name": "_gid",
-      "value": "GA1.3.2026095507.1577729840",
-      "domain": ".performancelab.com.br",
-      "hostOnly": false,
-      "path": "/",
-      "secure": false,
-      "httpOnly": false,
-      "session": false,
-      "expirationDate": 1577856818
-    },
-    {
       "name": "PHPSESSID",
-      "value": "v4icfbr49v36fj02n6ij5sqmd5",
-      "domain": "sla.performancelab.com.br",
-      "hostOnly": true,
+      "value": "sqbfr9ja25pbvktkvpjhm91jds",
+      "domain": ".sla.performancelab.com.br",
+      "hostOnly": false,
       "path": "/",
       "secure": false,
       "httpOnly": false,
@@ -148,23 +115,34 @@
     {
       "name": "b_Admin_visibility",
       "value": "hidden",
-      "domain": "sla.performancelab.com.br",
-      "hostOnly": true,
+      "domain": ".sla.performancelab.com.br",
+      "hostOnly": false,
       "path": "/",
       "secure": false,
       "httpOnly": false,
       "session": true
     },
     {
-      "name": "_gat",
-      "value": "1",
+      "name": "_ga",
+      "value": "GA1.3.429292531.1578091905",
       "domain": ".performancelab.com.br",
       "hostOnly": false,
       "path": "/",
       "secure": false,
       "httpOnly": false,
       "session": false,
-      "expirationDate": 1577770478
+      "expirationDate": 1641165653
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.3.2146964312.1578093654",
+      "domain": ".performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1578180053
     }
   ]
 }

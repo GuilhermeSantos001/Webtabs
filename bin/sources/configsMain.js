@@ -41,7 +41,7 @@ createDataURLs();
  * Functions
  */
 function createDataURLs() {
-    if (!path.localPathExists(path.localPath('data/storage/urls.json'))) path.localPathCreate(path.localPath('data/storage/urls.json'));
+    if (!path.localPathExists('data/storage/urls.json')) path.localPathCreate('data/storage/urls.json');
     if (fs.existsSync(path.localPath('data/storage/urls.json'))) {
         data_urls = JSON.parse(fs.readFileSync(path.localPath('data/storage/urls.json'), 'utf8')) || [
             [
@@ -85,7 +85,7 @@ function SCREEN_SELECTION_UPDATE() {
                 let btn = document.getElementById(source.id);
                 btn.onclick = function () {
                     let file = path.localPath('data/storage/urls.json');
-                    if (!path.localPathExists(file)) path.localPathCreate(file);
+                    if (!path.localPathExists('data/storage/urls.json')) path.localPathCreate('data/storage/urls.json');
                     if (fs.existsSync(file)) {
                         data.push([{
                             type_url: 'stream',
@@ -116,7 +116,7 @@ $(document).ready(function () {
 
     document.getElementById("button_add_url").onclick = function () {
         let file = path.localPath('data/storage/urls.json');
-        if (!path.localPathExists(file)) path.localPathCreate(file);
+        if (!path.localPathExists('data/storage/urls.json')) path.localPathCreate('data/storage/urls.json');
         if (fs.existsSync(file)) {
             let url = $('#input_add_url').val() || '';
             if (!url || typeof url != 'string' || url.length <= 0) return;

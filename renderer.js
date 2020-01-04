@@ -6,6 +6,11 @@ require('./bin/sources/configsMain');
 require('./bin/sources/configsGlobal');
 
 /**
+ * Import Extensions
+ */
+require('./bin/extensions/load');
+
+/**
  * Import
  */
 const [
@@ -38,12 +43,13 @@ let [
  * Self Callers Initialize
  */
 loadConfigGlobal();
+animatelayerContent();
 
 /**
  * Functions
  */
 function loadConfigGlobal() {
-    if (!path.localPathExists(path.localPath('data/configs/global.json'))) path.localPathCreate(path.localPath('data/configs/global.json'));
+    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
     if (fs.existsSync(path.localPath('data/configs/global.json'))) {
         data = JSON.parse(fs.readFileSync(path.localPath('data/configs/global.json'), 'utf8')) || [];
     } else {
@@ -59,6 +65,20 @@ function loadConfigGlobal() {
     };
 };
 
+function animatelayerContent() {
+    let file = path.localPath('data/storage/framereload.json');
+    if (!fs.existsSync(file)) {
+        $('#layerContent')
+            .animate({ "margin-top": `-=${height}`, opacity: 0 })
+            .delay(1000).animate({ "margin-top": `+=${height}`, opacity: 100 }, 'slow')
+            .delay(2000).animate({ "margin-top": `-=${height}`, opacity: 0 }, 'slow', function () {
+                $('#layerContent').hide();
+            });
+    } else {
+        $('#layerContent').hide();
+    }
+};
+
 /**
  * Process
  */
@@ -67,10 +87,6 @@ document.getElementById('logo').src = path.localPath('assets/img/logo.png');
 document.getElementById('title').innerText = data.TITLE;
 document.getElementById('slogan').innerText = data.SLOGAN;
 document.getElementById('version').innerText = data.VERSION;
-
-$('#layerContent').delay(3500).animate({ "margin-top": `-=${height}`, opacity: 0 }, 'slow', function () {
-    $('#layerContent').hide();
-});
 
 $(document).ready(function () {
     $('#layerContainer').fadeOut(function () { $('#layerContainer').css('filter', 'opacity(100%)'); }).delay().fadeIn('slow');

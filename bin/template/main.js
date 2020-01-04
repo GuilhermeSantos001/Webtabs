@@ -1,7 +1,13 @@
 /**
  * Import
  */
-const { BrowserWindow } = require('electron');
+const [
+    {
+        BrowserWindow
+    }
+] = [
+        require('electron')
+    ]
 
 const template = [
     {
@@ -54,6 +60,13 @@ const template = [
                 accelerator: 'F10',
                 click: () => {
                     BrowserWindow.getFocusedWindow().webContents.send('window_configs_global');
+                }
+            },
+            {
+                label: 'Recarregar',
+                accelerator: 'F5',
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.send('window_frame_reload');
                 }
             },
             {
@@ -142,6 +155,13 @@ const template = [
             {
                 label: 'D-Guard',
                 submenu: [
+                    {
+                        label: 'Conta',
+                        accelerator: 'CommandOrControlOrShift+F9',
+                        click: () => {
+                            BrowserWindow.getFocusedWindow().webContents.send('extensions_dguard_window_configs');
+                        }
+                    },
                     {
                         label: 'Câmeras',
                         submenu: [

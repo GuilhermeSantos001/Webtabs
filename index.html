@@ -9,6 +9,8 @@
   <!-- Bootstrap & Material Design Icons CSS -->
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="node_modules/material-design-icons/iconfont/material-icons.css">
+  <!-- Jquery UI -->
+  <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
 
   <!-- Renderer CSS -->
   <link rel="stylesheet" href="assets/css/renderer.css">
@@ -17,7 +19,13 @@
 </head>
 
 <body style="background-color: #232323;">
+  <!--
+    CONTAINER
+  -->
   <div id="layerContainer" class="container-fluid" style="filter:opacity(0%);">
+    <!--
+      CONTENT PRIMARY
+    -->
     <div id="layerContent" class="row">
       <div class="col-12 bg-dark text-white">
         <img id="logo" height="155px" width="164px" class="rounded-circle float-left m-2">
@@ -34,6 +42,9 @@
         <div id="version" class="alert alert-secondary text-center" role="alert"></div>
       </div>
     </div>
+    <!--
+      ADD CONTENTS OF FRAME
+    -->
     <div id="layerUrladd" class="bg-dark text-white" style="z-index: 2;">
       <div class="container-fluid">
         <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Ações</h1>
@@ -70,6 +81,9 @@
         <button type="button" class="btn btn-lg btn-block btn-outline-light mt-2" id="button_exit_url">Voltar</button>
       </div>
     </div>
+    <!--
+      CONFIGS GLOBAL
+    -->
     <div id="layerConfigs" class="bg-dark text-white" style="z-index: 2;">
       <div class="container-fluid">
         <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Configurações</h1>
@@ -126,12 +140,56 @@
         <button type="button" class="btn btn-lg btn-block btn-outline-light" id="button_exit_global">Voltar</button>
       </div>
     </div>
-    <div class="layerFrame row"></div>
+    <!--
+      EXTENSIONS
+    -->
+    <!--
+      D-GUARD
+    -->
+    <div id="layerExtension-DGuard" class="bg-dark text-white" style="z-index: 2;">
+      <div class="container-fluid">
+        <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Detalhes da conta D-Guard</h1>
+        <ul class="list-group">
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-dguard-username">
+                Nome de Usuario
+                <p class="mb-0">
+                  Esse é o nome da conta cadastrada no seu servidor do D-Guard.
+                </p>
+              </label>
+              <input type="text" class="form-control border border-light bg-dark text-white" id="form-dguard-username"
+                placeholder="Insira o nome da conta...">
+            </div>
+          </li>
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-dguard-password">
+                Senha de Usuario
+                <p class="mb-0">
+                  Essa é a senha da sua conta cadastrada no seu servidor do D-Guard.
+                </p>
+              </label>
+              <input type="password" class="form-control border border-light bg-dark text-white"
+                id="form-dguard-password" placeholder="Insira sua senha..."><i id="form-dguard-password-visibility"
+                class="material-icons float-right" style="margin-top: -1.9rem; margin-right: 0.7rem;">visibility</i>
+            </div>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-lg btn-block btn-outline-light"
+          id="button_extension_dguard_exit">Voltar</button>
+      </div>
+    </div>
+    <!--
+      FRAME CONTAINER
+    -->
+    <div class="layerFrame row" style="z-index: 1;"></div>
   </div>
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script>
     window.jQuery = window.$ = require('jquery');
   </script>
+  <script src="assets/js/jquery-ui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
     crossorigin="anonymous"></script>

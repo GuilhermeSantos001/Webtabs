@@ -34,7 +34,7 @@ createConfigGlobal();
 *  Functions
 */
 function createConfigGlobal() {
-    if (!path.localPathExists(path.localPath('data/configs/global.json'))) path.localPathCreate(path.localPath('data/configs/global.json'));
+    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
     if (fs.existsSync(path.localPath('data/configs/global.json'))) {
         ConfigGlobal = JSON.parse(fs.readFileSync(path.localPath('data/configs/global.json'), 'utf8')) || [];
     } else {
@@ -52,7 +52,7 @@ function createConfigGlobal() {
 
 function titlechange() {
     let file = path.localPath('data/configs/global.json');
-    if (!path.localPathExists(file)) path.localPathCreate(file);
+    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
     fs.writeFileSync(file, JSON.stringify({
         "APPNAME": ConfigGlobal.APPNAME,
         "TITLE": $('#form-title').val(),
@@ -66,7 +66,7 @@ function titlechange() {
 
 function sloganchange() {
     let file = path.localPath('data/configs/global.json');
-    if (!path.localPathExists(file)) path.localPathCreate(file);
+    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
     fs.writeFileSync(file, JSON.stringify({
         "APPNAME": ConfigGlobal.APPNAME,
         "TITLE": ConfigGlobal.TITLE,
@@ -94,7 +94,7 @@ function inputDemoFrametimeInnerText() {
 function inputFrametimeChange() {
     ConfigGlobal.FRAMETIME = Number($('#input-frametime').val());
     let file = path.localPath('data/configs/global.json');
-    if (!path.localPathExists(file)) path.localPathCreate(file);
+    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
     fs.writeFileSync(file, JSON.stringify({
         "APPNAME": ConfigGlobal.APPNAME,
         "TITLE": ConfigGlobal.TITLE,
@@ -153,7 +153,7 @@ $(document).ready(function () {
 
     document.getElementById("radio_horas").onclick = function () {
         let file = path.localPath('data/configs/global.json');
-        if (!path.localPathExists(file)) path.localPathCreate(file);
+        if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
         fs.writeFileSync(file, JSON.stringify({
             "APPNAME": ConfigGlobal.APPNAME,
             "TITLE": ConfigGlobal.TITLE,
@@ -170,7 +170,7 @@ $(document).ready(function () {
 
     document.getElementById("radio_minutos").onclick = function () {
         let file = path.localPath('data/configs/global.json');
-        if (!path.localPathExists(file)) path.localPathCreate(file);
+        if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
         fs.writeFileSync(file, JSON.stringify({
             "APPNAME": ConfigGlobal.APPNAME,
             "TITLE": ConfigGlobal.TITLE,
@@ -187,7 +187,7 @@ $(document).ready(function () {
 
     document.getElementById("radio_segundos").onclick = function () {
         let file = path.localPath('data/configs/global.json');
-        if (!path.localPathExists(file)) path.localPathCreate(file);
+        if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
         fs.writeFileSync(file, JSON.stringify({
             "APPNAME": ConfigGlobal.APPNAME,
             "TITLE": ConfigGlobal.TITLE,

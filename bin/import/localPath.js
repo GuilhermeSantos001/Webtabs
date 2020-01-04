@@ -17,8 +17,7 @@ function localPath(p) {
     // Importa o modulo PATH do Node
     var path = require('path'),
         // Cria a base para o caminho local
-        mainModule = remote.process.mainModule,
-        base = mainModule.path.substr(0, mainModule.path.substr(0, mainModule.path.search('.webpack')));
+        base = path.dirname(remote.process.mainModule.filename);
     // Retorna a base do caminho associado ao caminho
     return path.join(base, p);
 };
@@ -72,9 +71,10 @@ function localPathCreate(p) {
                 pathString += '\\';
                 path.str += '\\';
             };
-            path.dir.push(path.str), path.str = '';
-            if (!fs.existsSync(pathString) && path.dir[path.dir.length - 1].indexOf('\\') != -1) {
-                fs.mkdirSync(pathString);
+            path.dir.push(path.str),
+                path.str = '';
+            if (!fs.existsSync(localPath(pathString)) && path.dir[path.dir.length - 1].indexOf('\\') != -1) {
+                fs.mkdirSync(localPath(pathString));
             }
         }
     }

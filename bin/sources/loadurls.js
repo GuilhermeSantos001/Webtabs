@@ -59,7 +59,7 @@ loadDataURLs();
  *  Functions
  */
 function createConfigGlobal() {
-    if (!path.localPathExists(path.localPath('data/configs/global.json'))) path.localPathCreate(path.localPath('data/configs/global.json'));
+    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
     if (fs.existsSync(path.localPath('data/configs/global.json'))) {
         ConfigGlobal = JSON.parse(fs.readFileSync(path.localPath('data/configs/global.json'), 'utf8')) || [];
     } else {
@@ -76,7 +76,7 @@ function createConfigGlobal() {
 };
 
 function createDataURLs() {
-    if (!path.localPathExists(path.localPath('data/storage/urls.json'))) path.localPathCreate(path.localPath('data/storage/urls.json'));
+    if (!path.localPathExists('data/storage/urls.json')) path.localPathCreate('data/storage/urls.json');
     if (fs.existsSync(path.localPath('data/storage/urls.json'))) {
         data_urls = JSON.parse(fs.readFileSync(path.localPath('data/storage/urls.json'), 'utf8')) || [
             [
@@ -104,7 +104,7 @@ function createDataURLs() {
 };
 
 function createWebCookies() {
-    if (!path.localPathExists(path.localPath('data/storage/webcookies.json'))) path.localPathCreate(path.localPath('data/storage/webcookies.json'));
+    if (!path.localPathExists('data/storage/webcookies.json')) path.localPathCreate('data/storage/webcookies.json');
     if (fs.existsSync(path.localPath('data/storage/webcookies.json'))) {
         web_cookies = JSON.parse(fs.readFileSync(path.localPath('data/storage/webcookies.json'), 'utf8')) || { 'size': 0 };
     } else {
@@ -118,7 +118,7 @@ function createWebCookies() {
  */
 function saveDataURLs() {
     let file = path.localPath('data/storage/urls.json');
-    if (path.localPathExists(file)) {
+    if (path.localPathExists('data/storage/urls.json')) {
         fileProcess = 'write...';
         fs.writeFile(file, JSON.stringify(urls, null, 2), 'utf8', () => {
             fileProcess = 'done';
@@ -129,7 +129,7 @@ function saveDataURLs() {
 
 function loadDataURLs() {
     let file = path.localPath('data/storage/urls.json');
-    if (path.localPathExists(file)) {
+    if (path.localPathExists('data/storage/urls.json')) {
         fileProcess = 'reading...';
         let data = JSON.parse(fs.readFileSync(file, {
             encoding: 'utf8'
@@ -147,7 +147,7 @@ function loadDataURLs() {
  */
 function saveWebCookies() {
     let file = path.localPath('data/storage/webcookies.json');
-    if (path.localPathExists(file)) {
+    if (path.localPathExists('data/storage/webcookies.json')) {
         fileProcess = 'write...';
         fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
             fileProcess = 'done';
@@ -157,7 +157,7 @@ function saveWebCookies() {
 
 function loadWebCookies() {
     let file = path.localPath('data/storage/webcookies.json');
-    if (path.localPathExists(file)) {
+    if (path.localPathExists('data/storage/webcookies.json')) {
         fileProcess = 'reading...';
         let data = JSON.parse(fs.readFileSync(file, {
             encoding: 'utf8'
@@ -168,6 +168,19 @@ function loadWebCookies() {
         }
     }
 };
+
+/**
+ * Frame Reload
+ */
+function framereload() {
+    let file = path.localPath('data/storage/framereload.json');
+    if (fs.existsSync(file)) {
+        let __data = JSON.parse(fs.readFileSync(file)) || {};
+        if (__data['cache']) i = Number(__data['cache']);
+        fs.unlinkSync(file);
+    }
+};
+
 
 /**
  * Process
@@ -500,6 +513,7 @@ setInterval(() => {
         !ProcessInterval &&
         fileProcess === 'done'
     ) {
+        framereload();
         if (i >= urls.length) i = 0;
         if (typeof urls[i][0] === 'string') {
             ProcessInterval = 'processing...';
@@ -511,12 +525,12 @@ setInterval(() => {
                  * D-Guard
                  */
                 case 'dguard':
-                    let __cookies = JSON.parse(fs.readFileSync(path.localPath('data/frames/storage/cookies.json'))) || {},
-                        __file = fs.readFileSync(path.localPath('data/frames/scripts/dguard.js')).toString();
-                    __file = __file.replace('__NAME__VALUE__', __cookies['dguard']['username']);
-                    __file = __file.replace('__PASS__VALUE__', __cookies['dguard']['password']);
-                    __file = __file.replace('__CAM__VALUE__', __cookies['dguard']['cam']);
-                    __file = __file.replace('__LAYOUT_CAM__VALUE__', __cookies['dguard']['layout_cam']);
+                    let __cookies = JSON.parse(fs.readFileSync(path.localPath('data/extensions/storage/dguard.json'))) || {},
+                        __file = fs.readFileSync(path.localPath('data/extensions/scripts/dguard.js')).toString();
+                    __file = __file.replace('__NAME__VALUE__', __cookies['username']);
+                    __file = __file.replace('__PASS__VALUE__', __cookies['password']);
+                    __file = __file.replace('__CAM__VALUE__', __cookies['cam']);
+                    __file = __file.replace('__LAYOUT_CAM__VALUE__', __cookies['layout_cam']);
                     return render(['dguard', __file]);
             }
             /**
@@ -695,8 +709,8 @@ ipcRenderer
             if (typeof cam === 'number') {
                 frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
                 frame.executeJavaScript(`setTimeout(function () {document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();}, 500);`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('data/frames/storage/cookies.json'))) || {};
-                __cookies['dguard']['cam'] = cam;
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('data/extensions/storage/dguard.json'))) || {};
+                __cookies['cam'] = cam;
             } else if (typeof cam === 'string') {
                 if (cam === 'layout_1') {
                     cam = 1;
@@ -706,13 +720,21 @@ ipcRenderer
                     cam = 3;
                 }
                 frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('data/frames/storage/cookies.json'))) || {};
-                __cookies['dguard']['layout_cam'] = cam;
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('data/extensions/storage/dguard.json'))) || {};
+                __cookies['layout_cam'] = cam;
             }
-            fs.writeFileSync(path.localPath('data/frames/storage/cookies.json'), JSON.stringify(__cookies, null, 2));
+            fs.writeFileSync(path.localPath('data/extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
             resolve();
         })
             .then(() => {
                 clearInterval(interval);
             }), 1000);
+    })
+    .on('window_frame_reload', () => {
+        let file = path.localPath('data/storage/framereload.json');
+        if (!path.localPathExists('data/storage/framereload.json')) path.localPathCreate('data/storage/framereload.json');
+        fs.writeFileSync(file, JSON.stringify({
+            "cache": i - 1
+        }, null, 2), 'utf8');
+        remote.getCurrentWindow().webContents.reload();
     });
