@@ -41,10 +41,10 @@ function load() {
         data = JSON.parse(fs.readFileSync(file)) || {};
     } else {
         data = {
-            "username": "moacyr",
-            "password": "moacyr",
-            "layout_cam": 3,
-            "cam": 8
+            "username": "",
+            "password": "",
+            "layout_cam": 0,
+            "cam": 0
         }
         fs.writeFileSync(file, JSON.stringify(data, null, 2));
     }
