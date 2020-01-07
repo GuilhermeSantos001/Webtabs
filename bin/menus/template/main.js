@@ -27,6 +27,10 @@ const template = [{
                         selected: 0
                     }
                 }
+                while (!displays[data.selected]) {
+                    if (data.selected > 0)
+                        data.selected--;
+                }
                 data.displays = displays.map((display, i) => {
                     return {
                         label: `Monitor ${i + 1}`,
@@ -34,7 +38,17 @@ const template = [{
                         checked: i == data.selected,
                         click: menuItem => {
                             data.selected = Number(menuItem.label.replace('Monitor', '')), data.selected--;
-                            fs.writeFileSync(file, JSON.stringify(data, null, 2));
+                            let { x, y, width, height } = display.bounds,
+                                win = BrowserWindow.getFocusedWindow(),
+                                isFullScreen = win.isFullScreen();
+                            if (isFullScreen) win.setFullScreen(false);
+                            let delay = setTimeout(() => {
+                                win.setBounds({ x, y, width, height });
+                                fs.writeFile(file, JSON.stringify(data, null, 2), e => {
+                                    if (isFullScreen) win.setFullScreen(true);
+                                    clearTimeout(delay);
+                                });
+                            }, 100);
                         }
                     }
                 });

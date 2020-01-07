@@ -1,15 +1,12 @@
 [
   [
     "https://grupomave2.pipedrive.com/auth/login?return_url=https%3A%2F%2Fgrupomave2.pipedrive.com%2Fpipeline%2F1%2Fuser%2Feveryone",
-    0
-  ],
-  [
-    "http://grupomave.mooo.com:8081",
     0,
-    "dguard"
+    "cookie_1"
   ],
   [
     "https://sla.performancelab.com.br/login.php?uri=%2F",
-    0
+    0,
+    "cookie_2"
   ]
 ]

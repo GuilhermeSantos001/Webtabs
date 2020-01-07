@@ -1,0 +1,170 @@
+{
+  "size": 2,
+  "cookie_1": [
+    {
+      "name": "ajs_user_id",
+      "value": "null",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1609943521
+    },
+    {
+      "name": "ajs_group_id",
+      "value": "null",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1609943521
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.2.2034667411.1578396768",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1641479521
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.2.1387913471.1578396768",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1578493921
+    },
+    {
+      "name": "_gcl_au",
+      "value": "1.1.1683032296.1578396769",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1586172768
+    },
+    {
+      "name": "ajs_anonymous_id",
+      "value": "%22212e6a6e-85ea-49c2-af0b-d17bbcfbfc25%22",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1609943521
+    },
+    {
+      "name": "redirect-url",
+      "value": "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": true,
+      "session": false,
+      "expirationDate": 1578407820.54472
+    },
+    {
+      "name": "pipe-verify",
+      "value": "Xozdt9RcXTkHJptamR0m",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": true,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1578409320.544796
+    },
+    {
+      "name": "_gat",
+      "value": "1",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1578407581
+    },
+    {
+      "name": "_fbp",
+      "value": "fb.1.1578407521839.1790095262",
+      "domain": ".pipedrive.com",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1586183523
+    }
+  ],
+  "cookie_2": [
+    {
+      "name": "PHPSESSID",
+      "value": "t3hjp0jbpa1ru6ro2cjh8mogal",
+      "domain": ".sla.performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": true
+    },
+    {
+      "name": "b_Admin_visibility",
+      "value": "hidden",
+      "domain": ".sla.performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": true
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.3.209017693.1578396777",
+      "domain": ".performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1641479541
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.3.2028132575.1578396777",
+      "domain": ".performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1578493941
+    },
+    {
+      "name": "_gat",
+      "value": "1",
+      "domain": ".performancelab.com.br",
+      "hostOnly": false,
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "session": false,
+      "expirationDate": 1578407601
+    }
+  ]
+}

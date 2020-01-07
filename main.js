@@ -19,9 +19,23 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  const displays = screen.getAllDisplays(),
-    { width, height } = displays[0].workAreaSize,
-    { x, y } = displays[0].workArea;
+  let path = require('./bin/import/localPath'),
+    fs = require('fs'),
+    file = path.localPath('data/configs/display.json'),
+    selected = 0;
+  if (fs.existsSync(file)) {
+    selected = (data => {
+      if (data.selected != undefined) return data.selected;
+      return 0;
+    })(JSON.parse(fs.readFileSync(file, 'utf8')) || {});
+  }
+  const displays = screen.getAllDisplays();
+  while (!displays[selected]) {
+    if (selected > 0)
+      selected--;
+  }
+  const { width, height } = displays[selected].workAreaSize,
+    { x, y } = displays[selected].workArea;
   mainWindow = new BrowserWindow({
     width: width,
     height: height,

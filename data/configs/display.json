@@ -4,6 +4,11 @@
     {
       "label": "Monitor 1",
       "type": "radio",
+      "checked": false
+    },
+    {
+      "label": "Monitor 2",
+      "type": "radio",
       "checked": true
     }
   ]
