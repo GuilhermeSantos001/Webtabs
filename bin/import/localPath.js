@@ -15,9 +15,14 @@ function localPath(p) {
     if (p.substring(0, 1) === '/')
         p = p.substring(1);
     // Importa o modulo PATH do Node
-    var path = require('path'),
-        // Cria a base para o caminho local
-        base = path.dirname(remote.process.mainModule.filename);
+    var path = require('path');
+    // Cria a base para o caminho local
+    var base = (() => {
+        if (remote && remote.process)
+            return path.dirname(remote.process.mainModule.filename);
+        if (process)
+            return path.dirname(process.mainModule.filename);
+    })();
     // Retorna a base do caminho associado ao caminho
     return path.join(base, p);
 };
@@ -56,28 +61,13 @@ function localPathExists(p) {
  */
 function localPathCreate(p) {
     var fs = require('fs'),
-        i = 0,
-        length = p.length,
-        path = { str: '', dir: [] },
-        pathString = '';
-    for (; i < length; i++) {
-        let letter = String(p[i]);
-        if (letter != '\\') {
-            path.str += letter;
-            pathString += letter;
+        dir = '';
+    p.split('/').map(path => {
+        if (path.indexOf('.') == -1) {
+            if (!localPathExists(dir += `${path}/`))
+                fs.mkdirSync(localPath(dir));
         }
-        if (letter == '\\' || i == length - 1) {
-            if (letter == '\\') {
-                pathString += '\\';
-                path.str += '\\';
-            };
-            path.dir.push(path.str),
-                path.str = '';
-            if (!fs.existsSync(localPath(pathString)) && path.dir[path.dir.length - 1].indexOf('\\') != -1) {
-                fs.mkdirSync(localPath(pathString));
-            }
-        }
-    }
+    });
 };
 
 module.exports = { localPath, localPathExists, localPathCreate };

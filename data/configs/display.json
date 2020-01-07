@@ -1,0 +1,10 @@
+{
+  "selected": 0,
+  "displays": [
+    {
+      "label": "Monitor 1",
+      "type": "radio",
+      "checked": true
+    }
+  ]
+}

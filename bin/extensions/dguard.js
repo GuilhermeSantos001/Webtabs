@@ -37,6 +37,7 @@ load();
  */
 function load() {
     let file = path.localPath('data/extensions/storage/dguard.json');
+    if (!path.localPathExists('data/extensions/storage/dguard.json')) path.localPathCreate('data/extensions/storage/dguard.json');
     if (fs.existsSync(file)) {
         data = JSON.parse(fs.readFileSync(file)) || {};
     } else {
@@ -117,6 +118,13 @@ $(document).ready(() => {
 
     document.getElementById("button_extension_dguard_exit").onclick = function () {
         $('#layerExtension-DGuard').hide("fast");
+    };
+
+    document.getElementById("button_extension_dguard_remove_frame").onclick = function () {
+        $("#button_extension_dguard_remove_frame")
+            .effect("bounce")
+            .prop('disabled', true)
+            .html(`Excluindo...`);
     };
 });
 

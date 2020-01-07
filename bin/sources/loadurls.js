@@ -70,7 +70,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.3.10-beta.5",
+            "VERSION": "v4.4.14-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -145,6 +145,21 @@ function loadDataURLs() {
     }
 };
 
+function removeDataURLs(i) {
+    let file = path.localPath('data/storage/urls.json');
+    if (path.localPathExists('data/storage/urls.json')) {
+        fileProcess = 'write...';
+        if (urls[i] instanceof Array) {
+            let cookie = urls[i][2];
+            urls.splice(i, 1);
+            fs.writeFile(file, JSON.stringify(urls, null, 2), 'utf8', () => {
+                fileProcess = 'done';
+                removeWebCookies(cookie);
+            });
+        }
+    }
+};
+
 /**
  * Webcookies
  */
@@ -169,6 +184,17 @@ function loadWebCookies() {
             fileProcess = 'done';
             cookies = data;
         }
+    }
+};
+
+function removeWebCookies(cookie) {
+    let file = path.localPath('data/storage/webcookies.json');
+    if (path.localPathExists('data/storage/webcookies.json')) {
+        fileProcess = 'write...';
+        if (cookies[cookie] instanceof Array) delete cookies[cookie];
+        fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
+            fileProcess = 'done';
+        });
     }
 };
 
@@ -312,6 +338,60 @@ function flushFrame() {
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+            }
+        });
+    }
+}
+
+function deleteFrame(extensions) {
+    if (urls.length <= 0) return;
+    /**
+     * Extensions
+     */
+    /**
+     * D-Guard
+     */
+    if (extensions === 'dguard') {
+        return removeDataURLs(i);
+    }
+    /**
+     * Process
+     */
+    if (frame) {
+        if (
+            frame.removeProcess ||
+            frame.fadeInInitial === 'processing...'
+        ) return;
+        frame.removeProcess = true;
+        let __i = i > 1 ? i - 1 : i;
+        $(frame).fadeOut('slow', function () {
+            if (typeof urls[__i][0] === 'string') {
+                urls[__i][0] = frame.getURL();
+                urls[__i][1] = frame.getZoomLevel();
+                if (typeof urls[__i][2] != 'string') urls[__i][2] = `cookie_${++cookies.size}`;
+                if (String(urls[__i][2]).toLowerCase() === 'dguard') return finish(true);
+                remote.getCurrentWindow().webContents.session.cookies.get({})
+                    .then((data) => {
+                        cookies[urls[__i][2]] = data;
+                        finish(true);
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+            } else if (
+                typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'stream' ||
+                typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'image' ||
+                typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'video'
+            ) {
+                finish(false);
+            }
+            function finish(listener) {
+                i = __i;
+                saveDataURLs();
+                clearInterval(interval), interval = null;
+                if (listener) frame.removeEventListener('did-finish-load', frame.listener);
+                frame.remove();
+                frame = null;
+                removeDataURLs(i);
             }
         });
     }
@@ -558,7 +638,7 @@ setInterval(() => {
         framereload();
         if (i >= urls.length) i = 0;
         if (typeof urls[i][0] === 'string') {
-            !ProcessInterval ? 'processing...' : ProcessInterval;
+            ProcessInterval = !ProcessInterval ? 'processing...' : ProcessInterval;
             /**
              * Exceções
              */
@@ -569,6 +649,14 @@ setInterval(() => {
                 case 'dguard':
                     let { username, password, cam, layout_cam } = JSON.parse(fs.readFileSync(path.localPath('data/extensions/storage/dguard.json'))) || {},
                         __file = fs.readFileSync(path.localPath('data/extensions/scripts/dguard.js')).toString();
+                    /**
+                     * Se o usuario deseja remover o frame
+                     */
+                    if ($("#button_extension_dguard_remove_frame").html() === 'Excluindo...') {
+                        $('#layerExtension-DGuard').delay("slow").hide("fast");
+                        deleteFrame('dguard');
+                        return ProcessInterval = null;
+                    }
                     /**
                      * Erro com a configuração do layout
                      */
@@ -701,7 +789,13 @@ setInterval(() => {
                         frame.fadeInInitial = 'processing...';
                         $(frame).fadeOut(function () {
                             $(frame).css('filter', 'opacity(100%)');
+                            /**
+                             * Extensions
+                             */
                             if (exception instanceof Array) {
+                                /**
+                                 * D-Guard
+                                 */
                                 if (exception[0] === 'dguard') {
                                     frame.executeJavaScript(exception[1]);
                                     if (isDev) frame.openDevTools();
@@ -741,7 +835,13 @@ setInterval(() => {
                         }).delay().fadeIn('slow', function () {
                             frame.fadeInInitial = 'complete!';
                             ProcessInterval = null;
+                            /**
+                             * Extensions
+                             */
                             if (exception instanceof Array) {
+                                /**
+                                 * D-Guard
+                                 */
                                 if (exception[0] === 'dguard') {
                                     let auth = setInterval(() => {
                                         frame.executeJavaScript(`

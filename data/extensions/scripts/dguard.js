@@ -19,6 +19,7 @@ $(document).ready(() => {
             if (reset) $("#reset").remove(), reset = false;
         }
         try {
+            $('.layout-row')[3].children[0].click();
             document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();
             document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')['__LAYOUT_CAM__VALUE__'].click();
             clearInterval(intervals[0]);

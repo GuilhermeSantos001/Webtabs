@@ -19,12 +19,16 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  const displays = screen.getAllDisplays(),
+    { width, height } = displays[0].workAreaSize,
+    { x, y } = displays[0].workArea;
   mainWindow = new BrowserWindow({
     width: width,
     height: height,
     minWidth: width / 2,
     minHeight: height / 2,
+    x: x,
+    y: y,
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
@@ -36,7 +40,8 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('index.html');
+  mainWindow.maximize();
 
   // Open the DevTools.
   if (isDev) mainWindow.webContents.openDevTools();
@@ -48,9 +53,6 @@ function createWindow() {
       // in an array if your app supports multi windows, this is the time
       // when you should delete the corresponding element.
       mainWindow = null
-    })
-    .on('dom-ready', function () {
-      console.log('teste');
     });
 };
 

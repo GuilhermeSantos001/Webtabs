@@ -1,12 +1,47 @@
 const [
-    { BrowserWindow }
+    {
+        BrowserWindow,
+        screen
+    },
+    path,
+    fs
 ] = [
-        require('electron')
+        require('electron'),
+        require('../../import/localPath'),
+        require('fs')
     ];
 
 const template = [{
     label: 'Janela', submenu: [
         { label: 'Tela Cheia', role: 'togglefullscreen' },
+        {
+            label: 'Monitor de Saida',
+            submenu: (displays => {
+                let file = path.localPath('data/configs/display.json'),
+                    data;
+                if (!path.localPathExists('data/configs/display.json')) path.localPathCreate('data/configs/display.json');
+                if (fs.existsSync(file)) {
+                    data = JSON.parse(fs.readFileSync(file, 'utf8')) || {};
+                } else {
+                    data = {
+                        selected: 0
+                    }
+                }
+                data.displays = displays.map((display, i) => {
+                    return {
+                        label: `Monitor ${i + 1}`,
+                        type: 'radio',
+                        checked: i == data.selected,
+                        click: menuItem => {
+                            data.selected = Number(menuItem.label.replace('Monitor', '')), data.selected--;
+                            fs.writeFileSync(file, JSON.stringify(data, null, 2));
+                        }
+                    }
+                });
+                fs.writeFileSync(file, JSON.stringify(data, null, 2));
+                return data.displays;
+            })(screen.getAllDisplays())
+        },
         { role: 'toggleDevTools' },
         { label: 'Recarregar', role: 'reload' },
         {

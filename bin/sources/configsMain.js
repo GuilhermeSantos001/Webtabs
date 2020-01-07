@@ -78,7 +78,6 @@ function BTN_SCREEN_SELECTION_EXIST(id, name) {
 
 function SCREEN_SELECTION_UPDATE() {
     desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
-        console.log(sources);
         for (const source of sources) {
             if (document.getElementById(source.id) === null && source.id.includes('screen')) {
                 $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">${source.name}</button>`);
