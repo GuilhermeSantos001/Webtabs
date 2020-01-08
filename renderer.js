@@ -47,7 +47,7 @@ function loadConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.5.16-beta.5",
+            "VERSION": "v4.6.18-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }

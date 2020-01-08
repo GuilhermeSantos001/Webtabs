@@ -10,13 +10,15 @@ const [
     path,
     fs,
     isDev,
-    ALERT
+    ALERT,
+    DATE
 ] = [
         require('electron'),
         require('../import/localPath'),
         require('fs'),
         require('electron-is-dev'),
-        require('../import/alert')
+        require('../import/alert'),
+        require('../classes/tick')
     ];
 
 /**
@@ -70,7 +72,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.5.16-beta.5",
+            "VERSION": "v4.6.18-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -526,66 +528,18 @@ function frameInterval(type) {
         ) {
             if (frame.tickReset) frame.tickReset = null;
             frame.tick = (() => {
-                let date = new Date();
+                let date = new DATE();
                 if (frametimetype === 1) {
-                    date.setHours(date.getHours() + frametime);
+                    date.addHours(frametime);
                 } else if (frametimetype === 2) {
-                    date.setMinutes(date.getMinutes() + frametime);
-
+                    date.addMinutes(frametime);
                 } else if (frametimetype === 3) {
-                    date.setSeconds(date.getSeconds() + frametime);
+                    date.addSeconds(frametime)
                 }
-                let days = [
-                    'Domingo',
-                    'Segunda',
-                    'Terça',
-                    'Quarta',
-                    'Quinta',
-                    'Sexta',
-                    'Sabado'
-                ],
-                    months = [
-                        'Janeiro',
-                        'Fevereiro',
-                        'Março',
-                        'Abril',
-                        'Maio',
-                        'Junho',
-                        'Julho',
-                        'Agosto',
-                        'Setembro',
-                        'Outubro',
-                        'Novembro',
-                        'Dezembro'
-                    ]
-                return `${days[date.getDay()]} ${months[date.getMonth()]} ${date.getDate()} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+                return date;
             })();
             frame.ticknow = () => {
-                let date = new Date();
-                let days = [
-                    'Domingo',
-                    'Segunda',
-                    'Terça',
-                    'Quarta',
-                    'Quinta',
-                    'Sexta',
-                    'Sabado'
-                ],
-                    months = [
-                        'Janeiro',
-                        'Fevereiro',
-                        'Março',
-                        'Abril',
-                        'Maio',
-                        'Junho',
-                        'Julho',
-                        'Agosto',
-                        'Setembro',
-                        'Outubro',
-                        'Novembro',
-                        'Dezembro'
-                    ]
-                return `${days[date.getDay()]} ${months[date.getMonth()]} ${date.getDate()} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+                return new DATE();
             }
         }
         if (menu.getMenuItemById('PAUSE').checked) {
@@ -596,10 +550,10 @@ function frameInterval(type) {
             );
         }
         console.log(
-            `%c➠ LOG: Se ${frame.ticknow()} for igual a ${frame.tick}, mude o slide ⌛ `,
+            `%c➠ LOG: Se ${frame.ticknow().getFullDate()} for igual a ${frame.tick.getFullDate()}, mude o slide ⌛ `,
             'color: #405cff; padding: 8px; font-size: 150%;'
         );
-        if (frame.tick === frame.ticknow()) {
+        if (frame.ticknow().compareOldDate(frame.tick)) {
             console.log(`%c➠ LOG: ${frametype()} Removido ✘`, 'color: #405cff; padding: 8px; font-size: 150%;');
             if (String(type).toLowerCase() === 'frame') {
                 if (
@@ -798,7 +752,7 @@ setInterval(() => {
                                  */
                                 if (exception[0] === 'dguard') {
                                     frame.executeJavaScript(exception[1]);
-                                    if (isDev) frame.openDevTools();
+                                    // if (isDev) frame.openDevTools();
                                     frame.executeJavaScript(`
                                         new Promise((resolve, reject) => {
                                             let interval = setInterval(()=> {
@@ -857,6 +811,8 @@ setInterval(() => {
                                                     flushFrame();
                                                     clearInterval(auth);
                                                 }
+                                            } else {
+                                                clearInterval(auth);
                                             }
                                         });
                                     }, 1000);

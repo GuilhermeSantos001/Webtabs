@@ -58,7 +58,7 @@ function createWindow() {
   mainWindow.maximize();
 
   // Open the DevTools.
-  if (isDev) mainWindow.webContents.openDevTools();
+  // if (isDev) mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow
@@ -173,10 +173,11 @@ ipcMain
       });
 
       items.map(item => {
-        if (String(item.id).indexOf('cam_') != -1)
+        if (String(item.id).indexOf('cam_') != -1) {
           item.click = () => {
             event.sender.send('extension_dguard', Number(String(item.id).replace('cam_', '')));
           }
+        }
         template[3].submenu[0].submenu[1].submenu.push(item);
       });
     }
