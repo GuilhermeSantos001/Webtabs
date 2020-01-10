@@ -1,17 +1,15 @@
 [
   [
-    "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
-    0,
-    "cookie_2"
+    "https://grupomave2.pipedrive.com",
+    0
   ],
   [
-    "http://grupomave.mooo.com:8081/#!/live",
+    "http://grupomave.mooo.com:8081",
     0,
     "dguard"
   ],
   [
-    "https://sla.performancelab.com.br/login.php?uri=%2Fvlab_rel_eventos.php",
-    0,
-    "cookie_3"
+    "https://sla.performancelab.com.br",
+    0
   ]
 ]
