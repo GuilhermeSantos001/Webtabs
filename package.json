@@ -39,6 +39,7 @@
     "bootstrap": "^4.4.1",
     "electron-is-dev": "^1.1.0",
     "jquery": "^3.4.1",
+    "lz-string": "^1.4.4",
     "material-design-icons": "^3.0.1"
   }
 }

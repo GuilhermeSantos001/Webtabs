@@ -16,7 +16,7 @@ function direct(url, callback) {
     try {
         http.get(url, res => {
             const { statusCode } = res;
-            if (statusCode >= 200 && statusCode <= 205) {
+            if (statusCode >= 100 && statusCode <= 308) {
                 return callback(true);
             } else {
                 return callback(false);

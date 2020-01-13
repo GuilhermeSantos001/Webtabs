@@ -7,11 +7,13 @@ const [
         remote
     },
     fs,
-    path
+    path,
+    LZString
 ] = [
         require('electron'),
         require('fs'),
-        require('../import/localPath')
+        require('../import/localPath'),
+        require('../import/LZString')
     ];
 
 /**
@@ -30,13 +32,13 @@ let [
  * 
  * Self Callers Initialize
  */
-load();
+loadData();
 createscript();
 
 /**
  * Functions
  */
-function load() {
+function loadData() {
     let file = path.localPath('extensions/storage/dguard.json');
     if (!path.localPathExists('extensions/storage/dguard.json')) path.localPathCreate('extensions/storage/dguard.json');
     if (fs.existsSync(file)) {
@@ -53,35 +55,34 @@ function load() {
 };
 
 function createscript() {
-    let script = '\
-    /**\n\
-     * Process\n\
-     */\n\
-    $(document).ready(() => {\n\
-        $(document.getElementsByName(\'username\')[0]).val(\'__NAME__VALUE__\');\n\
-        $(document.getElementsByName(\'username\')[0]).change();\n\
-        \n\
-        $(document.getElementsByName(\'password\')[0]).val(\'__PASS__VALUE__\');\n\
-        $(document.getElementsByName(\'password\')[0]).change();\n\
-        \n\
-        $(document.getElementsByClassName(\'md-primary md-raised md-button md-dguardlight-theme md-ink-ripple\')[0]).delay().click();\n\
-        \n\
+    let script = "$(document).ready(() => {\n\
+        $(document.getElementsByName('username')[0]).val('__NAME__VALUE__');\n\
+        $(document.getElementsByName('username')[0]).change();\n\
+        \
+        $(document.getElementsByName('password')[0]).val('__PASS__VALUE__');\n\
+        $(document.getElementsByName('password')[0]).change();\n\
+        \
         let intervals = [],\n\
             reset = false;\n\
         intervals[0] = setInterval(function () {\n\
-            if ($($(\'#errors\').children()[0]).is(\':visible\')) {\n\
-                if (!reset) $(\"#errors\").prepend(\'<p id="reset"></p>\'), reset = true;\n\
-            } else {\
-                if (reset) $(\"#reset\").remove(), reset = false;\n\
+            if ($($('#errors').children()[0]).is(':visible')) {\n\
+                if (!reset) $('#errors').prepend('<p id=\"reset\"></p>'), reset = true;\n\
+            } else {\n\
+                if (reset) $('#reset').remove(), reset = false;\n\
             }\n\
             try {\n\
-                $(\'.layout - row\')[3].children[0].click();\n\
-                document.getElementsByClassName(\'md - accent md - icon - button md - button md - dguardlight - theme md - ink - ripple\')[0].click();\n\
-                document.getElementsByClassName(\'md - accent md - icon - button md - button md - dguardlight - theme md - ink - ripple\')[\'__LAYOUT_CAM__VALUE__\'].click();\n\
+                if ($(document.getElementsByClassName('md-primary md-raised md-button md-dguardlight-theme md-ink-ripple')[0]).length > 0) {\n\
+                    $(document.getElementsByClassName('md-primary md-raised md-button md-dguardlight-theme md-ink-ripple')[0]).delay().click();\n\
+                }\n\
+                if ($(document.getElementsByClassName('layout-row')[3]).children()[0]) {\n\
+                    $(document.getElementsByClassName('layout-row')[3]).children()[0].click();\n\
+                }\n\
+                document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();\n\
+                document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')['__LAYOUT_CAM__VALUE__'].click();\n\
                 clearInterval(intervals[0]);\n\
                 intervals[1] = setInterval(function () {\n\
                     try {\n\
-                        document.getElementsByClassName(\'md - no - style md - button md - dguardlight - theme md - ink - ripple flex\')[\'__CAM__VALUE__\'].click();\n\
+                        document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')['__CAM__VALUE__'].click();\n\
                         document.webtabs = true;\n\
                         clearInterval(intervals[1]);\n\
                         intervals = null;\n\
@@ -89,10 +90,10 @@ function createscript() {
                 }, 1000);\n\
             } catch (e) { console.error(e); };\n\
         }, 1000);\n\
-    });',
+    });",
         file = path.localPath('extensions/scripts/dguard.js');
     if (!path.localPathExists('extensions/scripts/dguard.js')) path.localPathCreate('extensions/scripts/dguard.js');
-    fs.writeFileSync(file, script, 'utf8');
+    fs.writeFileSync(file, LZString.compressToBase64(script), 'utf8');
 };
 
 function usernamechange() {
@@ -180,6 +181,7 @@ ipcRenderer
         $('#layerExtension-DGuard').show("fast");
     })
     .on('extensions_dguard_menu_update_checked', () => {
+        loadData();
         if (remote.Menu.getApplicationMenu().getMenuItemById(`layout_${data["layout_cam"]}`))
             remote.Menu.getApplicationMenu().getMenuItemById(`layout_${data["layout_cam"]}`).checked = true;
 

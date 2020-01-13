@@ -86,11 +86,11 @@ function SCREEN_SELECTION_UPDATE() {
                     let file = path.localPath('storage/urls.json');
                     if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
                     if (fs.existsSync(file)) {
-                        data.push([{
+                        data_urls.push([{
                             type_url: 'stream',
                             id: source.id
                         }]);
-                        fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
+                        fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
                             $(btn).prop('disabled', true);
                             mainWindow.webContents.send('add_url');
                         });
@@ -117,14 +117,39 @@ $(document).ready(function () {
         let file = path.localPath('storage/urls.json');
         if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
         if (fs.existsSync(file)) {
-            let url = $('#input_add_url').val() || '';
+            let url = $('#input_add_url').val() || '',
+                extension = 0;
             if (!url || typeof url != 'string' || url.length <= 0) return;
             chkurl.direct(url, e => {
                 if (!e) {
                     return ALERT.info(`A URL "${url}" não pode ser adicionada!!!`);
                 }
-                data.push([url, 0]);
-                fs.writeFile(file, JSON.stringify(data, null, 2), 'utf8', () => {
+                /**
+                 * Extensions
+                 */
+                /**
+                 * D-Guard
+                 */
+                extension = url.split('/').filter(str => {
+                    if (
+                        str.includes('grupomave.mooo.com') &&
+                        str.includes('8081')
+                    ) return true;
+                }).length;
+
+                if (extension > 0) {
+                    data_urls.push([
+                        url,
+                        0,
+                        'dguard'
+                    ]);
+                } else {
+                    data_urls.push([
+                        url,
+                        0
+                    ]);
+                }
+                fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
                     $('#input_add_url').val('');
                     ALERT.info(`A URL "${url}" foi adicionada com sucesso!!!`);
                     mainWindow.webContents.send('add_url');

@@ -11,14 +11,16 @@ const [
     fs,
     isDev,
     ALERT,
-    DATE
+    DATE,
+    LZString
 ] = [
         require('electron'),
         require('../import/localPath'),
         require('fs'),
         require('../import/isDev'),
         require('../import/alert'),
-        require('../classes/tick')
+        require('../classes/tick'),
+        require('../import/LZString')
     ];
 
 /**
@@ -72,7 +74,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.8.22-beta.5",
+            "VERSION": "v4.10.25-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -348,15 +350,6 @@ function flushFrame() {
 function deleteFrame(extensions) {
     if (urls.length <= 0) return;
     /**
-     * Extensions
-     */
-    /**
-     * D-Guard
-     */
-    if (extensions === 'dguard') {
-        return removeDataURLs(i);
-    }
-    /**
      * Process
      */
     if (frame) {
@@ -366,6 +359,27 @@ function deleteFrame(extensions) {
         ) return;
         frame.removeProcess = true;
         let __i = i > 1 ? i - 1 : i;
+        /**
+         * Extensions
+         */
+        /**
+         * D-Guard
+         */
+        if (extensions === 'dguard') {
+            return $(frame).fadeOut('slow', function () {
+                i = __i;
+                clearInterval(interval), interval = null;
+                if (frame.listener) frame.removeEventListener('did-finish-load', frame.listener);
+                frame.remove();
+                frame = null;
+                removeDataURLs(i);
+                $("#button_extension_dguard_remove_frame")
+                    .effect("bounce")
+                    .prop('disabled', false)
+                    .html(`Remover o D-Guard`);
+            });
+        }
+
         $(frame).fadeOut('slow', function () {
             if (typeof urls[__i][0] === 'string') {
                 urls[__i][0] = frame.getURL();
@@ -388,7 +402,6 @@ function deleteFrame(extensions) {
             }
             function finish(listener) {
                 i = __i;
-                saveDataURLs();
                 clearInterval(interval), interval = null;
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
@@ -586,6 +599,17 @@ function frameInterval(type) {
  * Memory Cache
  */
 setInterval(() => {
+    /**
+     * Frame Waiting for remove
+     */
+    /**
+     * D-Guard
+     */
+    if ($("#button_extension_dguard_remove_frame").html() === 'Excluindo...') {
+        $('#layerExtension-DGuard').delay("slow").hide("fast");
+        deleteFrame('dguard');
+        return;
+    }
     if (
         (!frame && !ProcessInterval && fileProcess === 'done')
     ) {
@@ -602,15 +626,7 @@ setInterval(() => {
                  */
                 case 'dguard':
                     let { username, password, cam, layout_cam } = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {},
-                        __file = fs.readFileSync(path.localPath('extensions/scripts/dguard.js')).toString();
-                    /**
-                     * Se o usuario deseja remover o frame
-                     */
-                    if ($("#button_extension_dguard_remove_frame").html() === 'Excluindo...') {
-                        $('#layerExtension-DGuard').delay("slow").hide("fast");
-                        deleteFrame('dguard');
-                        return ProcessInterval = null;
-                    }
+                        __file = LZString.decompressFromBase64(fs.readFileSync(path.localPath('extensions/scripts/dguard.js')).toString()) || '';
                     /**
                      * Erro com a configuração do layout
                      */
