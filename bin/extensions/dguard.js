@@ -31,13 +31,14 @@ let [
  * Self Callers Initialize
  */
 load();
+createscript();
 
 /**
  * Functions
  */
 function load() {
-    let file = path.localPath('data/extensions/storage/dguard.json');
-    if (!path.localPathExists('data/extensions/storage/dguard.json')) path.localPathCreate('data/extensions/storage/dguard.json');
+    let file = path.localPath('extensions/storage/dguard.json');
+    if (!path.localPathExists('extensions/storage/dguard.json')) path.localPathCreate('extensions/storage/dguard.json');
     if (fs.existsSync(file)) {
         data = JSON.parse(fs.readFileSync(file)) || {};
     } else {
@@ -51,9 +52,52 @@ function load() {
     }
 };
 
+function createscript() {
+    let script = '\
+    /**\n\
+     * Process\n\
+     */\n\
+    $(document).ready(() => {\n\
+        $(document.getElementsByName(\'username\')[0]).val(\'__NAME__VALUE__\');\n\
+        $(document.getElementsByName(\'username\')[0]).change();\n\
+        \n\
+        $(document.getElementsByName(\'password\')[0]).val(\'__PASS__VALUE__\');\n\
+        $(document.getElementsByName(\'password\')[0]).change();\n\
+        \n\
+        $(document.getElementsByClassName(\'md-primary md-raised md-button md-dguardlight-theme md-ink-ripple\')[0]).delay().click();\n\
+        \n\
+        let intervals = [],\n\
+            reset = false;\n\
+        intervals[0] = setInterval(function () {\n\
+            if ($($(\'#errors\').children()[0]).is(\':visible\')) {\n\
+                if (!reset) $(\"#errors\").prepend(\'<p id="reset"></p>\'), reset = true;\n\
+            } else {\
+                if (reset) $(\"#reset\").remove(), reset = false;\n\
+            }\n\
+            try {\n\
+                $(\'.layout - row\')[3].children[0].click();\n\
+                document.getElementsByClassName(\'md - accent md - icon - button md - button md - dguardlight - theme md - ink - ripple\')[0].click();\n\
+                document.getElementsByClassName(\'md - accent md - icon - button md - button md - dguardlight - theme md - ink - ripple\')[\'__LAYOUT_CAM__VALUE__\'].click();\n\
+                clearInterval(intervals[0]);\n\
+                intervals[1] = setInterval(function () {\n\
+                    try {\n\
+                        document.getElementsByClassName(\'md - no - style md - button md - dguardlight - theme md - ink - ripple flex\')[\'__CAM__VALUE__\'].click();\n\
+                        document.webtabs = true;\n\
+                        clearInterval(intervals[1]);\n\
+                        intervals = null;\n\
+                    } catch (e) { console.error(e); }\n\
+                }, 1000);\n\
+            } catch (e) { console.error(e); };\n\
+        }, 1000);\n\
+    });',
+        file = path.localPath('extensions/scripts/dguard.js');
+    if (!path.localPathExists('extensions/scripts/dguard.js')) path.localPathCreate('extensions/scripts/dguard.js');
+    fs.writeFileSync(file, script, 'utf8');
+};
+
 function usernamechange() {
-    let file = path.localPath('data/extensions/storage/dguard.json');
-    if (!path.localPathExists('data/extensions/storage/dguard.json')) path.localPathCreate('data/extensions/storage/dguard.json');
+    let file = path.localPath('extensions/storage/dguard.json');
+    if (!path.localPathExists('extensions/storage/dguard.json')) path.localPathCreate('extensions/storage/dguard.json');
     fs.writeFileSync(file, JSON.stringify({
         "username": String($('#form-dguard-username').val()),
         "password": String(data['password']),
@@ -64,8 +108,8 @@ function usernamechange() {
 };
 
 function passwordchange() {
-    let file = path.localPath('data/extensions/storage/dguard.json');
-    if (!path.localPathExists('data/extensions/storage/dguard.json')) path.localPathCreate('data/extensions/storage/dguard.json');
+    let file = path.localPath('extensions/storage/dguard.json');
+    if (!path.localPathExists('extensions/storage/dguard.json')) path.localPathCreate('extensions/storage/dguard.json');
     fs.writeFileSync(file, JSON.stringify({
         "username": String(data['username']),
         "password": String($('#form-dguard-password').val()),

@@ -2,7 +2,10 @@
  * Variables
  */
 const [
-    { remote }
+    {
+        remote,
+        app
+    }
 ] = [
         require('electron')
     ]
@@ -18,10 +21,15 @@ function localPath(p) {
     var path = require('path');
     // Cria a base para o caminho local
     var base = (() => {
-        if (remote && remote.process)
-            return path.dirname(remote.process.mainModule.filename);
-        if (process)
-            return path.dirname(process.mainModule.filename);
+        let fs = require('fs'),
+            pathbase;
+        if (remote && remote.app) {
+            pathbase = path.join(remote.app.getPath('documents'), 'Webtabs');
+        } else {
+            pathbase = path.join(app.getPath('documents'), 'Webtabs');
+        }
+        if (!fs.existsSync(pathbase)) fs.mkdirSync(pathbase);
+        return pathbase;
     })();
     // Retorna a base do caminho associado ao caminho
     return path.join(base, p);
@@ -64,8 +72,9 @@ function localPathCreate(p) {
         dir = '';
     p.split('/').map(path => {
         if (path.indexOf('.') == -1) {
-            if (!localPathExists(dir += `${path}/`))
+            if (!localPathExists(dir += `${path}/`)) {
                 fs.mkdirSync(localPath(dir));
+            }
         }
     });
 };

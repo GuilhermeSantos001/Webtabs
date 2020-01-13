@@ -11,7 +11,7 @@ const [
   isDev
 ] = [
     require('electron'),
-    require('electron-is-dev')
+    require('./bin/import/isDev')
   ];
 
 /**
@@ -29,7 +29,7 @@ let mainWindow;
 function createWindow() {
   let path = require('./bin/import/localPath'),
     fs = require('fs'),
-    file = path.localPath('data/configs/display.json'),
+    file = path.localPath('configs/display.json'),
     selected = 0;
   if (fs.existsSync(file)) {
     selected = (data => {
@@ -65,7 +65,7 @@ function createWindow() {
   mainWindow.loadFile('index.html');
   mainWindow.maximize();
 
-  if (isDev) mainWindow.webContents.openDevTools();
+  if (isDev()) mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () { mainWindow = null });
 };

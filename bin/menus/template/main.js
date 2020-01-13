@@ -17,9 +17,9 @@ const template = [{
         {
             label: 'Monitor de Saida',
             submenu: (displays => {
-                let file = path.localPath('data/configs/display.json'),
+                let file = path.localPath('configs/display.json'),
                     data;
-                if (!path.localPathExists('data/configs/display.json')) path.localPathCreate('data/configs/display.json');
+                if (!path.localPathExists('configs/display.json')) path.localPathCreate('configs/display.json');
                 if (fs.existsSync(file)) {
                     data = JSON.parse(fs.readFileSync(file, 'utf8')) || {};
                 } else {
@@ -56,7 +56,18 @@ const template = [{
                 return data.displays;
             })(screen.getAllDisplays())
         },
-        { role: 'toggleDevTools' },
+        {
+            label: 'DevTools',
+            submenu: [
+                {
+                    id: 'devtools_developerMode',
+                    label: 'Exibir mensagens de depuração',
+                    type: 'checkbox',
+                    checked: false
+                },
+                { role: 'toggleDevTools' }
+            ]
+        },
         { label: 'Recarregar', role: 'reload' },
         {
             label: 'Barra de menu',

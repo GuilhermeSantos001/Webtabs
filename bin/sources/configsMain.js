@@ -41,9 +41,9 @@ createDataURLs();
  * Functions
  */
 function createDataURLs() {
-    if (!path.localPathExists('data/storage/urls.json')) path.localPathCreate('data/storage/urls.json');
-    if (fs.existsSync(path.localPath('data/storage/urls.json'))) {
-        data_urls = JSON.parse(fs.readFileSync(path.localPath('data/storage/urls.json'), 'utf8')) || [
+    if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
+    if (fs.existsSync(path.localPath('storage/urls.json'))) {
+        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [
             [
                 "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
                 0
@@ -64,7 +64,7 @@ function createDataURLs() {
                 0
             ]
         ];
-        fs.writeFileSync(path.localPath('data/storage/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('storage/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
     }
 };
 
@@ -83,8 +83,8 @@ function SCREEN_SELECTION_UPDATE() {
                 $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">${source.name}</button>`);
                 let btn = document.getElementById(source.id);
                 btn.onclick = function () {
-                    let file = path.localPath('data/storage/urls.json');
-                    if (!path.localPathExists('data/storage/urls.json')) path.localPathCreate('data/storage/urls.json');
+                    let file = path.localPath('storage/urls.json');
+                    if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
                     if (fs.existsSync(file)) {
                         data.push([{
                             type_url: 'stream',
@@ -114,8 +114,8 @@ $(document).ready(function () {
     };
 
     document.getElementById("button_add_url").onclick = function () {
-        let file = path.localPath('data/storage/urls.json');
-        if (!path.localPathExists('data/storage/urls.json')) path.localPathCreate('data/storage/urls.json');
+        let file = path.localPath('storage/urls.json');
+        if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
         if (fs.existsSync(file)) {
             let url = $('#input_add_url').val() || '';
             if (!url || typeof url != 'string' || url.length <= 0) return;

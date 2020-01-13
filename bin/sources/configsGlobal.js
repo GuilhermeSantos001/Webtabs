@@ -34,25 +34,25 @@ createConfigGlobal();
 *  Functions
 */
 function createConfigGlobal() {
-    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
-    if (fs.existsSync(path.localPath('data/configs/global.json'))) {
-        ConfigGlobal = JSON.parse(fs.readFileSync(path.localPath('data/configs/global.json'), 'utf8')) || [];
+    if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
+    if (fs.existsSync(path.localPath('configs/global.json'))) {
+        ConfigGlobal = JSON.parse(fs.readFileSync(path.localPath('configs/global.json'), 'utf8')) || [];
     } else {
         ConfigGlobal = {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.7.20-beta.5",
+            "VERSION": "v4.8.22-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
-        fs.writeFileSync(path.localPath('data/configs/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
     }
 };
 
 function titlechange() {
-    let file = path.localPath('data/configs/global.json');
-    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
+    let file = path.localPath('configs/global.json');
+    if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
     fs.writeFileSync(file, JSON.stringify({
         "APPNAME": ConfigGlobal.APPNAME,
         "TITLE": $('#form-title').val(),
@@ -65,8 +65,8 @@ function titlechange() {
 };
 
 function sloganchange() {
-    let file = path.localPath('data/configs/global.json');
-    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
+    let file = path.localPath('configs/global.json');
+    if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
     fs.writeFileSync(file, JSON.stringify({
         "APPNAME": ConfigGlobal.APPNAME,
         "TITLE": ConfigGlobal.TITLE,
@@ -93,8 +93,8 @@ function inputDemoFrametimeInnerText() {
 
 function inputFrametimeChange() {
     ConfigGlobal.FRAMETIME = Number($('#input-frametime').val());
-    let file = path.localPath('data/configs/global.json');
-    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
+    let file = path.localPath('configs/global.json');
+    if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
     fs.writeFileSync(file, JSON.stringify({
         "APPNAME": ConfigGlobal.APPNAME,
         "TITLE": ConfigGlobal.TITLE,
@@ -152,8 +152,8 @@ $(document).ready(function () {
     };
 
     document.getElementById("radio_horas").onclick = function () {
-        let file = path.localPath('data/configs/global.json');
-        if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
+        let file = path.localPath('configs/global.json');
+        if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
         fs.writeFileSync(file, JSON.stringify({
             "APPNAME": ConfigGlobal.APPNAME,
             "TITLE": ConfigGlobal.TITLE,
@@ -169,8 +169,8 @@ $(document).ready(function () {
     };
 
     document.getElementById("radio_minutos").onclick = function () {
-        let file = path.localPath('data/configs/global.json');
-        if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
+        let file = path.localPath('configs/global.json');
+        if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
         fs.writeFileSync(file, JSON.stringify({
             "APPNAME": ConfigGlobal.APPNAME,
             "TITLE": ConfigGlobal.TITLE,
@@ -186,8 +186,8 @@ $(document).ready(function () {
     };
 
     document.getElementById("radio_segundos").onclick = function () {
-        let file = path.localPath('data/configs/global.json');
-        if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
+        let file = path.localPath('configs/global.json');
+        if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
         fs.writeFileSync(file, JSON.stringify({
             "APPNAME": ConfigGlobal.APPNAME,
             "TITLE": ConfigGlobal.TITLE,

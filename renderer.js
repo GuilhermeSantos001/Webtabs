@@ -13,7 +13,7 @@ const [
         require('electron'),
         require('./bin/import/localPath'),
         require('fs'),
-        require('electron-is-dev')
+        require('./bin/import/isDev')
     ];
 
 /**
@@ -39,24 +39,24 @@ animatelayerContent();
  * Functions
  */
 function loadConfigGlobal() {
-    if (!path.localPathExists('data/configs/global.json')) path.localPathCreate('data/configs/global.json');
-    if (fs.existsSync(path.localPath('data/configs/global.json'))) {
-        data = JSON.parse(fs.readFileSync(path.localPath('data/configs/global.json'), 'utf8')) || [];
+    if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
+    if (fs.existsSync(path.localPath('configs/global.json'))) {
+        data = JSON.parse(fs.readFileSync(path.localPath('configs/global.json'), 'utf8')) || [];
     } else {
         data = {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.7.20-beta.5",
+            "VERSION": "v4.8.22-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
-        fs.writeFileSync(path.localPath('data/configs/global.json'), JSON.stringify(data, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(data, null, 2), 'utf8');
     };
 };
 
 function animatelayerContent() {
-    let file = path.localPath('data/storage/framereload.json');
+    let file = path.localPath('storage/framereload.json');
     if (!fs.existsSync(file)) {
         $('#layerContent')
             .animate({ "margin-top": `-=${height}`, opacity: 0 })
@@ -73,7 +73,6 @@ function animatelayerContent() {
  * Process
  */
 document.title = data.APPNAME;
-document.getElementById('logo').src = path.localPath('assets/img/logo.png');
 document.getElementById('title').innerText = data.TITLE;
 document.getElementById('slogan').innerText = data.SLOGAN;
 document.getElementById('version').innerText = data.VERSION;
@@ -93,7 +92,7 @@ console.log(
     'font-size: 250%; color: #292929;',
 );
 
-if (isDev) {
+if (isDev()) {
     console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 4.2.6-beta.5 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 } else {
     console.log('%c📛 VERSÃO EM EXECUÇÃO - 4.2.6 ♨️', 'color: #f03c3c; padding: 8px; font-size: 200%;');
