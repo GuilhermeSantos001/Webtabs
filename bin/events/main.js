@@ -31,9 +31,11 @@ ipcMain
         /**
          * D-Guard
          */
-        if (template[3].submenu[0]) {
-            template[3].submenu.splice(0, 1);
-        }
+        let indexOf;
+        template[3].submenu.map((item, i) => {
+            if (item.label === 'D-Guard') return indexOf = i;
+        });
+        if (indexOf >= 0) template[3].submenu.splice(indexOf, 1);
 
         /**
          * Process
@@ -50,9 +52,12 @@ ipcMain
         /**
          * D-Guard append
          */
-        if (template[3].submenu.filter(item => {
-            return item.label === 'D-Guard';
-        }).length > 0) template[3].submenu.splice(0, 1);
+        let indexOf;
+        template[3].submenu.map((item, i) => {
+            if (item.label === 'D-Guard') return indexOf = i;
+        });
+        if (indexOf >= 0) template[3].submenu.splice(indexOf, 1);
+
         template[3].submenu.splice(0, 0, {
             label: 'D-Guard',
             submenu: [
@@ -114,4 +119,25 @@ ipcMain
         const menu = Menu.buildFromTemplate(template);
         Menu.setApplicationMenu(menu);
         event.sender.send('extensions_dguard_menu_update_checked');
+    })
+    .on('extensions_dguard_menu_close', () => {
+        /**
+         * Import
+         */
+        let template = require(templateMainPath);
+
+        /**
+         * D-Guard
+         */
+        let indexOf;
+        template[3].submenu.map((item, i) => {
+            if (item.label === 'D-Guard') return indexOf = i;
+        });
+        if (indexOf >= 0) template[3].submenu.splice(indexOf, 1);
+
+        /**
+         * Process
+         */
+        const menu = Menu.buildFromTemplate(require(templateMainPath));
+        Menu.setApplicationMenu(menu);
     });

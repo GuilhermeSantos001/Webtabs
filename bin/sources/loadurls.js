@@ -74,7 +74,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.10.25-beta.5",
+            "VERSION": "v4.11.25-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -245,6 +245,13 @@ function removeFrame() {
                         frame.removeEventListener('did-finish-load', frame.listener);
                         frame.remove();
                         frame = null;
+                        /**
+                         * Update Menu Extensions
+                         */
+                        /**
+                         * D-Guard
+                         */
+                        ipcRenderer.send('extensions_dguard_menu_close');
                     }).catch((error) => {
                         if (isDev()) console.log(error);
                     });
@@ -261,6 +268,13 @@ function removeFrame() {
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                /**
+                 * Update Menu Extensions
+                 */
+                /**
+                 * D-Guard
+                 */
+                ipcRenderer.send('extensions_dguard_menu_close');
             }
         });
     }
@@ -301,6 +315,13 @@ function returnFrame() {
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                /**
+                 * Update Menu Extensions
+                 */
+                /**
+                 * D-Guard
+                 */
+                ipcRenderer.send('extensions_dguard_menu_close');
             }
         });
     }
@@ -342,6 +363,13 @@ function flushFrame() {
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                /**
+                 * Update Menu Extensions
+                 */
+                /**
+                 * D-Guard
+                 */
+                ipcRenderer.send('extensions_dguard_menu_close');
             }
         });
     }
@@ -372,6 +400,13 @@ function deleteFrame(extensions) {
                 if (frame.listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                /**
+                 * Update Menu Extensions
+                 */
+                /**
+                 * D-Guard
+                 */
+                ipcRenderer.send('extensions_dguard_menu_close');
                 removeDataURLs(i);
                 $("#button_extension_dguard_remove_frame")
                     .effect("bounce")
@@ -406,6 +441,13 @@ function deleteFrame(extensions) {
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                /**
+                 * Update Menu Extensions
+                 */
+                /**
+                 * D-Guard
+                 */
+                ipcRenderer.send('extensions_dguard_menu_close');
                 removeDataURLs(i);
             }
         });
