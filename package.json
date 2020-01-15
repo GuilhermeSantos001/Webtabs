@@ -1,7 +1,7 @@
 {
   "name": "webtabs",
   "productName": "Webtabs",
-  "version": "4.12.27",
+  "version": "4.12.28",
   "description": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
   "main": "main.js",
   "scripts": {
