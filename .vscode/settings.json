@@ -1,0 +1,18 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 3500,
+    "editor.renderWhitespace": "all",
+    "editor.hideCursorInOverviewRuler": true,
+    "editor.formatOnSave": true,
+    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorSurroundingLinesStyle": "all",
+    "editor.cursorWidth": 2,
+    "editor.snippetSuggestions": "top",
+    "editor.smoothScrolling": true,
+    "editor.mouseWheelZoom": true,
+    "editor.fontFamily": "'Fira Code', Consolas",
+    "editor.lineHeight": 26,
+    "editor.cursorBlinking": "expand",
+    "terminal.integrated.cursorBlinking": true,
+    "editor.mouseWheelScrollSensitivity": 1.5
+}

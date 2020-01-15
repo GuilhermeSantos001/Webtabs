@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap & Material Design Icons CSS -->
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="node_modules/material-design-icons/iconfont/material-icons.css">
+  <!-- Jquery UI -->
+  <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
+
+  <!-- Renderer CSS -->
+  <link rel="stylesheet" href="assets/css/renderer.css">
+
+  <title>Webtabs</title>
+</head>
+
+<body style="background-color: #232323;">
+  <!--
+    CONTAINER
+  -->
+  <div id="layerContainer" class="container-fluid" style="filter:opacity(0%);">
+    <!--
+      CONTENT PRIMARY
+    -->
+    <div id="layerContent" class="row">
+      <div class="col-12 bg-dark text-white">
+        <img id="logo" src="assets/img/logo.png" height="155px" width="545px" class="float-left m-2">
+        <div class="row">
+          <div class="col-12">
+            <h2 id="title" class="text-uppercase font-weight-bold" style="margin-top: 4rem; font-size: 2.5rem;"></h2>
+          </div>
+          <div class="col-12">
+            <h5 id="slogan" class="text-uppercase font-weight-bold ml-1"
+              style="margin-top: -0.5rem; font-size: 1.5rem;"></h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 position-absolute" style="margin-top: 7.9rem; margin-left: 83vw; transform: scale(0.7, 0.7);">
+        <div id="version" class="alert alert-secondary text-center" role="alert"></div>
+      </div>
+    </div>
+    <!--
+      ADD CONTENTS OF FRAME
+    -->
+    <div id="layerUrladd" class="bg-dark text-white" style="z-index: 2;">
+      <div class="container-fluid">
+        <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Ações</h1>
+        <div class="border border-light p-2">
+          <h4 class="text-uppercase font-weight-bold">Pagina</h4>
+          <label for="input_add_url">
+            Adicionar novo URL
+            <p class="mb-0" style="font-size: small;">
+              Escreva/Cole o URL
+            </p>
+          </label>
+        </div>
+        <input type="text" class="form-control border border-light bg-dark text-white mt-2" id="input_add_url"
+          placeholder="Insira o url...">
+        <button type="button" class="btn btn-lg btn-block btn-outline-light mt-2" id="button_add_url">Adicionar</button>
+        <div class="border border-light p-2 mt-2">
+          <h4 class="text-uppercase font-weight-bold">Capturar</h4>
+          <label for="screen_selection">
+            Faça a captura da tela do seu monitor ou de uma janela aberta.
+          </label>
+        </div>
+        <div id="screen_selection"></div>
+        <div class="border border-light p-2 mt-2">
+          <h4 class="text-uppercase font-weight-bold">Imagem</h4>
+          <label for="input_add_photo">
+            Adicione suas belas fotos!
+            <p class="mb-0" style="font-size: small;">
+              Escreva/Cole o URL
+            </p>
+          </label>
+        </div>
+        <input type="text" class="form-control border border-light bg-dark text-white mt-2" id="input_add_photo"
+          placeholder="Insira o url...">
+        <button type="button" class="btn btn-lg btn-block btn-outline-light mt-2" id="button_exit_url">Voltar</button>
+      </div>
+    </div>
+    <!--
+      CONFIGS GLOBAL
+    -->
+    <div id="layerConfigs" class="bg-dark text-white" style="z-index: 2;">
+      <div class="container-fluid">
+        <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Configurações</h1>
+        <ul class="list-group">
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-title">
+                Titulo
+                <p class="mb-0">
+                  Esse titulo é usado no cabeçalho da janela inicial do programa.
+                </p>
+              </label>
+              <input type="text" class="form-control border border-light bg-dark text-white" id="form-title"
+                placeholder="Insira um titulo...">
+            </div>
+          </li>
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-slogan">
+                Slogan
+                <p class="mb-0">
+                  Esse slogan é usado a baixo do titulo no cabeçalho da janela inicial do programa.
+                </p>
+              </label>
+              <input type="text" class="form-control border border-light bg-dark text-white" id="form-slogan"
+                placeholder="Insira um slogan...">
+            </div>
+          </li>
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-frametime">
+                Tempo de transição
+                <p class="mb-0">
+                  Defina o tempo que o site deve ficar visivel até que outro seja exibido.
+                </p>
+              </label>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="radio_horas" name="customRadio" class="custom-control-input">
+                <label id="label_radio_horas" class="custom-control-label" for="radio_horas">Horas</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="radio_minutos" name="customRadio" class="custom-control-input">
+                <label id="label_radio_minutos" class="custom-control-label" for="radio_minutos">Minutos</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input type="radio" id="radio_segundos" name="customRadio" class="custom-control-input">
+                <label id="label_radio_segundos" class="custom-control-label" for="radio_segundos">Segundos</label>
+              </div>
+              <input id="input-frametime" type="range" min="1" max="60" value="1" class="custom-range">
+              <p id="input-demo-frametime" class="mb-0"></p>
+            </div>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-lg btn-block btn-outline-light" id="button_exit_global">Voltar</button>
+      </div>
+    </div>
+    <!--
+      EXTENSIONS
+    -->
+    <!--
+      D-GUARD
+    -->
+    <div id="layerExtension-DGuard" class="bg-dark text-white" style="z-index: 2;">
+      <div class="container-fluid">
+        <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Detalhes da conta D-Guard</h1>
+        <ul class="list-group">
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-dguard-username">
+                Nome de Usuario
+                <p class="mb-0">
+                  Esse é o nome da conta cadastrada no seu servidor do D-Guard.
+                </p>
+              </label>
+              <input type="text" class="form-control border border-light bg-dark text-white" id="form-dguard-username"
+                placeholder="Insira o nome da conta...">
+            </div>
+          </li>
+          <li class="list-group-item border border-light bg-dark text-white mb-2">
+            <div class="form-group">
+              <label for="form-dguard-password">
+                Senha de Usuario
+                <p class="mb-0">
+                  Essa é a senha da sua conta cadastrada no seu servidor do D-Guard.
+                </p>
+              </label>
+              <input type="password" class="form-control border border-light bg-dark text-white"
+                id="form-dguard-password" placeholder="Insira sua senha..."><i id="form-dguard-password-visibility"
+                class="material-icons float-right" style="margin-top: -1.9rem; margin-right: 0.7rem;">visibility</i>
+            </div>
+          </li>
+        </ul>
+        <button type="button" class="btn btn-lg btn-block btn-outline-light"
+          id="button_extension_dguard_exit">Voltar</button>
+        <button type="button" class="btn btn-lg btn-block btn-outline-light"
+          id="button_extension_dguard_remove_frame">Remover o D-Guard</button>
+      </div>
+    </div>
+    <!--
+      FRAME CONTAINER
+    -->
+    <div class="layerFrame row" style="z-index: 1;"></div>
+  </div>
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script>
+    window.jQuery = window.$ = require('jquery');
+  </script>
+  <script src="assets/js/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- Others -->
+  <script src="renderer.js"></script>
+</body>
+
+</html>
