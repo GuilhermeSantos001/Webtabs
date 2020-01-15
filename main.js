@@ -8,10 +8,10 @@ const [
     screen,
     Menu
   },
-  isDev
+  DeveloperMode
 ] = [
     require('electron'),
-    require('./bin/import/isDev')
+    require('./bin/import/DeveloperMode')
   ];
 
 /**
@@ -65,7 +65,7 @@ function createWindow() {
   mainWindow.loadFile('index.html');
   mainWindow.maximize();
 
-  if (isDev()) mainWindow.webContents.openDevTools();
+  if (DeveloperMode.getStatus()) mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () { mainWindow = null });
 };

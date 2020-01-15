@@ -63,7 +63,7 @@ const template = [{
                     id: 'devtools_developerMode',
                     label: 'Exibir mensagens de depuração',
                     type: 'checkbox',
-                    checked: false
+                    checked: require('electron-is-dev')
                 },
                 { role: 'toggleDevTools' }
             ]

@@ -8,12 +8,12 @@ const [
     },
     path,
     fs,
-    isDev
+    DeveloperMode
 ] = [
         require('electron'),
         require('./bin/import/localPath'),
         require('fs'),
-        require('./bin/import/isDev')
+        require('./bin/import/DeveloperMode')
     ];
 
 /**
@@ -47,7 +47,7 @@ function loadConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.11.25-beta.5",
+            "VERSION": "v4.12.27-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -92,7 +92,7 @@ console.log(
     'font-size: 250%; color: #292929;',
 );
 
-if (isDev()) {
+if (DeveloperMode.getDevToolsDeveloperMode()) {
     console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 4.2.6-beta.5 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 } else {
     console.log('%c📛 VERSÃO EM EXECUÇÃO - 4.2.6 ♨️', 'color: #f03c3c; padding: 8px; font-size: 200%;');

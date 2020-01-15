@@ -9,7 +9,7 @@ const [
     },
     path,
     fs,
-    isDev,
+    DeveloperMode,
     ALERT,
     DATE,
     LZString
@@ -17,7 +17,7 @@ const [
         require('electron'),
         require('../import/localPath'),
         require('fs'),
-        require('../import/isDev'),
+        require('../import/DeveloperMode'),
         require('../import/alert'),
         require('../classes/tick'),
         require('../import/LZString')
@@ -74,7 +74,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.11.25-beta.5",
+            "VERSION": "v4.12.27-beta.5",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -253,7 +253,7 @@ function removeFrame() {
                          */
                         ipcRenderer.send('extensions_dguard_menu_close');
                     }).catch((error) => {
-                        if (isDev()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
                     });
             } else if (
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'stream' ||
@@ -299,7 +299,7 @@ function returnFrame() {
                         cookies[urls[i - 1][2]] = data;
                         finish(true);
                     }).catch((error) => {
-                        if (isDev()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
                     });
             } else if (
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'stream' ||
@@ -347,7 +347,7 @@ function flushFrame() {
                         cookies[urls[__i][2]] = data;
                         finish(true);
                     }).catch((error) => {
-                        if (isDev()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
                     });
             } else if (
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'stream' ||
@@ -426,7 +426,7 @@ function deleteFrame(extensions) {
                         cookies[urls[__i][2]] = data;
                         finish(true);
                     }).catch((error) => {
-                        if (isDev()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
                     });
             } else if (
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'stream' ||
@@ -514,7 +514,7 @@ function DESKTOPCAPTURER() {
                 $(frame).css('filter', 'opacity(100%)');
             }).delay().fadeIn('slow', function () {
                 frame.fadeInInitial = 'complete!';
-                if (isDev()) console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
                 interval = setInterval(frameInterval.bind(this, 'Stream'), 1000);
             });
         }
@@ -522,7 +522,7 @@ function DESKTOPCAPTURER() {
     };
 
     function desktopCapturer_handleError(e) {
-        if (isDev()) console.error(e);
+        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
     };
 }
 
@@ -539,7 +539,7 @@ function IMGRENDER() {
             $(frame).css('filter', 'opacity(100%)');
         }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
-            if (isDev()) console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
             interval = setInterval(frameInterval.bind(this, 'Imagem'), 1000);
         });
     }
@@ -559,7 +559,7 @@ function VIDEORENDER() {
             $(frame).css('filter', 'opacity(100%)');
         }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
-            if (isDev()) console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
             interval = setInterval(frameInterval.bind(this, 'video'), 1000);
         });
     }
@@ -599,17 +599,17 @@ function frameInterval(type) {
         }
         if (menu.getMenuItemById('PAUSE').checked) {
             if (!frame.tickReset) frame.tickReset = true;
-            if (isDev()) console.log(
+            if (DeveloperMode.getDevToolsDeveloperMode()) console.log(
                 `%c➠ LOG: ⚠ O ${frametype()} está parado, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠`,
                 'color: #e39b0b; padding: 8px; font-size: 150%;'
             );
         }
-        if (isDev()) console.log(
+        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(
             `%c➠ LOG: Se ${frame.ticknow().getFullDate()} for igual a ${frame.tick.getFullDate()}, mude o slide ⌛ `,
             'color: #405cff; padding: 8px; font-size: 150%;'
         );
         if (frame.ticknow().compareOldDate(frame.tick)) {
-            if (isDev()) console.log(`%c➠ LOG: ${frametype()} Removido ✘`, 'color: #405cff; padding: 8px; font-size: 150%;');
+            if (DeveloperMode.getDevToolsDeveloperMode()) console.log(`%c➠ LOG: ${frametype()} Removido ✘`, 'color: #405cff; padding: 8px; font-size: 150%;');
             if (String(type).toLowerCase() === 'frame') {
                 if (
                     !frame ||
@@ -765,7 +765,7 @@ setInterval(() => {
                                                     return render();
                                                 })
                                                 .catch((e) => {
-                                                    if (isDev()) console.error(e);
+                                                    if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
                                                 });
                                         }
                                         /**
@@ -785,7 +785,7 @@ setInterval(() => {
                         return render();
                     }
                 }).catch((e) => {
-                    if (isDev()) console.error(e);
+                    if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
                 });
 
             function render(exception) {
@@ -796,7 +796,7 @@ setInterval(() => {
                 }
 
                 frame.listener = function () {
-                    if (isDev()) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                    if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
                     if (!frame.fadeInInitial) {
                         frame.fadeInInitial = 'processing...';
                         $(frame).fadeOut(function () {
@@ -810,7 +810,7 @@ setInterval(() => {
                                  */
                                 if (exception[0] === 'dguard') {
                                     frame.executeJavaScript(exception[1]);
-                                    if (isDev()) frame.openDevTools();
+                                    if (DeveloperMode.getStatus()) frame.openDevTools();
                                     frame.executeJavaScript(`
                                         new Promise((resolve, reject) => {
                                             let interval = setInterval(()=> {
