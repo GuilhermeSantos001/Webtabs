@@ -5,6 +5,8 @@
   "description": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
   "main": "main.js",
   "scripts": {
+    "installer": "node .preinstall.js && npm install",
+    "update": "npm update -i",
     "start": "electron .",
     "win": "electron-builder -w"
   },
