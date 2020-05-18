@@ -1,8 +1,7 @@
 /**
  * Import
  */
-const [
-    {
+const [{
         remote,
         ipcRenderer,
         desktopCapturer
@@ -14,14 +13,14 @@ const [
     DATE,
     LZString
 ] = [
-        require('electron'),
-        require('../import/localPath'),
-        require('fs'),
-        require('../import/DeveloperMode'),
-        require('../import/alert'),
-        require('../classes/tick'),
-        require('../import/LZString')
-    ];
+    require('electron'),
+    require('../import/localPath'),
+    require('fs'),
+    require('../import/DeveloperMode'),
+    require('../import/alert'),
+    require('../classes/tick'),
+    require('../import/LZString')
+];
 
 /**
  *  Variables
@@ -39,18 +38,18 @@ let [
     i,
     ProcessInterval
 ] = [
-        null,
-        null,
-        null,
-        remote.Menu.getApplicationMenu(),
-        null,
-        null,
-        null,
-        null,
-        null,
-        0,
-        null,
-    ];
+    null,
+    null,
+    null,
+    remote.Menu.getApplicationMenu(),
+    null,
+    null,
+    null,
+    null,
+    null,
+    0,
+    null,
+];
 
 /**
  * SCI ▲
@@ -74,7 +73,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.12.28-beta.5",
+            "VERSION": "v5.16.29-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -113,9 +112,13 @@ function createDataURLs() {
 function createWebCookies() {
     if (!path.localPathExists('storage/webcookies.json')) path.localPathCreate('storage/webcookies.json');
     if (fs.existsSync(path.localPath('storage/webcookies.json'))) {
-        web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf8')) || { 'size': 0 };
+        web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf8')) || {
+            'size': 0
+        };
     } else {
-        web_cookies = { 'size': 0 };
+        web_cookies = {
+            'size': 0
+        };
         fs.writeFileSync(path.localPath('storage/webcookies.json'), JSON.stringify(web_cookies, null, 2), 'utf8');
     }
 };
@@ -236,8 +239,8 @@ function removeFrame() {
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
-                    url: urls[i - 1][0]
-                })
+                        url: urls[i - 1][0]
+                    })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         saveDataURLs();
@@ -262,6 +265,7 @@ function removeFrame() {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 saveDataURLs();
                 clearInterval(interval), interval = null;
@@ -308,6 +312,7 @@ function returnFrame() {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 i = i - 2 < 0 ? 0 : i - 2;
                 saveDataURLs();
@@ -356,6 +361,7 @@ function flushFrame() {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 i = __i;
                 saveDataURLs();
@@ -435,6 +441,7 @@ function deleteFrame(extensions) {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 i = __i;
                 clearInterval(interval), interval = null;
@@ -667,7 +674,9 @@ setInterval(() => {
                  * D-Guard
                  */
                 case 'dguard':
-                    let { username, password, cam, layout_cam } = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {},
+                    let {
+                        username, password, cam, layout_cam
+                    } = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {},
                         __file = LZString.decompressFromBase64(fs.readFileSync(path.localPath('extensions/scripts/dguard.js')).toString()) || '';
                     /**
                      * Erro com a configuração do layout
@@ -677,7 +686,12 @@ setInterval(() => {
                     ) {
                         layout_cam = 3;
                         fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                            JSON.stringify({ username, password, layout_cam, cam }, null, 2));
+                            JSON.stringify({
+                                username,
+                                password,
+                                layout_cam,
+                                cam
+                            }, null, 2));
                     }
                     /**
                      * Erro com a seleção de cameras
@@ -685,7 +699,12 @@ setInterval(() => {
                     if (cam < 0) {
                         cam = 0;
                         fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                            JSON.stringify({ username, password, layout_cam, cam }, null, 2));
+                            JSON.stringify({
+                                username,
+                                password,
+                                layout_cam,
+                                cam
+                            }, null, 2));
                     }
                     /**
                      * Erro com nome de usuario ou senha
@@ -696,7 +715,7 @@ setInterval(() => {
                     ) {
                         if ($('#layerExtension-DGuard').is(':hidden')) {
                             $('#layerExtension-DGuard').show("fast");
-                            ALERT.info(`Verifique seu nome/senha de usuario do D-Guard.`);
+                            ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
                         }
                         return ProcessInterval = null;
                     }
@@ -716,8 +735,8 @@ setInterval(() => {
              * Limpa os cookies da pagina do Hard Disk (HD)
              */
             remote.getCurrentWindow().webContents.session.clearStorageData({
-                storages: 'cookies'
-            })
+                    storages: 'cookies'
+                })
                 .then(() => {
                     if (typeof urls[i][2] === 'string') {
                         let cookie = {
@@ -735,15 +754,15 @@ setInterval(() => {
                              * Define os cookies da pagina
                              */
                             remote.getCurrentWindow().webContents.session.cookies.set({
-                                url: urls[i][0],
-                                name: cookie.values[cookie.i]['name'],
-                                value: cookie.values[cookie.i]['value'],
-                                domain: cookie.values[cookie.i]['domain'],
-                                path: cookie.values[cookie.i]['path'],
-                                secure: cookie.values[cookie.i]['secure'],
-                                httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                expirationDate: cookie.values[cookie.i]['expirationDate']
-                            })
+                                    url: urls[i][0],
+                                    name: cookie.values[cookie.i]['name'],
+                                    value: cookie.values[cookie.i]['value'],
+                                    domain: cookie.values[cookie.i]['domain'],
+                                    path: cookie.values[cookie.i]['path'],
+                                    secure: cookie.values[cookie.i]['secure'],
+                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                    expirationDate: cookie.values[cookie.i]['expirationDate']
+                                })
                                 .then(() => {
                                     cookie.callers.sucess++;
                                 })
@@ -864,7 +883,7 @@ setInterval(() => {
                                             if (result > 0) {
                                                 if ($('#layerExtension-DGuard').is(':hidden')) {
                                                     $('#layerExtension-DGuard').show("fast");
-                                                    ALERT.info(`Verifique seu nome/senha de usuario do D-Guard.`);
+                                                    ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
                                                 } else {
                                                     flushFrame();
                                                     clearInterval(auth);
@@ -948,26 +967,26 @@ ipcRenderer
     })
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, reject) => {
-            if (typeof cam === 'number') {
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
-                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['cam'] = cam;
-            } else if (typeof cam === 'string') {
-                if (cam === 'layout_1') {
-                    cam = 1;
-                } else if (cam === 'layout_2') {
-                    cam = 2;
-                } else if (cam === 'layout_3') {
-                    cam = 3;
+                if (typeof cam === 'number') {
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
+                    frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['cam'] = cam;
+                } else if (typeof cam === 'string') {
+                    if (cam === 'layout_1') {
+                        cam = 1;
+                    } else if (cam === 'layout_2') {
+                        cam = 2;
+                    } else if (cam === 'layout_3') {
+                        cam = 3;
+                    }
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['layout_cam'] = cam;
                 }
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['layout_cam'] = cam;
-            }
-            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
-            resolve();
-        })
+                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+                resolve();
+            })
             .then(() => {
                 clearInterval(interval);
             }), 1000);

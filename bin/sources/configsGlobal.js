@@ -1,18 +1,17 @@
 /**
  * Import
  */
-const [
-    {
+const [{
         remote,
         ipcRenderer
     },
     path,
     fs
 ] = [
-        require('electron'),
-        require('../import/localPath'),
-        require('fs'),
-    ];
+    require('electron'),
+    require('../import/localPath'),
+    require('fs'),
+];
 
 /**
  * Variables
@@ -20,8 +19,8 @@ const [
 let [
     ConfigGlobal
 ] = [
-        null
-    ]
+    null
+]
 
 /**
  * SCI ▲
@@ -31,8 +30,8 @@ let [
 createConfigGlobal();
 
 /**
-*  Functions
-*/
+ *  Functions
+ */
 function createConfigGlobal() {
     if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
     if (fs.existsSync(path.localPath('configs/global.json'))) {
@@ -42,7 +41,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.12.28-beta.5",
+            "VERSION": "v5.16.29-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2
         }
@@ -148,7 +147,10 @@ $(document).ready(function () {
     inputDemoFrametimeInnerText();
 
     document.getElementById("button_exit_global").onclick = function () {
-        $('#layerConfigs').hide("fast");
+        $('#layerConfigs').animate({
+            "height": "0vh",
+            "opacity": 0
+        }, "fast").hide("fast");
     };
 
     document.getElementById("radio_horas").onclick = function () {
@@ -213,5 +215,8 @@ $(document).ready(function () {
  */
 ipcRenderer
     .on('window_configs_global', () => {
-        $('#layerConfigs').show("fast");
+        $('#layerConfigs').show("fast").animate({
+            "height": "100vh",
+            "opacity": 100
+        }, "fast");
     });
