@@ -2,16 +2,16 @@
  * Import
  */
 const [{
-        remote,
-        ipcRenderer
-    },
+    remote,
+    ipcRenderer
+},
     path,
     fs
 ] = [
-    require('electron'),
-    require('../import/localPath'),
-    require('fs'),
-];
+        require('electron'),
+        require('../import/localPath'),
+        require('fs'),
+    ];
 
 /**
  * Variables
@@ -19,8 +19,8 @@ const [{
 let [
     ConfigGlobal
 ] = [
-    null
-]
+        null
+    ]
 
 /**
  * SCI ▲
@@ -41,9 +41,10 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.16.29-build",
+            "VERSION": "v5.17.30-build",
             "FRAMETIME": 2,
-            "FRAMETIMETYPE": 2
+            "FRAMETIMETYPE": 2,
+            "LOGO": "assets/img/logo.png"
         }
         fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
     }
@@ -111,7 +112,10 @@ function inputFrametimeChange() {
  */
 $('#layerConfigs').hide();
 
+$('#layerListConfigs').append(fs.readFileSync(path.localPath('bin\\menus\\html\\mainconfigs.html', true), 'utf8'));
+
 $(document).ready(function () {
+    $('#logo').attr('src', ConfigGlobal.LOGO);
     $('#form-title').val(ConfigGlobal.TITLE);
     $('#form-slogan').val(ConfigGlobal.SLOGAN);
 
@@ -219,4 +223,17 @@ ipcRenderer
             "height": "100vh",
             "opacity": 100
         }, "fast");
+    })
+    .on('set_logo_config_main', (event, value) => {
+        let file = path.localPath('configs/global.json');
+        if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
+        fs.writeFileSync(file, JSON.stringify({
+            "APPNAME": ConfigGlobal.APPNAME,
+            "TITLE": ConfigGlobal.TITLE,
+            "SLOGAN": ConfigGlobal.SLOGAN,
+            "VERSION": ConfigGlobal.VERSION,
+            "FRAMETIME": ConfigGlobal.FRAMETIME,
+            "FRAMETIMETYPE": ConfigGlobal.FRAMETIMETYPE,
+            "LOGO": String(value)
+        }, null, 2), 'utf8');
     });

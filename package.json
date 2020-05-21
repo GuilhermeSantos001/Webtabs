@@ -1,7 +1,7 @@
 {
   "name": "webtabs",
   "productName": "Webtabs",
-  "version": "5.16.29",
+  "version": "5.17.30",
   "description": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
   "main": "main.js",
   "scripts": {
@@ -15,13 +15,15 @@
     "asar": true,
     "win": {
       "icon": "assets/img/logo.ico",
-      "target": [{
-        "target": "nsis",
-        "arch": [
-          "x64",
-          "ia32"
-        ]
-      }]
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     }
   },
   "repository": "https://github.com/GuilhermeSantos001/Webtabs",

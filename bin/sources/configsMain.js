@@ -2,23 +2,23 @@
  * Import
  */
 const [{
-        remote,
-        ipcRenderer,
-        desktopCapturer
-    },
+    remote,
+    ipcRenderer,
+    desktopCapturer
+},
     path,
     ALERT,
     bytesToSize,
     chkurl,
     fs
 ] = [
-    require('electron'),
-    require('../import/localPath'),
-    require('../import/alert'),
-    require('../import/bytesToSize'),
-    require('../import/checking_url'),
-    require('fs'),
-];
+        require('electron'),
+        require('../import/localPath'),
+        require('../import/alert'),
+        require('../import/bytesToSize'),
+        require('../import/checking_url'),
+        require('fs'),
+    ];
 
 /**
  * Variables
@@ -27,9 +27,9 @@ let [
     data_urls,
     mainWindow
 ] = [
-    null,
-    remote.getCurrentWindow()
-]
+        null,
+        remote.getCurrentWindow()
+    ]
 
 /**
  * SCI ▲
@@ -81,9 +81,10 @@ function SCREEN_SELECTION_UPDATE() {
     desktopCapturer.getSources({
         types: ['window', 'screen']
     }).then(async sources => {
+        let i = 1;
         for (const source of sources) {
             if (document.getElementById(source.id) === null && source.id.includes('screen')) {
-                $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">${source.name}</button>`);
+                $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">Monitor ${i++}</button>`);
                 let btn = document.getElementById(source.id);
                 btn.onclick = function () {
                     let file = path.localPath('storage/urls.json');

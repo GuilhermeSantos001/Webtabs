@@ -47,9 +47,10 @@ function loadConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.16.29-build",
+            "VERSION": "v5.17.30-build",
             "FRAMETIME": 2,
-            "FRAMETIMETYPE": 2
+            "FRAMETIMETYPE": 2,
+            "LOGO": "assets/img/logo.png"
         }
         fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(data, null, 2), 'utf8');
     };

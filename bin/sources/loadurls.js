@@ -2,10 +2,10 @@
  * Import
  */
 const [{
-        remote,
-        ipcRenderer,
-        desktopCapturer
-    },
+    remote,
+    ipcRenderer,
+    desktopCapturer
+},
     path,
     fs,
     DeveloperMode,
@@ -13,14 +13,14 @@ const [{
     DATE,
     LZString
 ] = [
-    require('electron'),
-    require('../import/localPath'),
-    require('fs'),
-    require('../import/DeveloperMode'),
-    require('../import/alert'),
-    require('../classes/tick'),
-    require('../import/LZString')
-];
+        require('electron'),
+        require('../import/localPath'),
+        require('fs'),
+        require('../import/DeveloperMode'),
+        require('../import/alert'),
+        require('../classes/tick'),
+        require('../import/LZString')
+    ];
 
 /**
  *  Variables
@@ -38,18 +38,18 @@ let [
     i,
     ProcessInterval
 ] = [
-    null,
-    null,
-    null,
-    remote.Menu.getApplicationMenu(),
-    null,
-    null,
-    null,
-    null,
-    null,
-    0,
-    null,
-];
+        null,
+        null,
+        null,
+        remote.Menu.getApplicationMenu(),
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+    ];
 
 /**
  * SCI ▲
@@ -73,9 +73,10 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.16.29-build",
+            "VERSION": "v5.17.30-build",
             "FRAMETIME": 2,
-            "FRAMETIMETYPE": 2
+            "FRAMETIMETYPE": 2,
+            "LOGO": "assets/img/logo.png"
         }
         fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
     }
@@ -239,8 +240,8 @@ function removeFrame() {
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
-                        url: urls[i - 1][0]
-                    })
+                    url: urls[i - 1][0]
+                })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         saveDataURLs();
@@ -735,8 +736,8 @@ setInterval(() => {
              * Limpa os cookies da pagina do Hard Disk (HD)
              */
             remote.getCurrentWindow().webContents.session.clearStorageData({
-                    storages: 'cookies'
-                })
+                storages: 'cookies'
+            })
                 .then(() => {
                     if (typeof urls[i][2] === 'string') {
                         let cookie = {
@@ -754,15 +755,15 @@ setInterval(() => {
                              * Define os cookies da pagina
                              */
                             remote.getCurrentWindow().webContents.session.cookies.set({
-                                    url: urls[i][0],
-                                    name: cookie.values[cookie.i]['name'],
-                                    value: cookie.values[cookie.i]['value'],
-                                    domain: cookie.values[cookie.i]['domain'],
-                                    path: cookie.values[cookie.i]['path'],
-                                    secure: cookie.values[cookie.i]['secure'],
-                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                    expirationDate: cookie.values[cookie.i]['expirationDate']
-                                })
+                                url: urls[i][0],
+                                name: cookie.values[cookie.i]['name'],
+                                value: cookie.values[cookie.i]['value'],
+                                domain: cookie.values[cookie.i]['domain'],
+                                path: cookie.values[cookie.i]['path'],
+                                secure: cookie.values[cookie.i]['secure'],
+                                httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                expirationDate: cookie.values[cookie.i]['expirationDate']
+                            })
                                 .then(() => {
                                     cookie.callers.sucess++;
                                 })
@@ -967,26 +968,26 @@ ipcRenderer
     })
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, reject) => {
-                if (typeof cam === 'number') {
-                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
-                    frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                    __cookies['cam'] = cam;
-                } else if (typeof cam === 'string') {
-                    if (cam === 'layout_1') {
-                        cam = 1;
-                    } else if (cam === 'layout_2') {
-                        cam = 2;
-                    } else if (cam === 'layout_3') {
-                        cam = 3;
-                    }
-                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                    __cookies['layout_cam'] = cam;
+            if (typeof cam === 'number') {
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
+                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                __cookies['cam'] = cam;
+            } else if (typeof cam === 'string') {
+                if (cam === 'layout_1') {
+                    cam = 1;
+                } else if (cam === 'layout_2') {
+                    cam = 2;
+                } else if (cam === 'layout_3') {
+                    cam = 3;
                 }
-                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
-                resolve();
-            })
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                __cookies['layout_cam'] = cam;
+            }
+            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+            resolve();
+        })
             .then(() => {
                 clearInterval(interval);
             }), 1000);
