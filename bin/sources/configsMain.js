@@ -1,20 +1,21 @@
 /**
  * Import
  */
-const [
-    {
-        remote,
-        ipcRenderer,
-        desktopCapturer
-    },
+const [{
+    remote,
+    ipcRenderer,
+    desktopCapturer
+},
     path,
     ALERT,
+    bytesToSize,
     chkurl,
     fs
 ] = [
         require('electron'),
         require('../import/localPath'),
         require('../import/alert'),
+        require('../import/bytesToSize'),
         require('../import/checking_url'),
         require('fs'),
     ];
@@ -77,10 +78,13 @@ function BTN_SCREEN_SELECTION_EXIST(id, name) {
 };
 
 function SCREEN_SELECTION_UPDATE() {
-    desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+    desktopCapturer.getSources({
+        types: ['window', 'screen']
+    }).then(async sources => {
+        let i = 1;
         for (const source of sources) {
             if (document.getElementById(source.id) === null && source.id.includes('screen')) {
-                $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">${source.name}</button>`);
+                $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">Monitor ${i++}</button>`);
                 let btn = document.getElementById(source.id);
                 btn.onclick = function () {
                     let file = path.localPath('storage/urls.json');
@@ -88,7 +92,8 @@ function SCREEN_SELECTION_UPDATE() {
                     if (fs.existsSync(file)) {
                         data_urls.push([{
                             type_url: 'stream',
-                            id: source.id
+                            id: source.id,
+                            name: source.name
                         }]);
                         fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
                             $(btn).prop('disabled', true);
@@ -96,8 +101,7 @@ function SCREEN_SELECTION_UPDATE() {
                         });
                     }
                 };
-                if (BTN_SCREEN_SELECTION_EXIST(source.id, source.name))
-                    $(btn).prop('disabled', true);
+                if (BTN_SCREEN_SELECTION_EXIST(source.id, source.name)) $(btn).prop('disabled', true);
             }
         }
     });
@@ -110,7 +114,38 @@ $('#layerUrladd').hide();
 
 $(document).ready(function () {
     document.getElementById("button_exit_url").onclick = function () {
-        $('#layerUrladd').hide("fast");
+        $('#layerUrladd').animate({
+            "height": "0vh",
+            "opacity": 0
+        }, "fast").hide("fast");
+    };
+
+    $('#input_add_photo').on('change', function () {
+        $('#show_filePath_photo').text(document.getElementById('input_add_photo').files[0].path);
+        $('#size_file_photo').text(`Tamanho do arquivo: ${bytesToSize(document.getElementById('input_add_photo').files[0].size, 2)}`);
+    });
+
+    document.getElementById("button_add_photo").onclick = function () {
+        let file = path.localPath('storage/urls.json');
+        if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
+        if (fs.existsSync(file)) {
+            let url = document.getElementById('input_add_photo').files[0].path || '',
+                fileName = document.getElementById('input_add_photo').files[0].name;
+            if (!url || typeof url != 'string' || url.length <= 0) return;
+            if (fs.existsSync(url)) {
+                data_urls.push([{
+                    url,
+                    type_url: 'image'
+                }]);
+                fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
+                    $('#input_add_photo').val('');
+                    $('#show_filePath_photo').text('Procurar Imagem...');
+                    $('#size_file_photo').text('');
+                    ALERT.info('', `A sua imagem "${fileName}" foi adicionada com sucesso!!!`);
+                    mainWindow.webContents.send('add_url');
+                });
+            }
+        }
     };
 
     document.getElementById("button_add_url").onclick = function () {
@@ -122,7 +157,7 @@ $(document).ready(function () {
             if (!url || typeof url != 'string' || url.length <= 0) return;
             chkurl.direct(url, e => {
                 if (!e) {
-                    return ALERT.info(`A URL "${url}" não pode ser adicionada!!!`);
+                    return ALERT.info('', `A URL "${url}" não pode ser adicionada!!!`);
                 }
                 /**
                  * Extensions
@@ -151,7 +186,7 @@ $(document).ready(function () {
                 }
                 fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
                     $('#input_add_url').val('');
-                    ALERT.info(`A URL "${url}" foi adicionada com sucesso!!!`);
+                    ALERT.info('', `A URL "${url}" foi adicionada com sucesso!!!`);
                     mainWindow.webContents.send('add_url');
                 });
             });
@@ -166,5 +201,8 @@ $(document).ready(function () {
 ipcRenderer
     .on('window_configs_urls', () => {
         SCREEN_SELECTION_UPDATE();
-        $('#layerUrladd').show("fast");
+        $('#layerUrladd').show("fast").animate({
+            "height": "100vh",
+            "opacity": 100
+        }, "fast");
     });

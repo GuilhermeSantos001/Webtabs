@@ -1,14 +1,12 @@
 /**
  * Variables
  */
-let [
-    {
-        remote,
-        Menu
-    }
-] = [
-        require('electron')
-    ];
+let [{
+    remote,
+    Menu
+}] = [
+    require('electron')
+];
 
 /**
  * Class
@@ -27,8 +25,7 @@ class DeveloperMode {
         ) {
             if (remote.Menu.getApplicationMenu().getMenuItemById('devtools_developerMode'))
                 return remote.Menu.getApplicationMenu().getMenuItemById('devtools_developerMode').checked;
-        }
-        else {
+        } else {
             if (Menu.getApplicationMenu().getMenuItemById('devtools_developerMode'))
                 return Menu.getApplicationMenu().getMenuItemById('devtools_developerMode').checked;
         }

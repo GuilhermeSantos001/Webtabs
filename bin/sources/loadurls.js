@@ -1,12 +1,11 @@
 /**
  * Import
  */
-const [
-    {
-        remote,
-        ipcRenderer,
-        desktopCapturer
-    },
+const [{
+    remote,
+    ipcRenderer,
+    desktopCapturer
+},
     path,
     fs,
     DeveloperMode,
@@ -74,9 +73,10 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v4.12.28-beta.5",
+            "VERSION": "v5.17.30-build",
             "FRAMETIME": 2,
-            "FRAMETIMETYPE": 2
+            "FRAMETIMETYPE": 2,
+            "LOGO": "assets/img/logo.png"
         }
         fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
     }
@@ -113,9 +113,13 @@ function createDataURLs() {
 function createWebCookies() {
     if (!path.localPathExists('storage/webcookies.json')) path.localPathCreate('storage/webcookies.json');
     if (fs.existsSync(path.localPath('storage/webcookies.json'))) {
-        web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf8')) || { 'size': 0 };
+        web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf8')) || {
+            'size': 0
+        };
     } else {
-        web_cookies = { 'size': 0 };
+        web_cookies = {
+            'size': 0
+        };
         fs.writeFileSync(path.localPath('storage/webcookies.json'), JSON.stringify(web_cookies, null, 2), 'utf8');
     }
 };
@@ -262,6 +266,7 @@ function removeFrame() {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 saveDataURLs();
                 clearInterval(interval), interval = null;
@@ -308,6 +313,7 @@ function returnFrame() {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 i = i - 2 < 0 ? 0 : i - 2;
                 saveDataURLs();
@@ -356,6 +362,7 @@ function flushFrame() {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 i = __i;
                 saveDataURLs();
@@ -435,6 +442,7 @@ function deleteFrame(extensions) {
             ) {
                 finish(false);
             }
+
             function finish(listener) {
                 i = __i;
                 clearInterval(interval), interval = null;
@@ -667,7 +675,9 @@ setInterval(() => {
                  * D-Guard
                  */
                 case 'dguard':
-                    let { username, password, cam, layout_cam } = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {},
+                    let {
+                        username, password, cam, layout_cam
+                    } = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {},
                         __file = LZString.decompressFromBase64(fs.readFileSync(path.localPath('extensions/scripts/dguard.js')).toString()) || '';
                     /**
                      * Erro com a configuração do layout
@@ -677,7 +687,12 @@ setInterval(() => {
                     ) {
                         layout_cam = 3;
                         fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                            JSON.stringify({ username, password, layout_cam, cam }, null, 2));
+                            JSON.stringify({
+                                username,
+                                password,
+                                layout_cam,
+                                cam
+                            }, null, 2));
                     }
                     /**
                      * Erro com a seleção de cameras
@@ -685,7 +700,12 @@ setInterval(() => {
                     if (cam < 0) {
                         cam = 0;
                         fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                            JSON.stringify({ username, password, layout_cam, cam }, null, 2));
+                            JSON.stringify({
+                                username,
+                                password,
+                                layout_cam,
+                                cam
+                            }, null, 2));
                     }
                     /**
                      * Erro com nome de usuario ou senha
@@ -696,7 +716,7 @@ setInterval(() => {
                     ) {
                         if ($('#layerExtension-DGuard').is(':hidden')) {
                             $('#layerExtension-DGuard').show("fast");
-                            ALERT.info(`Verifique seu nome/senha de usuario do D-Guard.`);
+                            ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
                         }
                         return ProcessInterval = null;
                     }
@@ -864,7 +884,7 @@ setInterval(() => {
                                             if (result > 0) {
                                                 if ($('#layerExtension-DGuard').is(':hidden')) {
                                                     $('#layerExtension-DGuard').show("fast");
-                                                    ALERT.info(`Verifique seu nome/senha de usuario do D-Guard.`);
+                                                    ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
                                                 } else {
                                                     flushFrame();
                                                     clearInterval(auth);

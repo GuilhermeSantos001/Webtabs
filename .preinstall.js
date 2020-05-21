@@ -78,4 +78,8 @@ Array(
     }
 })
 
-Array('node_modules').map(dir => { localPathRemoveEx(dir) })
+Array(
+    'node_modules'
+).map(dir => {
+    localPathRemoveEx(dir)
+})
