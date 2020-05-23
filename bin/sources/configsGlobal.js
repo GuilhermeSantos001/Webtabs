@@ -6,11 +6,13 @@ const [{
     ipcRenderer
 },
     path,
-    fs
+    fs,
+    menuManager
 ] = [
         require('electron'),
         require('../import/localPath'),
         require('fs'),
+        require('../import/MenuManager')
     ];
 
 /**
@@ -39,9 +41,9 @@ function createConfigGlobal() {
     } else {
         ConfigGlobal = {
             "APPNAME": "WEBTABS",
-            "TITLE": "GRUPO MAVE 2019",
+            "TITLE": "GRUPO MAVE 2020",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.17.30-build",
+            "VERSION": "v5.30.31-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
@@ -155,6 +157,7 @@ $(document).ready(function () {
             "height": "0vh",
             "opacity": 0
         }, "fast").hide("fast");
+        menuManager.clear();
     };
 
     document.getElementById("radio_horas").onclick = function () {
@@ -219,10 +222,17 @@ $(document).ready(function () {
  */
 ipcRenderer
     .on('window_configs_global', () => {
-        $('#layerConfigs').show("fast").animate({
-            "height": "100vh",
-            "opacity": 100
-        }, "fast");
+        if (menuManager.isClear()) {
+            $('#layerConfigs').show("fast").animate({
+                "height": "100vh",
+                "opacity": 100
+            }, "fast");
+            menuManager.setMenu('configsGlobal');
+        } else {
+            if (menuManager.isMenu('configsGlobal')) {
+                $('#button_exit_global').click();
+            }
+        }
     })
     .on('set_logo_config_main', (event, value) => {
         let file = path.localPath('configs/global.json');

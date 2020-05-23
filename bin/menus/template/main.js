@@ -173,6 +173,13 @@ class Template {
     {
         label: 'Frame', submenu: [
             {
+                label: 'Gerenciar Conteúdos',
+                accelerator: 'F8',
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.send('window_contents_manager');
+                }
+            },
+            {
                 label: 'Abrir o menu de ações',
                 accelerator: 'F9',
                 click: () => {

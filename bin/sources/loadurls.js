@@ -11,7 +11,8 @@ const [{
     DeveloperMode,
     ALERT,
     DATE,
-    LZString
+    LZString,
+    menuManager
 ] = [
         require('electron'),
         require('../import/localPath'),
@@ -19,7 +20,8 @@ const [{
         require('../import/DeveloperMode'),
         require('../import/alert'),
         require('../classes/tick'),
-        require('../import/LZString')
+        require('../import/LZString'),
+        require('../import/MenuManager')
     ];
 
 /**
@@ -36,7 +38,8 @@ let [
     urls,
     cookies,
     i,
-    ProcessInterval
+    ProcessInterval,
+    framePauseValue
 ] = [
         null,
         null,
@@ -49,6 +52,7 @@ let [
         null,
         0,
         null,
+        null
     ];
 
 /**
@@ -73,7 +77,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.17.30-build",
+            "VERSION": "v5.30.31-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
@@ -199,10 +203,16 @@ function removeWebCookies(cookie) {
     let file = path.localPath('storage/webcookies.json');
     if (path.localPathExists('storage/webcookies.json')) {
         fileProcess = 'write...';
-        if (cookies[cookie] instanceof Array) delete cookies[cookie];
-        fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
-            fileProcess = 'done';
-        });
+        if (cookie != undefined) {
+            if (cookies[cookie] instanceof Array) delete cookies[cookie];
+            fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
+                fileProcess = 'done';
+            });
+        } else {
+            fs.unlink(file, () => {
+                fileProcess = 'done';
+            });
+        }
     }
 };
 
@@ -218,6 +228,20 @@ function framereload() {
     }
 };
 
+/**
+ * Frame Pause
+ */
+function frameIsPause() {
+    return framePauseValue || menu.getMenuItemById('PAUSE').checked;
+}
+
+function framePause() {
+    framePauseValue = true;
+}
+
+function frameResume() {
+    framePauseValue = null;
+}
 
 /**
  * Process
@@ -586,7 +610,7 @@ function frameInterval(type) {
             };
         if (
             frame.tick === undefined ||
-            !menu.getMenuItemById('PAUSE').checked &&
+            !frameIsPause() &&
             frame.tickReset
         ) {
             if (frame.tickReset) frame.tickReset = null;
@@ -605,7 +629,7 @@ function frameInterval(type) {
                 return new DATE();
             }
         }
-        if (menu.getMenuItemById('PAUSE').checked) {
+        if (frameIsPause()) {
             if (!frame.tickReset) frame.tickReset = true;
             if (DeveloperMode.getDevToolsDeveloperMode()) console.log(
                 `%c➠ LOG: ⚠ O ${frametype()} está parado, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠`,
@@ -624,7 +648,7 @@ function frameInterval(type) {
                     frame.isLoading() ||
                     frame.isLoadingMainFrame() ||
                     frame.isWaitingForResponse() ||
-                    menu.getMenuItemById('PAUSE').checked ||
+                    frameIsPause() ||
                     frame.fadeInInitial === 'processing...' ||
                     fileProcess === 'write...' ||
                     fileProcess === 'reading...'
@@ -635,7 +659,7 @@ function frameInterval(type) {
                 String(type).toLowerCase() === 'imagem' ||
                 String(type).toLowerCase() === 'video'
             ) {
-                if (!frame || menu.getMenuItemById('PAUSE').checked ||
+                if (!frame || frameIsPause() ||
                     frame.fadeInInitial === 'processing...' ||
                     fileProcess === 'write...' ||
                     fileProcess === 'reading...') return;
@@ -660,6 +684,7 @@ setInterval(() => {
         deleteFrame('dguard');
         return;
     }
+    if (menuManager.isMenu('contentsManager')) return;
     if (
         (!frame && !ProcessInterval && fileProcess === 'done')
     ) {
@@ -918,6 +943,12 @@ setInterval(() => {
  * Events
  */
 ipcRenderer
+    .on('render_framePause', () => {
+        if (!frameIsPause()) framePause();
+    })
+    .on('render_frameResume', () => {
+        if (frameIsPause()) frameResume();
+    })
     .on('render_resetZoom', () => {
         if (frame) {
             if (!frame.removeProcess && typeof frame.setZoomLevel === 'function') {

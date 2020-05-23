@@ -1,0 +1,195 @@
+<style>
+    #layerContentsManager {
+        height: 0vh;
+        opacity: 0;
+    }
+</style>
+
+<div id="layerContentsManager" class="bg-dark text-white col-12 overflow-auto fixed-top">
+    <h1 class="text-uppercase font-weight-bold border border-light p-2 text-center">Conteúdos para exibição</h1>
+    <ul id="layerAddContentsManagerList" class="list-group"></ul>
+    <button type="button" class="btn btn-lg btn-block btn-outline-light mb-2"
+        id="button_exit_contentsManager">Voltar</button>
+</div>
+
+<script>
+    $('#layerContentsManager').hide(function () { initialize(); });
+
+    function initialize() {
+        let data_urls = [],
+            web_cookies = {},
+            data_change = false;
+
+        if (fs.existsSync(path.localPath('storage/urls.json'))) {
+            data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [];
+        }
+
+        if (fs.existsSync(path.localPath('storage/webcookies.json'))) {
+            web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf8')) || {
+                'size': 0
+            };
+        }
+        data_change = false;
+
+        if (data_urls.length > 0) {
+            let position = 1;
+
+            $('#layerAddContentsManagerList').children().toArray().forEach($this => $($this).remove());
+
+            for (const url of data_urls) {
+                if (url[0] instanceof Object === false) {
+                    $('#layerAddContentsManagerList').append(`\
+                <li sequence="${position}" class="list-group-item border border-light bg-dark text-white mb-2 liEllipsis">\
+                <div class="card col-12 border border-dark bg-dark text-white">\
+                <div class="card-body">\
+                <h4 class="card-title">${url[3] || 'Desconhecido'}</h4>\
+                <h5 class="card-subtitle mb-2 text-muted">Tipo - URL</h5>\
+                <hr class="bg-light">\
+                <input type="text" class="form-control mb-2" id="input_edit_content_url" placeholder="Insira a url..." value="${url[0]}">\
+                <button id="up_item_${position}_content" type="button" class="btn btn-light btn-block upButton" ${position <= 1 ? "disabled" : ""}>Subir</button>\
+                <button id="down_item_${position}_content" type="button" class="btn btn-light btn-block downButton" ${position >= data_urls.length ? "disabled" : ""}>Descer</button>\
+                <button id="remove_item_content" type="button" class="btn btn-light btn-block">Remover</button>\
+                </div></div></li>\
+                `);
+
+                    $(`#up_item_${position}_content`).on('click', function () {
+                        var hook = $(this).closest('.liEllipsis').prev('.liEllipsis'),
+                            elementToMove = $(this).closest('.liEllipsis').detach();
+                        hook.before(elementToMove);
+                        /**
+                         * Reset buttons of elements
+                         */
+                        hook.find('.upButton, .downButton').attr('disabled', false);
+                        elementToMove.find('.upButton, .downButton').attr('disabled', false);
+                        /**
+                         * Configure buttons of elements
+                         */
+                        if ($('.liEllipsis').first().is(elementToMove)) {
+                            if (!$(this).is('[disabled=disabled]')) $(this).attr('disabled', true);
+                        }
+                        if ($('.liEllipsis').last().is(hook)) {
+                            hook.find('.downButton').attr('disabled', true);
+                        }
+                        /**
+                         * Configure element in list
+                         */
+                        let currentSequence = elementToMove.attr('sequence'),
+                            beforeSequence = hook.attr('sequence'),
+                            data = data_urls.slice(0),
+                            cookieId = Number(String(data[Number(currentSequence) - 1][2]).replace('cookie_', ''));
+                        /**
+                         * Configure CookieID
+                         */
+                        data[Number(currentSequence) - 1][2] = `cookie_${cookieId - 1}`;
+                        data[Number(beforeSequence) - 1][2] = `cookie_${cookieId}`;
+                        /**
+                         * Move element in list
+                         */
+                        let currentItem = data[Number(currentSequence) - 1],
+                            beforeItem = data[Number(beforeSequence) - 1];
+                        hook.attr('sequence', currentSequence);
+                        elementToMove.attr('sequence', beforeSequence);
+                        data.splice(Number(currentSequence) - 1, 1, beforeItem);
+                        data.splice(Number(beforeSequence) - 1, 1, currentItem);
+                        /**
+                         * Configure webcookies of element
+                         */
+                        if (web_cookies[currentItem[2]]) {
+                            let currentWebCookie = web_cookies[currentItem[2]],
+                                beforeWebCookie = web_cookies[beforeItem[2]];
+                            web_cookies[currentItem[2]] = beforeWebCookie;
+                            web_cookies[beforeItem[2]] = currentWebCookie;
+                        }
+                        /**
+                         * Save changes in data
+                         */
+                        data_urls = data;
+                        data_change = true;
+                    });
+
+                    $(`#down_item_${position}_content`).on('click', function () {
+                        let hook = $(this).closest('.liEllipsis').next('.liEllipsis'),
+                            elementToMove = $(this).closest('.liEllipsis').detach();
+                        hook.after(elementToMove);
+                        /**
+                         * Reset buttons of elements
+                         */
+                        hook.find('.upButton, .downButton').attr('disabled', false);
+                        elementToMove.find('.upButton, .downButton').attr('disabled', false);
+                        /**
+                         * Configure buttons of elements
+                         */
+                        if ($('.liEllipsis').last().is(elementToMove)) {
+                            if (!$(this).is('[disabled=disabled]')) $(this).attr('disabled', true);
+                        }
+                        if ($('.liEllipsis').first().is(hook)) {
+                            hook.find('.upButton').attr('disabled', true);
+                        }
+                        /**
+                         * Configure element in list
+                         */
+                        let currentSequence = elementToMove.attr('sequence'),
+                            nextSequence = hook.attr('sequence'),
+                            data = data_urls.slice(0),
+                            cookieId = Number(String(data[Number(currentSequence) - 1][2]).replace('cookie_', ''));
+                        /**
+                         * Configure CookieID
+                         */
+                        data[Number(currentSequence) - 1][2] = `cookie_${cookieId + 1}`;
+                        data[Number(nextSequence) - 1][2] = `cookie_${cookieId}`;
+                        /**
+                         * Move element in list
+                         */
+                        let currentItem = data[Number(currentSequence) - 1],
+                            nextItem = data[Number(nextSequence) - 1];
+                        hook.attr('sequence', currentSequence);
+                        elementToMove.attr('sequence', nextSequence);
+                        data.splice(Number(currentSequence) - 1, 1, nextItem);
+                        data.splice(Number(nextSequence) - 1, 1, currentItem);
+                        /**
+                         * Configure webcookies of element
+                         */
+                        if (web_cookies[currentItem[2]]) {
+                            let currentWebCookie = web_cookies[currentItem[2]],
+                                nextWebCookie = web_cookies[nextItem[2]];
+                            web_cookies[currentItem[2]] = nextWebCookie;
+                            web_cookies[nextItem[2]] = currentWebCookie;
+                        }
+                        /**
+                         * Save changes in data
+                         */
+                        data_urls = data;
+                        data_change = true;
+                    });
+
+                    $('#remove_item_content').on('click', function () {
+
+                    });
+
+                    $('#button_exit_contentsManager').on('click', function () {
+                        $('#layerContentsManager').animate({
+                            "height": "0vh",
+                            "opacity": 0
+                        }, "fast").hide("fast");
+                        if (data_change) {
+                            if (data_urls.length > 0) {
+                                fs.writeFileSync(path.localPath('storage/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
+                            }
+                            if (web_cookies instanceof Object) {
+                                fs.writeFileSync(path.localPath('storage/webcookies.json'), JSON.stringify(web_cookies, null, 2), 'utf8');
+                            }
+                            remote.getCurrentWindow().webContents.reload();
+                        }
+                        remote.getCurrentWindow().webContents.send('window_contents_manager_menu_clear');
+                        remote.getCurrentWindow().webContents.send('render_frameResume');
+                    });
+
+                } else {
+
+                }
+
+                position++;
+            }
+        }
+    }
+</script>

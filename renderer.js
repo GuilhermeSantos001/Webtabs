@@ -45,9 +45,9 @@ function loadConfigGlobal() {
     } else {
         data = {
             "APPNAME": "WEBTABS",
-            "TITLE": "GRUPO MAVE 2019",
+            "TITLE": "GRUPO MAVE 2020",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.17.30-build",
+            "VERSION": "v5.30.31-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
@@ -94,9 +94,9 @@ console.log(
 );
 
 if (DeveloperMode.getDevToolsDeveloperMode()) {
-    console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - 4.2.6-beta.5 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+    console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - v5.30.31-build 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 } else {
-    console.log('%c📛 VERSÃO EM EXECUÇÃO - 4.2.6 ♨️', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+    console.log('%c📛 VERSÃO EM EXECUÇÃO - v5.30.31-build ♨️', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 }
 
 /**
@@ -128,6 +128,7 @@ ipcRenderer
 require('./bin/sources/loadurls');
 require('./bin/sources/configsMain');
 require('./bin/sources/configsGlobal');
+require('./bin/sources/contentsManager');
 
 /**
  * Import Extensions
