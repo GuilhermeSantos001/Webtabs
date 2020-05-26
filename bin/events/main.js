@@ -1,22 +1,20 @@
 /**
  * Import
  */
-const [
-    {
-        ipcMain,
-        Menu
-    }
-] = [
-        require('electron')
-    ];
+const [{
+    ipcMain,
+    Menu
+}] = [
+    require('electron')
+];
 /**
  * Variables
  */
 const [
     templateMain
 ] = [
-        require('../menus/template/main')
-    ]
+    require('../menus/template/main')
+]
 ipcMain
     .on('menu_started', () => {
         /**
@@ -60,8 +58,7 @@ ipcMain
 
         template.layout[3].submenu.splice(0, 0, {
             label: 'D-Guard',
-            submenu: [
-                {
+            submenu: [{
                     label: 'Conta',
                     accelerator: 'CommandOrControl+F9',
                     click: () => {
@@ -77,8 +74,7 @@ ipcMain
         if (items.length > 0) {
             items.splice(0, 0, {
                 label: 'Layout',
-                submenu: [
-                    {
+                submenu: [{
                         label: '1 Camera',
                         id: 'layout_1',
                         type: 'radio',

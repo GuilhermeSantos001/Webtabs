@@ -43,7 +43,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2020",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.30.33-build",
+            "VERSION": "v5.31.33-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"

@@ -47,7 +47,7 @@ function loadConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2020",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.30.33-build",
+            "VERSION": "v5.31.33-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
@@ -94,9 +94,9 @@ console.log(
 );
 
 if (DeveloperMode.getDevToolsDeveloperMode()) {
-    console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - v5.30.33-build 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+    console.log('%c🔬 AMBIENTE DE DESENVOLVIMENTO - v5.31.33-build 📜', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 } else {
-    console.log('%c📛 VERSÃO EM EXECUÇÃO - v5.30.33-build ♨️', 'color: #f03c3c; padding: 8px; font-size: 200%;');
+    console.log('%c📛 VERSÃO EM EXECUÇÃO - v5.31.33-build ♨️', 'color: #f03c3c; padding: 8px; font-size: 200%;');
 }
 
 /**
