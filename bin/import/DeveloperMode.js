@@ -5,8 +5,8 @@ let [{
     remote,
     Menu
 }] = [
-    require('electron')
-];
+        require('electron')
+    ];
 
 /**
  * Class
@@ -19,6 +19,7 @@ class DeveloperMode {
         return this.status;
     }
     getDevToolsDeveloperMode() {
+        if (this.getStatus()) return true;
         if (
             remote &&
             remote.Menu

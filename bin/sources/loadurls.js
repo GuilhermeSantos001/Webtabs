@@ -77,7 +77,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.30.31-build",
+            "VERSION": "v5.30.33-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
@@ -236,10 +236,12 @@ function frameIsPause() {
 }
 
 function framePause() {
+    if (menu.getMenuItemById('PAUSE').checked) return;
     framePauseValue = true;
 }
 
 function frameResume() {
+    if (menu.getMenuItemById('PAUSE').checked) return;
     framePauseValue = null;
 }
 
@@ -311,7 +313,7 @@ function removeFrame() {
 
 function returnFrame() {
     if (urls.length <= 0) return;
-    if (frame && i > 1) {
+    if (frame) {
         if (
             frame.removeProcess ||
             frame.fadeInInitial === 'processing...'
@@ -339,7 +341,7 @@ function returnFrame() {
             }
 
             function finish(listener) {
-                i = i - 2 < 0 ? 0 : i - 2;
+                if (i > 1) { i = i - 2 < 0 ? 0 : i - 2; } else { i = urls.length - 1; }
                 saveDataURLs();
                 clearInterval(interval), interval = null;
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
