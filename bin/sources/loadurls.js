@@ -2,25 +2,27 @@
  * Import
  */
 const [{
-    remote,
-    ipcRenderer,
-    desktopCapturer
-},
+        remote,
+        ipcRenderer,
+        desktopCapturer
+    },
     path,
     fs,
     DeveloperMode,
     ALERT,
     DATE,
-    LZString
+    LZString,
+    menuManager
 ] = [
-        require('electron'),
-        require('../import/localPath'),
-        require('fs'),
-        require('../import/DeveloperMode'),
-        require('../import/alert'),
-        require('../classes/tick'),
-        require('../import/LZString')
-    ];
+    require('electron'),
+    require('../import/localPath'),
+    require('fs'),
+    require('../import/DeveloperMode'),
+    require('../import/alert'),
+    require('../classes/tick'),
+    require('../import/LZString'),
+    require('../import/MenuManager')
+];
 
 /**
  *  Variables
@@ -36,20 +38,22 @@ let [
     urls,
     cookies,
     i,
-    ProcessInterval
+    ProcessInterval,
+    framePauseValue
 ] = [
-        null,
-        null,
-        null,
-        remote.Menu.getApplicationMenu(),
-        null,
-        null,
-        null,
-        null,
-        null,
-        0,
-        null,
-    ];
+    null,
+    null,
+    null,
+    remote.Menu.getApplicationMenu(),
+    null,
+    null,
+    null,
+    null,
+    null,
+    0,
+    null,
+    null
+];
 
 /**
  * SCI ▲
@@ -73,7 +77,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "GRUPO MAVE 2019",
             "SLOGAN": "Você e seu Patrimônio em boas mãos!",
-            "VERSION": "v5.17.30-build",
+            "VERSION": "v5.31.33-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
@@ -199,10 +203,16 @@ function removeWebCookies(cookie) {
     let file = path.localPath('storage/webcookies.json');
     if (path.localPathExists('storage/webcookies.json')) {
         fileProcess = 'write...';
-        if (cookies[cookie] instanceof Array) delete cookies[cookie];
-        fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
-            fileProcess = 'done';
-        });
+        if (cookie != undefined) {
+            if (cookies[cookie] instanceof Array) delete cookies[cookie];
+            fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
+                fileProcess = 'done';
+            });
+        } else {
+            fs.unlink(file, () => {
+                fileProcess = 'done';
+            });
+        }
     }
 };
 
@@ -218,6 +228,22 @@ function framereload() {
     }
 };
 
+/**
+ * Frame Pause
+ */
+function frameIsPause() {
+    return framePauseValue || menu.getMenuItemById('PAUSE').checked;
+}
+
+function framePause() {
+    if (menu.getMenuItemById('PAUSE').checked) return;
+    framePauseValue = true;
+}
+
+function frameResume() {
+    if (menu.getMenuItemById('PAUSE').checked) return;
+    framePauseValue = null;
+}
 
 /**
  * Process
@@ -240,8 +266,8 @@ function removeFrame() {
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
-                    url: urls[i - 1][0]
-                })
+                        url: urls[i - 1][0]
+                    })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         saveDataURLs();
@@ -287,7 +313,7 @@ function removeFrame() {
 
 function returnFrame() {
     if (urls.length <= 0) return;
-    if (frame && i > 1) {
+    if (frame) {
         if (
             frame.removeProcess ||
             frame.fadeInInitial === 'processing...'
@@ -315,7 +341,11 @@ function returnFrame() {
             }
 
             function finish(listener) {
-                i = i - 2 < 0 ? 0 : i - 2;
+                if (i > 1) {
+                    i = i - 2 < 0 ? 0 : i - 2;
+                } else {
+                    i = urls.length - 1;
+                }
                 saveDataURLs();
                 clearInterval(interval), interval = null;
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
@@ -586,7 +616,7 @@ function frameInterval(type) {
             };
         if (
             frame.tick === undefined ||
-            !menu.getMenuItemById('PAUSE').checked &&
+            !frameIsPause() &&
             frame.tickReset
         ) {
             if (frame.tickReset) frame.tickReset = null;
@@ -605,7 +635,7 @@ function frameInterval(type) {
                 return new DATE();
             }
         }
-        if (menu.getMenuItemById('PAUSE').checked) {
+        if (frameIsPause()) {
             if (!frame.tickReset) frame.tickReset = true;
             if (DeveloperMode.getDevToolsDeveloperMode()) console.log(
                 `%c➠ LOG: ⚠ O ${frametype()} está parado, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠`,
@@ -624,7 +654,7 @@ function frameInterval(type) {
                     frame.isLoading() ||
                     frame.isLoadingMainFrame() ||
                     frame.isWaitingForResponse() ||
-                    menu.getMenuItemById('PAUSE').checked ||
+                    frameIsPause() ||
                     frame.fadeInInitial === 'processing...' ||
                     fileProcess === 'write...' ||
                     fileProcess === 'reading...'
@@ -635,7 +665,7 @@ function frameInterval(type) {
                 String(type).toLowerCase() === 'imagem' ||
                 String(type).toLowerCase() === 'video'
             ) {
-                if (!frame || menu.getMenuItemById('PAUSE').checked ||
+                if (!frame || frameIsPause() ||
                     frame.fadeInInitial === 'processing...' ||
                     fileProcess === 'write...' ||
                     fileProcess === 'reading...') return;
@@ -660,6 +690,7 @@ setInterval(() => {
         deleteFrame('dguard');
         return;
     }
+    if (menuManager.isMenu('contentsManager')) return;
     if (
         (!frame && !ProcessInterval && fileProcess === 'done')
     ) {
@@ -736,8 +767,8 @@ setInterval(() => {
              * Limpa os cookies da pagina do Hard Disk (HD)
              */
             remote.getCurrentWindow().webContents.session.clearStorageData({
-                storages: 'cookies'
-            })
+                    storages: 'cookies'
+                })
                 .then(() => {
                     if (typeof urls[i][2] === 'string') {
                         let cookie = {
@@ -755,15 +786,15 @@ setInterval(() => {
                              * Define os cookies da pagina
                              */
                             remote.getCurrentWindow().webContents.session.cookies.set({
-                                url: urls[i][0],
-                                name: cookie.values[cookie.i]['name'],
-                                value: cookie.values[cookie.i]['value'],
-                                domain: cookie.values[cookie.i]['domain'],
-                                path: cookie.values[cookie.i]['path'],
-                                secure: cookie.values[cookie.i]['secure'],
-                                httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                expirationDate: cookie.values[cookie.i]['expirationDate']
-                            })
+                                    url: urls[i][0],
+                                    name: cookie.values[cookie.i]['name'],
+                                    value: cookie.values[cookie.i]['value'],
+                                    domain: cookie.values[cookie.i]['domain'],
+                                    path: cookie.values[cookie.i]['path'],
+                                    secure: cookie.values[cookie.i]['secure'],
+                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                    expirationDate: cookie.values[cookie.i]['expirationDate']
+                                })
                                 .then(() => {
                                     cookie.callers.sucess++;
                                 })
@@ -918,6 +949,12 @@ setInterval(() => {
  * Events
  */
 ipcRenderer
+    .on('render_framePause', () => {
+        if (!frameIsPause()) framePause();
+    })
+    .on('render_frameResume', () => {
+        if (frameIsPause()) frameResume();
+    })
     .on('render_resetZoom', () => {
         if (frame) {
             if (!frame.removeProcess && typeof frame.setZoomLevel === 'function') {
@@ -968,26 +1005,26 @@ ipcRenderer
     })
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, reject) => {
-            if (typeof cam === 'number') {
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
-                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['cam'] = cam;
-            } else if (typeof cam === 'string') {
-                if (cam === 'layout_1') {
-                    cam = 1;
-                } else if (cam === 'layout_2') {
-                    cam = 2;
-                } else if (cam === 'layout_3') {
-                    cam = 3;
+                if (typeof cam === 'number') {
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
+                    frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['cam'] = cam;
+                } else if (typeof cam === 'string') {
+                    if (cam === 'layout_1') {
+                        cam = 1;
+                    } else if (cam === 'layout_2') {
+                        cam = 2;
+                    } else if (cam === 'layout_3') {
+                        cam = 3;
+                    }
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['layout_cam'] = cam;
                 }
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['layout_cam'] = cam;
-            }
-            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
-            resolve();
-        })
+                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+                resolve();
+            })
             .then(() => {
                 clearInterval(interval);
             }), 1000);

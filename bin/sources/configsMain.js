@@ -10,7 +10,8 @@ const [{
     ALERT,
     bytesToSize,
     chkurl,
-    fs
+    fs,
+    menuManager
 ] = [
         require('electron'),
         require('../import/localPath'),
@@ -18,6 +19,7 @@ const [{
         require('../import/bytesToSize'),
         require('../import/checking_url'),
         require('fs'),
+        require('../import/MenuManager')
     ];
 
 /**
@@ -118,6 +120,7 @@ $(document).ready(function () {
             "height": "0vh",
             "opacity": 0
         }, "fast").hide("fast");
+        menuManager.clear();
     };
 
     $('#input_add_photo').on('change', function () {
@@ -200,9 +203,16 @@ $(document).ready(function () {
  */
 ipcRenderer
     .on('window_configs_urls', () => {
-        SCREEN_SELECTION_UPDATE();
-        $('#layerUrladd').show("fast").animate({
-            "height": "100vh",
-            "opacity": 100
-        }, "fast");
+        if (menuManager.isClear()) {
+            SCREEN_SELECTION_UPDATE();
+            $('#layerUrladd').show("fast").animate({
+                "height": "100vh",
+                "opacity": 100
+            }, "fast");
+            menuManager.setMenu('configsUrls');
+        } else {
+            if (menuManager.isMenu('configsUrls')) {
+                $('#button_exit_url').click();
+            }
+        }
     });
