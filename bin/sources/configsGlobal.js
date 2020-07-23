@@ -41,8 +41,8 @@ function createConfigGlobal() {
     } else {
         ConfigGlobal = {
             "APPNAME": "WEBTABS",
-            "TITLE": "GRUPO MAVE 2020",
-            "SLOGAN": "Você e seu Patrimônio em boas mãos!",
+            "TITLE": "WEBTABS",
+            "SLOGAN": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
             "VERSION": "v5.31.33-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,

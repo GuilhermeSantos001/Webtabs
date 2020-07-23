@@ -46,27 +46,9 @@ createDataURLs();
 function createDataURLs() {
     if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
     if (fs.existsSync(path.localPath('storage/urls.json'))) {
-        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [
-            [
-                "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
-                0
-            ],
-            [
-                "https://sla.performancelab.com.br/login.php?uri=%2F",
-                0
-            ]
-        ];
+        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [];
     } else {
-        data_urls = [
-            [
-                "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
-                0
-            ],
-            [
-                "https://sla.performancelab.com.br/login.php?uri=%2F",
-                0
-            ]
-        ];
+        data_urls = [];
         fs.writeFileSync(path.localPath('storage/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
     }
 };
@@ -155,8 +137,7 @@ $(document).ready(function () {
         let file = path.localPath('storage/urls.json');
         if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
         if (fs.existsSync(file)) {
-            let url = $('#input_add_url').val() || '',
-                extension = 0;
+            let url = $('#input_add_url').val() || '', extension = 0, title = $('#input_add_url_title').val() || false;
             if (!url || typeof url != 'string' || url.length <= 0) return;
             chkurl.direct(url, e => {
                 if (!e) {
@@ -179,12 +160,14 @@ $(document).ready(function () {
                     data_urls.push([
                         url,
                         0,
-                        'dguard'
+                        'dguard',
+                        title
                     ]);
                 } else {
                     data_urls.push([
                         url,
-                        0
+                        0,
+                        title
                     ]);
                 }
                 fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {

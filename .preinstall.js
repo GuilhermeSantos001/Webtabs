@@ -77,9 +77,3 @@ Array(
             fs.unlinkSync(file);
     }
 })
-
-Array(
-    'node_modules'
-).map(dir => {
-    localPathRemoveEx(dir)
-})

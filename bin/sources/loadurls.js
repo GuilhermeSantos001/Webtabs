@@ -2,27 +2,29 @@
  * Import
  */
 const [{
-        remote,
-        ipcRenderer,
-        desktopCapturer
-    },
+    remote,
+    ipcRenderer,
+    desktopCapturer
+},
     path,
     fs,
     DeveloperMode,
     ALERT,
     DATE,
     LZString,
-    menuManager
+    menuManager,
+    controller
 ] = [
-    require('electron'),
-    require('../import/localPath'),
-    require('fs'),
-    require('../import/DeveloperMode'),
-    require('../import/alert'),
-    require('../classes/tick'),
-    require('../import/LZString'),
-    require('../import/MenuManager')
-];
+        require('electron'),
+        require('../import/localPath'),
+        require('fs'),
+        require('../import/DeveloperMode'),
+        require('../import/alert'),
+        require('../classes/tick'),
+        require('../import/LZString'),
+        require('../import/MenuManager'),
+        require('../import/controller')
+    ];
 
 /**
  *  Variables
@@ -39,21 +41,23 @@ let [
     cookies,
     i,
     ProcessInterval,
-    framePauseValue
+    framePauseValue,
+    tick
 ] = [
-    null,
-    null,
-    null,
-    remote.Menu.getApplicationMenu(),
-    null,
-    null,
-    null,
-    null,
-    null,
-    0,
-    null,
-    null
-];
+        null,
+        null,
+        null,
+        remote.Menu.getApplicationMenu(),
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        null,
+        [0, 10]
+    ];
 
 /**
  * SCI ▲
@@ -75,8 +79,8 @@ function createConfigGlobal() {
     } else {
         ConfigGlobal = {
             "APPNAME": "WEBTABS",
-            "TITLE": "GRUPO MAVE 2019",
-            "SLOGAN": "Você e seu Patrimônio em boas mãos!",
+            "TITLE": "WEBTABS",
+            "SLOGAN": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
             "VERSION": "v5.31.33-build",
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
@@ -89,27 +93,9 @@ function createConfigGlobal() {
 function createDataURLs() {
     if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
     if (fs.existsSync(path.localPath('storage/urls.json'))) {
-        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [
-            [
-                "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
-                0
-            ],
-            [
-                "https://sla.performancelab.com.br/login.php?uri=%2F",
-                0
-            ]
-        ];
+        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [];
     } else {
-        data_urls = [
-            [
-                "https://grupomave2.pipedrive.com/pipeline/1/user/everyone",
-                0
-            ],
-            [
-                "https://sla.performancelab.com.br/login.php?uri=%2F",
-                0
-            ]
-        ];
+        data_urls = [];
         fs.writeFileSync(path.localPath('storage/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
     }
 };
@@ -266,8 +252,8 @@ function removeFrame() {
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
-                        url: urls[i - 1][0]
-                    })
+                    url: urls[i - 1][0]
+                })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         saveDataURLs();
@@ -642,10 +628,6 @@ function frameInterval(type) {
                 'color: #e39b0b; padding: 8px; font-size: 150%;'
             );
         }
-        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(
-            `%c➠ LOG: Se ${frame.ticknow().getFullDate()} for igual a ${frame.tick.getFullDate()}, mude o slide ⌛ `,
-            'color: #405cff; padding: 8px; font-size: 150%;'
-        );
         if (frame.ticknow().compareOldDate(frame.tick)) {
             if (DeveloperMode.getDevToolsDeveloperMode()) console.log(`%c➠ LOG: ${frametype()} Removido ✘`, 'color: #405cff; padding: 8px; font-size: 150%;');
             if (String(type).toLowerCase() === 'frame') {
@@ -679,6 +661,30 @@ function frameInterval(type) {
  * Memory Cache
  */
 setInterval(() => {
+    /**
+     * Verifica se o frame ainda não carregou, 
+     * durante o periodo de tempo estipulado.
+     */
+    if (!frame) {
+        /**
+         * Limpa o cache do frame armazenado.
+         */
+        if (++tick[0] > tick[1]) {
+            tick[0] = 0;
+            console.log('teste');
+        }
+    }
+
+    /**
+     * Verifica se existe algo para ser exibido.
+     */
+    if (urls.length <= 0 && !controller.frameEmpty()) {
+        controller.setframeEmpty(true);
+        $('.layerFrame').append(fs.readFileSync(path.localPath('bin\\menus\\html\\homepage.html', true), 'utf8'));
+    }
+
+    if (controller.frameEmpty()) return;
+
     /**
      * Frame Waiting for remove
      */
@@ -767,8 +773,8 @@ setInterval(() => {
              * Limpa os cookies da pagina do Hard Disk (HD)
              */
             remote.getCurrentWindow().webContents.session.clearStorageData({
-                    storages: 'cookies'
-                })
+                storages: 'cookies'
+            })
                 .then(() => {
                     if (typeof urls[i][2] === 'string') {
                         let cookie = {
@@ -786,15 +792,15 @@ setInterval(() => {
                              * Define os cookies da pagina
                              */
                             remote.getCurrentWindow().webContents.session.cookies.set({
-                                    url: urls[i][0],
-                                    name: cookie.values[cookie.i]['name'],
-                                    value: cookie.values[cookie.i]['value'],
-                                    domain: cookie.values[cookie.i]['domain'],
-                                    path: cookie.values[cookie.i]['path'],
-                                    secure: cookie.values[cookie.i]['secure'],
-                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                    expirationDate: cookie.values[cookie.i]['expirationDate']
-                                })
+                                url: urls[i][0],
+                                name: cookie.values[cookie.i]['name'],
+                                value: cookie.values[cookie.i]['value'],
+                                domain: cookie.values[cookie.i]['domain'],
+                                path: cookie.values[cookie.i]['path'],
+                                secure: cookie.values[cookie.i]['secure'],
+                                httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                expirationDate: cookie.values[cookie.i]['expirationDate']
+                            })
                                 .then(() => {
                                     cookie.callers.sucess++;
                                 })
@@ -950,12 +956,15 @@ setInterval(() => {
  */
 ipcRenderer
     .on('render_framePause', () => {
+        if (controller.frameEmpty()) return;
         if (!frameIsPause()) framePause();
     })
     .on('render_frameResume', () => {
+        if (controller.frameEmpty()) return;
         if (frameIsPause()) frameResume();
     })
     .on('render_resetZoom', () => {
+        if (controller.frameEmpty()) return;
         if (frame) {
             if (!frame.removeProcess && typeof frame.setZoomLevel === 'function') {
                 frame.setZoomLevel(0);
@@ -963,6 +972,7 @@ ipcRenderer
         }
     })
     .on('render_increaseZoom', () => {
+        if (controller.frameEmpty()) return;
         if (frame) {
             if (!frame.removeProcess && typeof frame.getZoomLevel === 'function') {
                 let zoom = frame.getZoomLevel(),
@@ -973,6 +983,7 @@ ipcRenderer
         }
     })
     .on('render_reduceZoom', () => {
+        if (controller.frameEmpty()) return;
         if (frame) {
             if (!frame.removeProcess && typeof frame.getZoomLevel === 'function') {
                 let zoom = frame.getZoomLevel(),
@@ -983,11 +994,13 @@ ipcRenderer
         }
     })
     .on('render_next', () => {
+        if (controller.frameEmpty()) return;
         if (frame && fileProcess === 'done') {
             removeFrame();
         }
     })
     .on('render_return', () => {
+        if (controller.frameEmpty()) return;
         if (frame && fileProcess === 'done') {
             returnFrame();
         }
@@ -1005,26 +1018,26 @@ ipcRenderer
     })
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, reject) => {
-                if (typeof cam === 'number') {
-                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
-                    frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                    __cookies['cam'] = cam;
-                } else if (typeof cam === 'string') {
-                    if (cam === 'layout_1') {
-                        cam = 1;
-                    } else if (cam === 'layout_2') {
-                        cam = 2;
-                    } else if (cam === 'layout_3') {
-                        cam = 3;
-                    }
-                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                    __cookies['layout_cam'] = cam;
+            if (typeof cam === 'number') {
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
+                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                __cookies['cam'] = cam;
+            } else if (typeof cam === 'string') {
+                if (cam === 'layout_1') {
+                    cam = 1;
+                } else if (cam === 'layout_2') {
+                    cam = 2;
+                } else if (cam === 'layout_3') {
+                    cam = 3;
                 }
-                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
-                resolve();
-            })
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                __cookies['layout_cam'] = cam;
+            }
+            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+            resolve();
+        })
             .then(() => {
                 clearInterval(interval);
             }), 1000);

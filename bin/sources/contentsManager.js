@@ -8,13 +8,15 @@ const [{
     path,
     ALERT,
     fs,
-    menuManager
+    menuManager,
+    controller
 ] = [
         require('electron'),
         require('../import/localPath'),
         require('../import/alert'),
         require('fs'),
-        require('../import/MenuManager')
+        require('../import/MenuManager'),
+        require('../import/controller')
     ];
 
 /**
@@ -27,6 +29,7 @@ $('.layerFrame').append(fs.readFileSync(path.localPath('bin\\menus\\html\\conten
  */
 ipcRenderer
     .on('window_contents_manager', () => {
+        console.log(controller.frameEmpty());
         if (menuManager.isClear()) {
             $('#layerContentsManager').show("fast").animate({
                 "height": "100vh",
