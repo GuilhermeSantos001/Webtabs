@@ -29,8 +29,7 @@ $('.layerFrame').append(fs.readFileSync(path.localPath('bin\\menus\\html\\conten
  */
 ipcRenderer
     .on('window_contents_manager', () => {
-        console.log(controller.frameEmpty());
-        if (menuManager.isClear()) {
+        if (menuManager.isClear() && !controller.frameEmpty()) {
             $('#layerContentsManager').show("fast").animate({
                 "height": "100vh",
                 "opacity": 100

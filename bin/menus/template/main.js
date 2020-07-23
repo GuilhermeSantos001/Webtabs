@@ -8,12 +8,14 @@ const [{
     },
     path,
     fs,
-    cacheMenu
+    cacheMenu,
+    controller
 ] = [
     require('electron'),
     require('../../import/localPath'),
     require('fs'),
-    require('../data/main')
+    require('../data/main'),
+    require('../../import/controller')
 ];
 
 /**
@@ -226,7 +228,8 @@ class Template {
                     label: 'Gerenciar Conteúdos',
                     accelerator: 'F8',
                     click: () => {
-                        BrowserWindow.getFocusedWindow().webContents.send('window_contents_manager');
+                        if (!controller.frameEmpty())
+                            BrowserWindow.getFocusedWindow().webContents.send('window_contents_manager');
                     }
                 },
                 {

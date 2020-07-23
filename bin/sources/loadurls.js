@@ -2,10 +2,10 @@
  * Import
  */
 const [{
-    remote,
-    ipcRenderer,
-    desktopCapturer
-},
+        remote,
+        ipcRenderer,
+        desktopCapturer
+    },
     path,
     fs,
     DeveloperMode,
@@ -15,16 +15,16 @@ const [{
     menuManager,
     controller
 ] = [
-        require('electron'),
-        require('../import/localPath'),
-        require('fs'),
-        require('../import/DeveloperMode'),
-        require('../import/alert'),
-        require('../classes/tick'),
-        require('../import/LZString'),
-        require('../import/MenuManager'),
-        require('../import/controller')
-    ];
+    require('electron'),
+    require('../import/localPath'),
+    require('fs'),
+    require('../import/DeveloperMode'),
+    require('../import/alert'),
+    require('../classes/tick'),
+    require('../import/LZString'),
+    require('../import/MenuManager'),
+    require('../import/controller')
+];
 
 /**
  *  Variables
@@ -44,20 +44,20 @@ let [
     framePauseValue,
     tick
 ] = [
-        null,
-        null,
-        null,
-        remote.Menu.getApplicationMenu(),
-        null,
-        null,
-        null,
-        null,
-        null,
-        0,
-        null,
-        null,
-        [0, 10]
-    ];
+    null,
+    null,
+    null,
+    remote.Menu.getApplicationMenu(),
+    null,
+    null,
+    null,
+    null,
+    null,
+    0,
+    null,
+    null,
+    [0, 10]
+];
 
 /**
  * SCI ▲
@@ -252,8 +252,8 @@ function removeFrame() {
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
-                    url: urls[i - 1][0]
-                })
+                        url: urls[i - 1][0]
+                    })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         saveDataURLs();
@@ -660,296 +660,376 @@ function frameInterval(type) {
 /**
  * Memory Cache
  */
-setInterval(() => {
-    /**
-     * Verifica se o frame ainda não carregou, 
-     * durante o periodo de tempo estipulado.
-     */
-    if (!frame) {
+(() => {
+    setInterval(() => {
         /**
-         * Limpa o cache do frame armazenado.
+         * Verifica se existe algo para ser exibido.
          */
-        if (++tick[0] > tick[1]) {
-            tick[0] = 0;
-            console.log('teste');
+        if (controller.frameEmpty() && !controller.action('addhomepage')) {
+            controller.defineAction('addhomepage', true);
+            $('.layerFrame').append(fs.readFileSync(path.localPath('bin\\menus\\html\\homepage.html', true), 'utf8'));
+        } else if (!frameIsPause() && !controller.frameEmpty() && controller.action('addhomepage')) {
+            controller.defineAction('addhomepage', false);
+            $('#layerHomePage').animate({
+                "opacity": 0
+            }, "fast").hide("fast");
         }
-    }
 
-    /**
-     * Verifica se existe algo para ser exibido.
-     */
-    if (urls.length <= 0 && !controller.frameEmpty()) {
-        controller.setframeEmpty(true);
-        $('.layerFrame').append(fs.readFileSync(path.localPath('bin\\menus\\html\\homepage.html', true), 'utf8'));
-    }
+        if (controller.frameEmpty()) return;
 
-    if (controller.frameEmpty()) return;
-
-    /**
-     * Frame Waiting for remove
-     */
-    /**
-     * D-Guard
-     */
-    if ($("#button_extension_dguard_remove_frame").html() === 'Excluindo...') {
-        $('#layerExtension-DGuard').delay("slow").hide("fast");
-        deleteFrame('dguard');
-        return;
-    }
-    if (menuManager.isMenu('contentsManager')) return;
-    if (
-        (!frame && !ProcessInterval && fileProcess === 'done')
-    ) {
-        framereload();
-        if (i >= urls.length) i = 0;
-        if (typeof urls[i][0] === 'string') {
-            ProcessInterval = !ProcessInterval ? 'processing...' : ProcessInterval;
+        /**
+         * Verifica se o frame ainda não carregou, 
+         * durante o periodo de tempo estipulado.
+         */
+        if (!frame && !controller.frameEmpty()) {
             /**
-             * Exceções
+             * Limpa o cache do frame armazenado.
              */
-            switch (String(urls[i][2]).toLowerCase()) {
+            if (++tick[0] > tick[1]) {
+                tick[0] = 0;
                 /**
-                 * D-Guard
+                 * Limpa os cookies da pagina do Hard Disk (HD)
                  */
-                case 'dguard':
-                    let {
-                        username, password, cam, layout_cam
-                    } = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {},
-                        __file = LZString.decompressFromBase64(fs.readFileSync(path.localPath('extensions/scripts/dguard.js')).toString()) || '';
-                    /**
-                     * Erro com a configuração do layout
-                     */
-                    if (
-                        (layout_cam < 1 || layout_cam > 3)
-                    ) {
-                        layout_cam = 3;
-                        fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                            JSON.stringify({
-                                username,
-                                password,
-                                layout_cam,
-                                cam
-                            }, null, 2));
-                    }
-                    /**
-                     * Erro com a seleção de cameras
-                     */
-                    if (cam < 0) {
-                        cam = 0;
-                        fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                            JSON.stringify({
-                                username,
-                                password,
-                                layout_cam,
-                                cam
-                            }, null, 2));
-                    }
-                    /**
-                     * Erro com nome de usuario ou senha
-                     */
-                    if (
-                        (typeof username != 'string' || typeof password != 'string') ||
-                        (username.length <= 0 || password.length <= 0)
-                    ) {
-                        if ($('#layerExtension-DGuard').is(':hidden')) {
-                            $('#layerExtension-DGuard').show("fast");
-                            ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
-                        }
-                        return ProcessInterval = null;
-                    }
-                    /**
-                     * Verifica se a janela de configuração está aberta
-                     */
-                    if ($('#layerExtension-DGuard').is(":visible")) {
-                        return ProcessInterval = null;
-                    }
-                    __file = __file.replace('__NAME__VALUE__', username);
-                    __file = __file.replace('__PASS__VALUE__', password);
-                    __file = __file.replace('__CAM__VALUE__', cam);
-                    __file = __file.replace('__LAYOUT_CAM__VALUE__', layout_cam);
-                    return render(['dguard', __file]);
-            }
-            /**
-             * Limpa os cookies da pagina do Hard Disk (HD)
-             */
-            remote.getCurrentWindow().webContents.session.clearStorageData({
-                storages: 'cookies'
-            })
-                .then(() => {
-                    if (typeof urls[i][2] === 'string') {
-                        let cookie = {
-                            i: 0,
-                            l: cookies[urls[i][2]].length - 1,
-                            values: cookies[urls[i][2]],
-                            callers: {
-                                listen: 0,
-                                sucess: 0,
-                                error: 0
-                            }
-                        };
-                        for (; cookie.i < cookie.l; cookie.i++) {
-                            /**
-                             * Define os cookies da pagina
-                             */
-                            remote.getCurrentWindow().webContents.session.cookies.set({
-                                url: urls[i][0],
-                                name: cookie.values[cookie.i]['name'],
-                                value: cookie.values[cookie.i]['value'],
-                                domain: cookie.values[cookie.i]['domain'],
-                                path: cookie.values[cookie.i]['path'],
-                                secure: cookie.values[cookie.i]['secure'],
-                                httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                expirationDate: cookie.values[cookie.i]['expirationDate']
-                            })
-                                .then(() => {
-                                    cookie.callers.sucess++;
-                                })
-                                .catch((e) => {
-                                    cookie.callers.error++;
-                                })
-                                .finally(() => {
-                                    cookie.callers.listen++;
-                                    if (cookie.callers.listen >= cookie.l) {
-                                        /**
-                                         * Se chamadas foram atendidas com exito!
-                                         */
-                                        if (cookie.callers.sucess > 0) {
-                                            /**
-                                             * Escreve os cookies da pagina no Hard Disk (HD)
-                                             */
-                                            remote.getCurrentWindow().webContents.session.cookies.flushStore()
-                                                .then(() => {
-                                                    return render();
-                                                })
-                                                .catch((e) => {
-                                                    if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
-                                                });
-                                        }
-                                        /**
-                                         * Se não existe chamadas atendidas com exito!
-                                         */
-                                        else {
-                                            /**
-                                             * Limpa o cookie da pagina no sistema. 
-                                             */
-                                            ProcessInterval = null;
-                                            return saveDataURLs();
-                                        }
-                                    }
-                                });
-                        }
-                    } else {
-                        return render();
-                    }
-                }).catch((e) => {
-                    if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
-                });
-
-            function render(exception) {
-                $('.layerFrame').append(`<webview id="frame" src="${urls[i++][0]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);"></webview>`);
-
-                if (!frame) {
-                    frame = document.getElementById('frame');
-                }
-
-                frame.listener = function () {
-                    if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
-                    if (!frame.fadeInInitial) {
-                        frame.fadeInInitial = 'processing...';
-                        $(frame).fadeOut(function () {
-                            $(frame).css('filter', 'opacity(100%)');
-                            /**
-                             * Extensions
-                             */
-                            if (exception instanceof Array) {
+                remote.getCurrentWindow().webContents.session.clearStorageData({
+                        storages: 'cookies'
+                    })
+                    .then(() => {
+                        if (typeof urls[i][2] === 'string') {
+                            let cookie = {
+                                i: 0,
+                                l: cookies[urls[i][2]].length - 1,
+                                values: cookies[urls[i][2]],
+                                callers: {
+                                    listen: 0,
+                                    sucess: 0,
+                                    error: 0
+                                }
+                            };
+                            for (; cookie.i < cookie.l; cookie.i++) {
                                 /**
-                                 * D-Guard
+                                 * Define os cookies da pagina
                                  */
-                                if (exception[0] === 'dguard') {
-                                    frame.executeJavaScript(exception[1]);
-                                    if (DeveloperMode.getStatus()) frame.openDevTools();
-                                    frame.executeJavaScript(`
-                                        new Promise((resolve, reject) => {
-                                            let interval = setInterval(()=> {
-                                                if (document.webtabs) {
-                                                    let contents = document.getElementsByTagName('md-content')[1].getElementsByClassName('md-virtual-repeat-container md-orient-vertical ng-scope layout-align-center-stretch layout-row flex')[0].getElementsByClassName('md-virtual-repeat-scroller')[0].getElementsByClassName('md-virtual-repeat-offsetter')[0].children,
-                                                    i = 0,
-                                                    l = contents.length,
-                                                    menus = [];
-                                                    for (; i < l; i++) {
-                                                        menus.push(contents[i].getElementsByTagName('span')[0].innerText);
-                                                    }
-                                                    resolve(menus);
-                                                    clearInterval(interval);
-                                                }
-                                            }, 1000);
-                                        });
-                                    `).then(result => {
-                                        let menus = result;
-                                        if (menus instanceof Array) {
-                                            let items = [];
-                                            menus.map((label, id) => {
-                                                items.push({
-                                                    label: label,
-                                                    id: `cam_${id}`,
-                                                    type: 'radio',
-                                                    checked: false
-                                                });
-                                            });
-                                            ipcRenderer.send('extensions_dguard_menu_update', items);
+                                remote.getCurrentWindow().webContents.session.cookies.set({
+                                        url: urls[i][0],
+                                        name: cookie.values[cookie.i]['name'],
+                                        value: cookie.values[cookie.i]['value'],
+                                        domain: cookie.values[cookie.i]['domain'],
+                                        path: cookie.values[cookie.i]['path'],
+                                        secure: cookie.values[cookie.i]['secure'],
+                                        httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                        expirationDate: cookie.values[cookie.i]['expirationDate']
+                                    })
+                                    .then(() => {
+                                        cookie.callers.sucess++;
+                                    })
+                                    .catch((e) => {
+                                        cookie.callers.error++;
+                                    })
+                                    .finally(() => {
+                                        cookie.callers.listen++;
+                                        if (cookie.callers.listen >= cookie.l) {
+                                            /**
+                                             * Se chamadas foram atendidas com exito!
+                                             */
+                                            if (cookie.callers.sucess > 0) {
+                                                /**
+                                                 * Escreve os cookies da pagina no Hard Disk (HD)
+                                                 */
+                                                remote.getCurrentWindow().webContents.session.cookies.flushStore()
+                                                    .then(() => {
+                                                        return framereload();
+                                                    })
+                                                    .catch((e) => {
+                                                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                                                    });
+                                            }
+                                            /**
+                                             * Se não existe chamadas atendidas com exito!
+                                             */
+                                            else {
+                                                /**
+                                                 * Limpa o cookie da pagina no sistema. 
+                                                 */
+                                                saveDataURLs();
+                                                return framereload();
+                                            }
                                         }
                                     });
-                                }
                             }
-                        }).delay().fadeIn('slow', function () {
-                            frame.fadeInInitial = 'complete!';
-                            ProcessInterval = null;
-                            /**
-                             * Extensions
-                             */
-                            if (exception instanceof Array) {
+                        } else {
+                            return framereload();
+                        }
+                    }).catch((e) => {
+                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                    });
+            }
+        }
+
+        /**
+         * Frame Waiting for remove
+         */
+        /**
+         * D-Guard
+         */
+        if ($("#button_extension_dguard_remove_frame").html() === 'Excluindo...') {
+            $('#layerExtension-DGuard').delay("slow").hide("fast");
+            deleteFrame('dguard');
+            return;
+        }
+        if (menuManager.isMenu('contentsManager')) return;
+        if (
+            (!frame && !ProcessInterval && fileProcess === 'done')
+        ) {
+            framereload();
+            if (i >= urls.length) i = 0;
+            if (typeof urls[i][0] === 'string') {
+                ProcessInterval = !ProcessInterval ? 'processing...' : ProcessInterval;
+                /**
+                 * Exceções
+                 */
+                switch (String(urls[i][2]).toLowerCase()) {
+                    /**
+                     * D-Guard
+                     */
+                    case 'dguard':
+                        let {
+                            username, password, cam, layout_cam
+                        } = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {},
+                            __file = LZString.decompressFromBase64(fs.readFileSync(path.localPath('extensions/scripts/dguard.js')).toString()) || '';
+                        /**
+                         * Erro com a configuração do layout
+                         */
+                        if (
+                            (layout_cam < 1 || layout_cam > 3)
+                        ) {
+                            layout_cam = 3;
+                            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
+                                JSON.stringify({
+                                    username,
+                                    password,
+                                    layout_cam,
+                                    cam
+                                }, null, 2));
+                        }
+                        /**
+                         * Erro com a seleção de cameras
+                         */
+                        if (cam < 0) {
+                            cam = 0;
+                            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
+                                JSON.stringify({
+                                    username,
+                                    password,
+                                    layout_cam,
+                                    cam
+                                }, null, 2));
+                        }
+                        /**
+                         * Erro com nome de usuario ou senha
+                         */
+                        if (
+                            (typeof username != 'string' || typeof password != 'string') ||
+                            (username.length <= 0 || password.length <= 0)
+                        ) {
+                            if ($('#layerExtension-DGuard').is(':hidden')) {
+                                $('#layerExtension-DGuard').show("fast");
+                                ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
+                            }
+                            return ProcessInterval = null;
+                        }
+                        /**
+                         * Verifica se a janela de configuração está aberta
+                         */
+                        if ($('#layerExtension-DGuard').is(":visible")) {
+                            return ProcessInterval = null;
+                        }
+                        __file = __file.replace('__NAME__VALUE__', username);
+                        __file = __file.replace('__PASS__VALUE__', password);
+                        __file = __file.replace('__CAM__VALUE__', cam);
+                        __file = __file.replace('__LAYOUT_CAM__VALUE__', layout_cam);
+                        return render(['dguard', __file]);
+                }
+                /**
+                 * Limpa os cookies da pagina do Hard Disk (HD)
+                 */
+                remote.getCurrentWindow().webContents.session.clearStorageData({
+                        storages: 'cookies'
+                    })
+                    .then(() => {
+                        if (typeof urls[i][2] === 'string') {
+                            let cookie = {
+                                i: 0,
+                                l: cookies[urls[i][2]].length - 1,
+                                values: cookies[urls[i][2]],
+                                callers: {
+                                    listen: 0,
+                                    sucess: 0,
+                                    error: 0
+                                }
+                            };
+                            for (; cookie.i < cookie.l; cookie.i++) {
                                 /**
-                                 * D-Guard
+                                 * Define os cookies da pagina
                                  */
-                                if (exception[0] === 'dguard') {
-                                    let auth = setInterval(() => {
+                                remote.getCurrentWindow().webContents.session.cookies.set({
+                                        url: urls[i][0],
+                                        name: cookie.values[cookie.i]['name'],
+                                        value: cookie.values[cookie.i]['value'],
+                                        domain: cookie.values[cookie.i]['domain'],
+                                        path: cookie.values[cookie.i]['path'],
+                                        secure: cookie.values[cookie.i]['secure'],
+                                        httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                        expirationDate: cookie.values[cookie.i]['expirationDate']
+                                    })
+                                    .then(() => {
+                                        cookie.callers.sucess++;
+                                    })
+                                    .catch((e) => {
+                                        cookie.callers.error++;
+                                    })
+                                    .finally(() => {
+                                        cookie.callers.listen++;
+                                        if (cookie.callers.listen >= cookie.l) {
+                                            /**
+                                             * Se chamadas foram atendidas com exito!
+                                             */
+                                            if (cookie.callers.sucess > 0) {
+                                                /**
+                                                 * Escreve os cookies da pagina no Hard Disk (HD)
+                                                 */
+                                                remote.getCurrentWindow().webContents.session.cookies.flushStore()
+                                                    .then(() => {
+                                                        return render();
+                                                    })
+                                                    .catch((e) => {
+                                                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                                                    });
+                                            }
+                                            /**
+                                             * Se não existe chamadas atendidas com exito!
+                                             */
+                                            else {
+                                                /**
+                                                 * Limpa o cookie da pagina no sistema. 
+                                                 */
+                                                ProcessInterval = null;
+                                                return saveDataURLs();
+                                            }
+                                        }
+                                    });
+                            }
+                        } else {
+                            return render();
+                        }
+                    }).catch((e) => {
+                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                    });
+
+                function render(exception) {
+                    $('.layerFrame').append(`<webview id="frame" src="${urls[i++][0]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);"></webview>`);
+
+                    if (!frame) {
+                        frame = document.getElementById('frame');
+                    }
+
+                    frame.listener = function () {
+                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                        if (!frame.fadeInInitial) {
+                            frame.fadeInInitial = 'processing...';
+                            $(frame).fadeOut(function () {
+                                $(frame).css('filter', 'opacity(100%)');
+                                /**
+                                 * Extensions
+                                 */
+                                if (exception instanceof Array) {
+                                    /**
+                                     * D-Guard
+                                     */
+                                    if (exception[0] === 'dguard') {
+                                        frame.executeJavaScript(exception[1]);
+                                        if (DeveloperMode.getStatus()) frame.openDevTools();
                                         frame.executeJavaScript(`
-                                        new Promise((resolve, reject) => {
-                                            return resolve($('#reset').length);
-                                        });
-                                    `).then(result => {
-                                            if (result > 0) {
-                                                if ($('#layerExtension-DGuard').is(':hidden')) {
-                                                    $('#layerExtension-DGuard').show("fast");
-                                                    ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
-                                                } else {
-                                                    flushFrame();
-                                                    clearInterval(auth);
-                                                }
-                                            } else {
-                                                clearInterval(auth);
+                                            new Promise((resolve, reject) => {
+                                                let interval = setInterval(()=> {
+                                                    if (document.webtabs) {
+                                                        let contents = document.getElementsByTagName('md-content')[1].getElementsByClassName('md-virtual-repeat-container md-orient-vertical ng-scope layout-align-center-stretch layout-row flex')[0].getElementsByClassName('md-virtual-repeat-scroller')[0].getElementsByClassName('md-virtual-repeat-offsetter')[0].children,
+                                                        i = 0,
+                                                        l = contents.length,
+                                                        menus = [];
+                                                        for (; i < l; i++) {
+                                                            menus.push(contents[i].getElementsByTagName('span')[0].innerText);
+                                                        }
+                                                        resolve(menus);
+                                                        clearInterval(interval);
+                                                    }
+                                                }, 1000);
+                                            });
+                                        `).then(result => {
+                                            let menus = result;
+                                            if (menus instanceof Array) {
+                                                let items = [];
+                                                menus.map((label, id) => {
+                                                    items.push({
+                                                        label: label,
+                                                        id: `cam_${id}`,
+                                                        type: 'radio',
+                                                        checked: false
+                                                    });
+                                                });
+                                                ipcRenderer.send('extensions_dguard_menu_update', items);
                                             }
                                         });
-                                    }, 1000);
+                                    }
                                 }
-                            }
-                        });
+                            }).delay().fadeIn('slow', function () {
+                                frame.fadeInInitial = 'complete!';
+                                ProcessInterval = null;
+                                /**
+                                 * Extensions
+                                 */
+                                if (exception instanceof Array) {
+                                    /**
+                                     * D-Guard
+                                     */
+                                    if (exception[0] === 'dguard') {
+                                        let auth = setInterval(() => {
+                                            frame.executeJavaScript(`
+                                            new Promise((resolve, reject) => {
+                                                return resolve($('#reset').length);
+                                            });
+                                        `).then(result => {
+                                                if (result > 0) {
+                                                    if ($('#layerExtension-DGuard').is(':hidden')) {
+                                                        $('#layerExtension-DGuard').show("fast");
+                                                        ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
+                                                    } else {
+                                                        flushFrame();
+                                                        clearInterval(auth);
+                                                    }
+                                                } else {
+                                                    clearInterval(auth);
+                                                }
+                                            });
+                                        }, 1000);
+                                    }
+                                }
+                            });
+                        }
+                        frame.setZoomLevel(urls[i - 1][1]);
+                        interval = setInterval(frameInterval.bind(this, 'Frame'), 1000);
                     }
-                    frame.setZoomLevel(urls[i - 1][1]);
-                    interval = setInterval(frameInterval.bind(this, 'Frame'), 1000);
+                    frame.addEventListener('did-finish-load', frame.listener);
                 }
-                frame.addEventListener('did-finish-load', frame.listener);
+            } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'stream') {
+                DESKTOPCAPTURER();
+            } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'image') {
+                IMGRENDER();
+            } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'video') {
+                VIDEORENDER();
             }
-        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'stream') {
-            DESKTOPCAPTURER();
-        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'image') {
-            IMGRENDER();
-        } else if (typeof urls[i][0] === 'object' && urls[i][0]['type_url'] === 'video') {
-            VIDEORENDER();
         }
-    }
-}, 1000);
-
+    }, 1000);
+})();
 
 /**
  * Events
@@ -1018,26 +1098,26 @@ ipcRenderer
     })
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, reject) => {
-            if (typeof cam === 'number') {
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
-                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['cam'] = cam;
-            } else if (typeof cam === 'string') {
-                if (cam === 'layout_1') {
-                    cam = 1;
-                } else if (cam === 'layout_2') {
-                    cam = 2;
-                } else if (cam === 'layout_3') {
-                    cam = 3;
+                if (typeof cam === 'number') {
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
+                    frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['cam'] = cam;
+                } else if (typeof cam === 'string') {
+                    if (cam === 'layout_1') {
+                        cam = 1;
+                    } else if (cam === 'layout_2') {
+                        cam = 2;
+                    } else if (cam === 'layout_3') {
+                        cam = 3;
+                    }
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['layout_cam'] = cam;
                 }
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['layout_cam'] = cam;
-            }
-            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
-            resolve();
-        })
+                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+                resolve();
+            })
             .then(() => {
                 clearInterval(interval);
             }), 1000);

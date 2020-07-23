@@ -2,10 +2,10 @@
  * Import
  */
 const [{
-    remote,
-    ipcRenderer,
-    desktopCapturer
-},
+        remote,
+        ipcRenderer,
+        desktopCapturer
+    },
     path,
     ALERT,
     bytesToSize,
@@ -13,14 +13,14 @@ const [{
     fs,
     menuManager
 ] = [
-        require('electron'),
-        require('../import/localPath'),
-        require('../import/alert'),
-        require('../import/bytesToSize'),
-        require('../import/checking_url'),
-        require('fs'),
-        require('../import/MenuManager')
-    ];
+    require('electron'),
+    require('../import/localPath'),
+    require('../import/alert'),
+    require('../import/bytesToSize'),
+    require('../import/checking_url'),
+    require('fs'),
+    require('../import/MenuManager')
+];
 
 /**
  * Variables
@@ -29,9 +29,9 @@ let [
     data_urls,
     mainWindow
 ] = [
-        null,
-        remote.getCurrentWindow()
-    ]
+    null,
+    remote.getCurrentWindow()
+]
 
 /**
  * SCI ▲
@@ -137,7 +137,9 @@ $(document).ready(function () {
         let file = path.localPath('storage/urls.json');
         if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
         if (fs.existsSync(file)) {
-            let url = $('#input_add_url').val() || '', extension = 0, title = $('#input_add_url_title').val() || false;
+            let url = $('#input_add_url').val() || '',
+                extension = 0,
+                title = $('#input_add_url_title').val() || false;
             if (!url || typeof url != 'string' || url.length <= 0) return;
             chkurl.direct(url, e => {
                 if (!e) {
@@ -167,11 +169,13 @@ $(document).ready(function () {
                     data_urls.push([
                         url,
                         0,
+                        null,
                         title
                     ]);
                 }
                 fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
                     $('#input_add_url').val('');
+                    $('#input_add_url_title').val('');
                     ALERT.info('', `A URL "${url}" foi adicionada com sucesso!!!`);
                     mainWindow.webContents.send('add_url');
                 });
