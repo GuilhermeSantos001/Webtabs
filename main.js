@@ -1,8 +1,7 @@
 /**
  * Variables
  */
-const [
-  {
+const [{
     app,
     BrowserWindow,
     screen,
@@ -10,9 +9,9 @@ const [
   },
   DeveloperMode
 ] = [
-    require('electron'),
-    require('./bin/import/DeveloperMode')
-  ];
+  require('electron'),
+  require('./bin/import/DeveloperMode')
+];
 
 /**
  * Process
@@ -43,8 +42,13 @@ function createWindow() {
       selected--;
   }
 
-  const { width, height } = displays[selected].workAreaSize,
-    { x, y } = displays[selected].workArea;
+  const {
+    width,
+    height
+  } = displays[selected].workAreaSize, {
+    x,
+    y
+  } = displays[selected].workArea;
   mainWindow = new BrowserWindow({
     width: width,
     height: height,
@@ -53,6 +57,8 @@ function createWindow() {
     x: x,
     y: y,
     webPreferences: {
+      nodeIntegrationInSubFrames: true,
+      nodeIntegrationInWorker: true,
       nodeIntegration: true,
       webviewTag: true,
       webSecurity: false
@@ -67,7 +73,9 @@ function createWindow() {
 
   if (DeveloperMode.getStatus()) mainWindow.webContents.openDevTools();
 
-  mainWindow.on('closed', function () { mainWindow = null });
+  mainWindow.on('closed', function () {
+    mainWindow = null
+  });
 };
 
 /**

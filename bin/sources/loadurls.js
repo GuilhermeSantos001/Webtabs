@@ -1,3 +1,7 @@
+const {
+    url
+} = require('inspector');
+
 /**
  * Import
  */
@@ -994,10 +998,10 @@ function frameInterval(type) {
                                     if (exception[0] === 'dguard') {
                                         let auth = setInterval(() => {
                                             frame.executeJavaScript(`
-                                            new Promise((resolve, reject) => {
-                                                return resolve($('#reset').length);
-                                            });
-                                        `).then(result => {
+                                        new Promise((resolve, reject) => {
+                                            return resolve($('#reset').length);
+                                        });
+                                    `).then(result => {
                                                 if (result > 0) {
                                                     if ($('#layerExtension-DGuard').is(':hidden')) {
                                                         $('#layerExtension-DGuard').show("fast");
@@ -1012,6 +1016,26 @@ function frameInterval(type) {
                                             });
                                         }, 1000);
                                     }
+                                }
+                                /**
+                                 * Youtube
+                                 */
+                                if (String(urls[i - 1][0]).indexOf('youtube.com') != -1) {
+                                    frame.executeJavaScript(`
+                                    new Promise((resolve, reject) => {
+                                        let btn = document.getElementsByClassName('ytp-fullscreen-button');
+                                        if (typeof btn[0] === 'object') {
+                                            btn[0].click();
+                                            return resolve();
+                                        } else {
+                                            return resolve('recused');
+                                        }
+                                    });
+                                `, true).then(result => {
+                                        if (result === 'recused') {
+                                            if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ Youtube(LOG): Não foi possível colocar o vídeo em fullscreen automaticamente. ✗', 'color: #ff3624; padding: 8px; font-size: 150%;');
+                                        }
+                                    });
                                 }
                             });
                         }
