@@ -6,10 +6,10 @@ const {
  * Import
  */
 const [{
-        remote,
-        ipcRenderer,
-        desktopCapturer
-    },
+    remote,
+    ipcRenderer,
+    desktopCapturer
+},
     path,
     fs,
     DeveloperMode,
@@ -19,16 +19,16 @@ const [{
     menuManager,
     controller
 ] = [
-    require('electron'),
-    require('../import/localPath'),
-    require('fs'),
-    require('../import/DeveloperMode'),
-    require('../import/alert'),
-    require('../classes/tick'),
-    require('../import/LZString'),
-    require('../import/MenuManager'),
-    require('../import/controller')
-];
+        require('electron'),
+        require('../import/localPath'),
+        require('fs'),
+        require('../import/DeveloperMode'),
+        require('../import/alert'),
+        require('../classes/tick'),
+        require('../import/LZString'),
+        require('../import/MenuManager'),
+        require('../import/controller')
+    ];
 
 /**
  *  Variables
@@ -48,20 +48,20 @@ let [
     framePauseValue,
     tick
 ] = [
-    null,
-    null,
-    null,
-    remote.Menu.getApplicationMenu(),
-    null,
-    null,
-    null,
-    null,
-    null,
-    0,
-    null,
-    null,
-    [0, 10]
-];
+        null,
+        null,
+        null,
+        remote.Menu.getApplicationMenu(),
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        null,
+        [0, 10]
+    ];
 
 /**
  * SCI ▲
@@ -256,8 +256,8 @@ function removeFrame() {
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
-                        url: urls[i - 1][0]
-                    })
+                    url: urls[i - 1][0]
+                })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         saveDataURLs();
@@ -695,8 +695,8 @@ function frameInterval(type) {
                  * Limpa os cookies da pagina do Hard Disk (HD)
                  */
                 remote.getCurrentWindow().webContents.session.clearStorageData({
-                        storages: 'cookies'
-                    })
+                    storages: 'cookies'
+                })
                     .then(() => {
                         if (typeof urls[i][2] === 'string') {
                             let cookie = {
@@ -714,15 +714,15 @@ function frameInterval(type) {
                                  * Define os cookies da pagina
                                  */
                                 remote.getCurrentWindow().webContents.session.cookies.set({
-                                        url: urls[i][0],
-                                        name: cookie.values[cookie.i]['name'],
-                                        value: cookie.values[cookie.i]['value'],
-                                        domain: cookie.values[cookie.i]['domain'],
-                                        path: cookie.values[cookie.i]['path'],
-                                        secure: cookie.values[cookie.i]['secure'],
-                                        httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                        expirationDate: cookie.values[cookie.i]['expirationDate']
-                                    })
+                                    url: urls[i][0],
+                                    name: cookie.values[cookie.i]['name'],
+                                    value: cookie.values[cookie.i]['value'],
+                                    domain: cookie.values[cookie.i]['domain'],
+                                    path: cookie.values[cookie.i]['path'],
+                                    secure: cookie.values[cookie.i]['secure'],
+                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                    expirationDate: cookie.values[cookie.i]['expirationDate']
+                                })
                                     .then(() => {
                                         cookie.callers.sucess++;
                                     })
@@ -857,8 +857,8 @@ function frameInterval(type) {
                  * Limpa os cookies da pagina do Hard Disk (HD)
                  */
                 remote.getCurrentWindow().webContents.session.clearStorageData({
-                        storages: 'cookies'
-                    })
+                    storages: 'cookies'
+                })
                     .then(() => {
                         if (typeof urls[i][2] === 'string') {
                             let cookie = {
@@ -876,15 +876,15 @@ function frameInterval(type) {
                                  * Define os cookies da pagina
                                  */
                                 remote.getCurrentWindow().webContents.session.cookies.set({
-                                        url: urls[i][0],
-                                        name: cookie.values[cookie.i]['name'],
-                                        value: cookie.values[cookie.i]['value'],
-                                        domain: cookie.values[cookie.i]['domain'],
-                                        path: cookie.values[cookie.i]['path'],
-                                        secure: cookie.values[cookie.i]['secure'],
-                                        httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                        expirationDate: cookie.values[cookie.i]['expirationDate']
-                                    })
+                                    url: urls[i][0],
+                                    name: cookie.values[cookie.i]['name'],
+                                    value: cookie.values[cookie.i]['value'],
+                                    domain: cookie.values[cookie.i]['domain'],
+                                    path: cookie.values[cookie.i]['path'],
+                                    secure: cookie.values[cookie.i]['secure'],
+                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                    expirationDate: cookie.values[cookie.i]['expirationDate']
+                                })
                                     .then(() => {
                                         cookie.callers.sucess++;
                                     })
@@ -1122,26 +1122,26 @@ ipcRenderer
     })
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, reject) => {
-                if (typeof cam === 'number') {
-                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
-                    frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                    __cookies['cam'] = cam;
-                } else if (typeof cam === 'string') {
-                    if (cam === 'layout_1') {
-                        cam = 1;
-                    } else if (cam === 'layout_2') {
-                        cam = 2;
-                    } else if (cam === 'layout_3') {
-                        cam = 3;
-                    }
-                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                    __cookies['layout_cam'] = cam;
+            if (typeof cam === 'number') {
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
+                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                __cookies['cam'] = cam;
+            } else if (typeof cam === 'string') {
+                if (cam === 'layout_1') {
+                    cam = 1;
+                } else if (cam === 'layout_2') {
+                    cam = 2;
+                } else if (cam === 'layout_3') {
+                    cam = 3;
                 }
-                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
-                resolve();
-            })
+                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                __cookies['layout_cam'] = cam;
+            }
+            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+            resolve();
+        })
             .then(() => {
                 clearInterval(interval);
             }), 1000);
