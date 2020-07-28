@@ -7,12 +7,14 @@ const [{
 },
     path,
     fs,
-    menuManager
+    menuManager,
+    controller
 ] = [
         require('electron'),
         require('../import/localPath'),
         require('fs'),
-        require('../import/MenuManager')
+        require('../import/MenuManager'),
+        require('../import/controller')
     ];
 
 /**
@@ -43,7 +45,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "WEBTABS",
             "SLOGAN": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
-            "VERSION": "v5.31.33-build",
+            "VERSION": controller.versionSystem,
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"

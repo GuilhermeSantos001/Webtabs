@@ -5,8 +5,8 @@ let [{
     remote,
     Menu
 }] = [
-        require('electron')
-    ];
+    require('electron')
+];
 
 /**
  * Class
@@ -31,6 +31,21 @@ class DeveloperMode {
                 return Menu.getApplicationMenu().getMenuItemById('devtools_developerMode').checked;
         }
     }
+
+    getDevToolsMode(mode) {
+        if (
+            remote &&
+            remote.Menu
+        ) {
+            if (remote.Menu.getApplicationMenu().getMenuItemById(String(mode)))
+                return remote.Menu.getApplicationMenu().getMenuItemById(String(mode)).checked;
+        } else {
+            if (Menu.getApplicationMenu().getMenuItemById(String(mode)))
+                return Menu.getApplicationMenu().getMenuItemById(String(mode)).checked;
+        }
+        return false;
+    }
+
 }
 
 module.exports = new DeveloperMode();

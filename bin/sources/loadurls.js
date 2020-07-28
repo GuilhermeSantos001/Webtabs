@@ -1,15 +1,11 @@
-const {
-    url
-} = require('inspector');
-
 /**
  * Import
  */
 const [{
-    remote,
-    ipcRenderer,
-    desktopCapturer
-},
+        remote,
+        ipcRenderer,
+        desktopCapturer
+    },
     path,
     fs,
     DeveloperMode,
@@ -19,16 +15,16 @@ const [{
     menuManager,
     controller
 ] = [
-        require('electron'),
-        require('../import/localPath'),
-        require('fs'),
-        require('../import/DeveloperMode'),
-        require('../import/alert'),
-        require('../classes/tick'),
-        require('../import/LZString'),
-        require('../import/MenuManager'),
-        require('../import/controller')
-    ];
+    require('electron'),
+    require('../import/localPath'),
+    require('fs'),
+    require('../import/DeveloperMode'),
+    require('../import/alert'),
+    require('../classes/tick'),
+    require('../import/LZString'),
+    require('../import/MenuManager'),
+    require('../import/controller')
+];
 
 /**
  *  Variables
@@ -48,20 +44,20 @@ let [
     framePauseValue,
     tick
 ] = [
-        null,
-        null,
-        null,
-        remote.Menu.getApplicationMenu(),
-        null,
-        null,
-        null,
-        null,
-        null,
-        0,
-        null,
-        null,
-        [0, 10]
-    ];
+    null,
+    null,
+    null,
+    remote.Menu.getApplicationMenu(),
+    null,
+    null,
+    null,
+    null,
+    null,
+    0,
+    null,
+    null,
+    [0, 10]
+];
 
 /**
  * SCI ▲
@@ -85,7 +81,7 @@ function createConfigGlobal() {
             "APPNAME": "WEBTABS",
             "TITLE": "WEBTABS",
             "SLOGAN": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
-            "VERSION": "v5.31.33-build",
+            "VERSION": controller.versionSystem,
             "FRAMETIME": 2,
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
@@ -256,8 +252,8 @@ function removeFrame() {
                 if (typeof urls[i - 1][2] != 'string') urls[i - 1][2] = `cookie_${++cookies.size}`;
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({
-                    url: urls[i - 1][0]
-                })
+                        url: urls[i - 1][0]
+                    })
                     .then((data) => {
                         cookies[urls[i - 1][2]] = data;
                         saveDataURLs();
@@ -273,7 +269,8 @@ function removeFrame() {
                          */
                         ipcRenderer.send('extensions_dguard_menu_close');
                     }).catch((error) => {
-                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                            DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
                     });
             } else if (
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'stream' ||
@@ -320,7 +317,8 @@ function returnFrame() {
                         cookies[urls[i - 1][2]] = data;
                         finish(true);
                     }).catch((error) => {
-                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                            DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
                     });
             } else if (
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'stream' ||
@@ -373,7 +371,8 @@ function flushFrame() {
                         cookies[urls[__i][2]] = data;
                         finish(true);
                     }).catch((error) => {
-                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                            DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
                     });
             } else if (
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'stream' ||
@@ -453,7 +452,8 @@ function deleteFrame(extensions) {
                         cookies[urls[__i][2]] = data;
                         finish(true);
                     }).catch((error) => {
-                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log(error);
+                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                            DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
                     });
             } else if (
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'stream' ||
@@ -527,7 +527,25 @@ function DESKTOPCAPTURER() {
     });
 
     function desktopCapturer_handleStream(stream) {
-        $('.layerFrame').append(`<video id="stream" style="z-index: 1; display:inline-flexbox; width: 100vw; filter:opacity(0%);" />`);
+        $('.layerFrame').append(`<video id="stream" style="z-index: 1; display:inline-flexbox; filter:opacity(0%);" />`);
+
+        let $video = $('#stream'),
+            $window = $(window);
+
+        $window.resize(function () {
+
+            let height = $window.height();
+            $video.css('height', height);
+
+            let videoWidth = $video.width(),
+                windowWidth = $window.width(),
+                marginLeftAdjust = (windowWidth - videoWidth) / 2;
+
+            $video.css({
+                'height': height,
+                'marginLeft': marginLeftAdjust
+            });
+        }).resize();
 
         if (!frame) {
             frame = document.getElementById('stream');
@@ -542,7 +560,8 @@ function DESKTOPCAPTURER() {
                 $(frame).css('filter', 'opacity(100%)');
             }).delay().fadeIn('slow', function () {
                 frame.fadeInInitial = 'complete!';
-                if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                if (DeveloperMode.getDevToolsDeveloperMode() &&
+                    DeveloperMode.getDevToolsMode('append_frames')) console.log('%c➠ LOG: Frame(Stream) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
                 interval = setInterval(frameInterval.bind(this, 'Stream'), 1000);
             });
         }
@@ -550,7 +569,8 @@ function DESKTOPCAPTURER() {
     };
 
     function desktopCapturer_handleError(e) {
-        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+        if (DeveloperMode.getDevToolsDeveloperMode() &&
+            DeveloperMode.getDevToolsMode('errors_system')) console.error(e);
     };
 }
 
@@ -567,7 +587,8 @@ function IMGRENDER() {
             $(frame).css('filter', 'opacity(100%)');
         }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
-            if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            if (DeveloperMode.getDevToolsDeveloperMode() &&
+                DeveloperMode.getDevToolsMode('append_frames')) console.log('%c➠ LOG: Frame(Imagem) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
             interval = setInterval(frameInterval.bind(this, 'Imagem'), 1000);
         });
     }
@@ -587,7 +608,8 @@ function VIDEORENDER() {
             $(frame).css('filter', 'opacity(100%)');
         }).delay().fadeIn('slow', function () {
             frame.fadeInInitial = 'complete!';
-            if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+            if (DeveloperMode.getDevToolsDeveloperMode() &&
+                DeveloperMode.getDevToolsMode('append_frames')) console.log('%c➠ LOG: Frame(Video) Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
             interval = setInterval(frameInterval.bind(this, 'video'), 1000);
         });
     }
@@ -604,12 +626,14 @@ function frameInterval(type) {
             frametype = () => {
                 return String(type).toLowerCase() === 'frame' ? 'Frame' : `Frame(${type})`;
             };
+
         if (
             frame.tick === undefined ||
             !frameIsPause() &&
             frame.tickReset
         ) {
             if (frame.tickReset) frame.tickReset = null;
+
             frame.tick = (() => {
                 let date = new DATE();
                 if (frametimetype === 1) {
@@ -621,19 +645,33 @@ function frameInterval(type) {
                 }
                 return date;
             })();
+
             frame.ticknow = () => {
                 return new DATE();
             }
         }
+
+        if (!frameIsPause() &&
+            DeveloperMode.getDevToolsDeveloperMode() &&
+            DeveloperMode.getDevToolsMode('tick_frames')) {
+            console.log(
+                `%c➠ LOG: Se ${frame.ticknow().getFullDate()} for igual a ${frame.tick.getFullDate()}, mude o slide ⌛ `,
+                'color: #405cff; padding: 8px; font-size: 150%;'
+            );
+        }
+
         if (frameIsPause()) {
             if (!frame.tickReset) frame.tickReset = true;
-            if (DeveloperMode.getDevToolsDeveloperMode()) console.log(
+            if (DeveloperMode.getDevToolsDeveloperMode() &&
+                DeveloperMode.getDevToolsMode('pause_frames')) console.log(
                 `%c➠ LOG: ⚠ O ${frametype()} está parado, assim que o mesmo estiver ativo. O contador será resetado, tendo o seu valor retornado a 0. ⚠`,
                 'color: #e39b0b; padding: 8px; font-size: 150%;'
             );
         }
+
         if (frame.ticknow().compareOldDate(frame.tick)) {
-            if (DeveloperMode.getDevToolsDeveloperMode()) console.log(`%c➠ LOG: ${frametype()} Removido ✘`, 'color: #405cff; padding: 8px; font-size: 150%;');
+            if (DeveloperMode.getDevToolsDeveloperMode() &&
+                DeveloperMode.getDevToolsMode('remove_frames')) console.log(`%c➠ LOG: ${frametype()} Removido ✘`, 'color: #405cff; padding: 8px; font-size: 150%;');
             if (String(type).toLowerCase() === 'frame') {
                 if (
                     !frame ||
@@ -695,8 +733,8 @@ function frameInterval(type) {
                  * Limpa os cookies da pagina do Hard Disk (HD)
                  */
                 remote.getCurrentWindow().webContents.session.clearStorageData({
-                    storages: 'cookies'
-                })
+                        storages: 'cookies'
+                    })
                     .then(() => {
                         if (typeof urls[i][2] === 'string') {
                             let cookie = {
@@ -714,15 +752,15 @@ function frameInterval(type) {
                                  * Define os cookies da pagina
                                  */
                                 remote.getCurrentWindow().webContents.session.cookies.set({
-                                    url: urls[i][0],
-                                    name: cookie.values[cookie.i]['name'],
-                                    value: cookie.values[cookie.i]['value'],
-                                    domain: cookie.values[cookie.i]['domain'],
-                                    path: cookie.values[cookie.i]['path'],
-                                    secure: cookie.values[cookie.i]['secure'],
-                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                    expirationDate: cookie.values[cookie.i]['expirationDate']
-                                })
+                                        url: urls[i][0],
+                                        name: cookie.values[cookie.i]['name'],
+                                        value: cookie.values[cookie.i]['value'],
+                                        domain: cookie.values[cookie.i]['domain'],
+                                        path: cookie.values[cookie.i]['path'],
+                                        secure: cookie.values[cookie.i]['secure'],
+                                        httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                        expirationDate: cookie.values[cookie.i]['expirationDate']
+                                    })
                                     .then(() => {
                                         cookie.callers.sucess++;
                                     })
@@ -744,7 +782,8 @@ function frameInterval(type) {
                                                         return framereload();
                                                     })
                                                     .catch((e) => {
-                                                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                                                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                                                            DeveloperMode.getDevToolsMode('errors_system')) console.error(e);
                                                     });
                                             }
                                             /**
@@ -764,7 +803,8 @@ function frameInterval(type) {
                             return framereload();
                         }
                     }).catch((e) => {
-                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                            DeveloperMode.getDevToolsMode('errors_system')) console.error(e);
                     });
             }
         }
@@ -857,8 +897,8 @@ function frameInterval(type) {
                  * Limpa os cookies da pagina do Hard Disk (HD)
                  */
                 remote.getCurrentWindow().webContents.session.clearStorageData({
-                    storages: 'cookies'
-                })
+                        storages: 'cookies'
+                    })
                     .then(() => {
                         if (typeof urls[i][2] === 'string') {
                             let cookie = {
@@ -876,15 +916,15 @@ function frameInterval(type) {
                                  * Define os cookies da pagina
                                  */
                                 remote.getCurrentWindow().webContents.session.cookies.set({
-                                    url: urls[i][0],
-                                    name: cookie.values[cookie.i]['name'],
-                                    value: cookie.values[cookie.i]['value'],
-                                    domain: cookie.values[cookie.i]['domain'],
-                                    path: cookie.values[cookie.i]['path'],
-                                    secure: cookie.values[cookie.i]['secure'],
-                                    httpOnly: cookie.values[cookie.i]['httpOnly'],
-                                    expirationDate: cookie.values[cookie.i]['expirationDate']
-                                })
+                                        url: urls[i][0],
+                                        name: cookie.values[cookie.i]['name'],
+                                        value: cookie.values[cookie.i]['value'],
+                                        domain: cookie.values[cookie.i]['domain'],
+                                        path: cookie.values[cookie.i]['path'],
+                                        secure: cookie.values[cookie.i]['secure'],
+                                        httpOnly: cookie.values[cookie.i]['httpOnly'],
+                                        expirationDate: cookie.values[cookie.i]['expirationDate']
+                                    })
                                     .then(() => {
                                         cookie.callers.sucess++;
                                     })
@@ -906,7 +946,8 @@ function frameInterval(type) {
                                                         return render();
                                                     })
                                                     .catch((e) => {
-                                                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                                                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                                                            DeveloperMode.getDevToolsMode('errors_system')) console.error(e);
                                                     });
                                             }
                                             /**
@@ -926,7 +967,8 @@ function frameInterval(type) {
                             return render();
                         }
                     }).catch((e) => {
-                        if (DeveloperMode.getDevToolsDeveloperMode()) console.error(e);
+                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                            DeveloperMode.getDevToolsMode('errors_system')) console.error(e);
                     });
 
                 function render(exception) {
@@ -937,7 +979,8 @@ function frameInterval(type) {
                     }
 
                     frame.listener = function () {
-                        if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
+                        if (DeveloperMode.getDevToolsDeveloperMode() &&
+                            DeveloperMode.getDevToolsMode('append_frames')) console.log('%c➠ LOG: Frame Adicionado ✔', 'color: #405cff; padding: 8px; font-size: 150%;');
                         if (!frame.fadeInInitial) {
                             frame.fadeInInitial = 'processing...';
                             $(frame).fadeOut(function () {
@@ -1033,7 +1076,8 @@ function frameInterval(type) {
                                     });
                                 `, true).then(result => {
                                         if (result === 'recused') {
-                                            if (DeveloperMode.getDevToolsDeveloperMode()) console.log('%c➠ Youtube(LOG): Não foi possível colocar o vídeo em fullscreen automaticamente. ✗', 'color: #ff3624; padding: 8px; font-size: 150%;');
+                                            if (DeveloperMode.getDevToolsDeveloperMode() &&
+                                                DeveloperMode.getDevToolsMode('erros_system')) console.log('%c➠ Youtube(LOG): Não foi possível colocar o vídeo em fullscreen automaticamente. ✗', 'color: #ff3624; padding: 8px; font-size: 150%;');
                                         }
                                     });
                                 }
@@ -1122,26 +1166,26 @@ ipcRenderer
     })
     .on('extension_dguard', (event, cam) => {
         let interval = setInterval(new Promise((resolve, reject) => {
-            if (typeof cam === 'number') {
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
-                frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['cam'] = cam;
-            } else if (typeof cam === 'string') {
-                if (cam === 'layout_1') {
-                    cam = 1;
-                } else if (cam === 'layout_2') {
-                    cam = 2;
-                } else if (cam === 'layout_3') {
-                    cam = 3;
+                if (typeof cam === 'number') {
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[0].click();`);
+                    frame.executeJavaScript(`document.getElementsByClassName('md-no-style md-button md-dguardlight-theme md-ink-ripple flex')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['cam'] = cam;
+                } else if (typeof cam === 'string') {
+                    if (cam === 'layout_1') {
+                        cam = 1;
+                    } else if (cam === 'layout_2') {
+                        cam = 2;
+                    } else if (cam === 'layout_3') {
+                        cam = 3;
+                    }
+                    frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
+                    var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
+                    __cookies['layout_cam'] = cam;
                 }
-                frame.executeJavaScript(`document.getElementsByClassName('md-accent md-icon-button md-button md-dguardlight-theme md-ink-ripple')[${cam}].click();`);
-                var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
-                __cookies['layout_cam'] = cam;
-            }
-            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
-            resolve();
-        })
+                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+                resolve();
+            })
             .then(() => {
                 clearInterval(interval);
             }), 1000);
@@ -1153,4 +1197,7 @@ ipcRenderer
             "cache": i - 1
         }, null, 2), 'utf8');
         remote.getCurrentWindow().webContents.reload();
-    });
+    })
+    .on('window_frame_show_info_system', () => {
+        ALERT.info('WEBTABS', `Versão atual: ${controller.versionSystem}`);
+    })

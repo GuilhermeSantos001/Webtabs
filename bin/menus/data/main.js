@@ -26,6 +26,14 @@ class CACHE {
                 exibition: {
                     running: true,
                     pause: false
+                },
+                developertoolsmode: {
+                    start_frame: true,
+                    append_frames: true,
+                    remove_frames: true,
+                    tick_frames: true,
+                    pause_frames: true,
+                    errors_system: true
                 }
             }
             this.saveData();
@@ -45,6 +53,15 @@ class CACHE {
 
     getExibitionValue(key) {
         return this.data.exibition[key];
+    }
+
+    setDeveloperToolsModeValue(key, value) {
+        this.data.developertoolsmode[key] = value;
+        this.saveData();
+    }
+
+    getDeveloperToolsModeValue(key) {
+        return this.data.developertoolsmode[key];
     }
 }
 

@@ -2,6 +2,9 @@ function CONTROLLER() {
     throw new Error('This is a static class');
 }
 
+CONTROLLER.versionSystem = 'v5.31.33-build';
+CONTROLLER.limitTextAlert = 30;
+
 CONTROLLER.frameEmpty = function () {
     let path = require('../import/localPath'),
         fs = require('fs');
@@ -14,7 +17,7 @@ CONTROLLER.frameEmpty = function () {
             encoding: 'utf8'
         }));
 
-        if (data instanceof Array === true) {
+        if (read instanceof Array === true) {
             data = read;
         }
     }

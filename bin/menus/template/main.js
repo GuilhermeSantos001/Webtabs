@@ -151,6 +151,100 @@ class Template {
                             }
                         },
                         {
+                            label: 'Escolha o que será exibido',
+                            submenu: [{
+                                    id: 'start_frame',
+                                    label: 'Exibir a mensagem de inicialização do sistema',
+                                    type: 'checkbox',
+                                    checked: (() => {
+                                        return cacheMenu.getDeveloperToolsModeValue('start_frame');
+                                    })(),
+                                    click: (menuItem) => {
+                                        if (menuItem.checked) {
+                                            cacheMenu.setDeveloperToolsModeValue('start_frame', true);
+                                        } else {
+                                            cacheMenu.setDeveloperToolsModeValue('start_frame', false);
+                                        }
+                                    }
+                                },
+                                {
+                                    id: 'append_frames',
+                                    label: 'Exibir as mensagens de inicialização dos frames',
+                                    type: 'checkbox',
+                                    checked: (() => {
+                                        return cacheMenu.getDeveloperToolsModeValue('append_frames');
+                                    })(),
+                                    click: (menuItem) => {
+                                        if (menuItem.checked) {
+                                            cacheMenu.setDeveloperToolsModeValue('append_frames', true);
+                                        } else {
+                                            cacheMenu.setDeveloperToolsModeValue('append_frames', false);
+                                        }
+                                    }
+                                },
+                                {
+                                    id: 'remove_frames',
+                                    label: 'Exibir as mensagens de remoção dos frames',
+                                    type: 'checkbox',
+                                    checked: (() => {
+                                        return cacheMenu.getDeveloperToolsModeValue('remove_frames');
+                                    })(),
+                                    click: (menuItem) => {
+                                        if (menuItem.checked) {
+                                            cacheMenu.setDeveloperToolsModeValue('remove_frames', true);
+                                        } else {
+                                            cacheMenu.setDeveloperToolsModeValue('remove_frames', false);
+                                        }
+                                    }
+                                },
+                                {
+                                    id: 'tick_frames',
+                                    label: 'Exibir o tempo de transição entre os frames',
+                                    type: 'checkbox',
+                                    checked: (() => {
+                                        return cacheMenu.getDeveloperToolsModeValue('tick_frames');
+                                    })(),
+                                    click: (menuItem) => {
+                                        if (menuItem.checked) {
+                                            cacheMenu.setDeveloperToolsModeValue('tick_frames', true);
+                                        } else {
+                                            cacheMenu.setDeveloperToolsModeValue('tick_frames', false);
+                                        }
+                                    }
+                                },
+                                {
+                                    id: 'pause_frames',
+                                    label: 'Exibir a mensagem de pausa',
+                                    type: 'checkbox',
+                                    checked: (() => {
+                                        return cacheMenu.getDeveloperToolsModeValue('pause_frames');
+                                    })(),
+                                    click: (menuItem) => {
+                                        if (menuItem.checked) {
+                                            cacheMenu.setDeveloperToolsModeValue('pause_frames', true);
+                                        } else {
+                                            cacheMenu.setDeveloperToolsModeValue('pause_frames', false);
+                                        }
+                                    }
+                                },
+                                {
+                                    id: 'errors_system',
+                                    label: 'Exibir as mensagens de erro',
+                                    type: 'checkbox',
+                                    checked: (() => {
+                                        return cacheMenu.getDeveloperToolsModeValue('errors_system');
+                                    })(),
+                                    click: (menuItem) => {
+                                        if (menuItem.checked) {
+                                            cacheMenu.setDeveloperToolsModeValue('errors_system', true);
+                                        } else {
+                                            cacheMenu.setDeveloperToolsModeValue('errors_system', false);
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             role: 'toggleDevTools'
                         }
                     ]
@@ -335,6 +429,17 @@ class Template {
         {
             label: 'Extensões',
             submenu: []
+        },
+        {
+            label: 'Ajuda',
+            submenu: []
+        },
+        {
+            label: 'Sobre',
+            accelerator: 'CommandOrControl+F10',
+            click: () => {
+                BrowserWindow.getFocusedWindow().webContents.send('window_frame_show_info_system');
+            }
         }
     ]
 }

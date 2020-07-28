@@ -65,10 +65,11 @@ function SCREEN_SELECTION_UPDATE() {
     desktopCapturer.getSources({
         types: ['window', 'screen']
     }).then(async sources => {
-        let i = 1;
+        let i = 1,
+            l = sources.filter(source => source.id.includes('screen')).length;
         for (const source of sources) {
             if (document.getElementById(source.id) === null && source.id.includes('screen')) {
-                $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;">Monitor ${i++}</button>`);
+                $('#screen_selection').append(`<button type="button" id="${source.id}" class="btn btn-lg btn-block btn-outline-light mt-2 col-12 text-center text-uppercase font-weight-bold text-wrap" style="font-size: 1.2rem;" ${l <= 1 ? "disabled" : ""}>Monitor ${i++}</button>`);
                 let btn = document.getElementById(source.id);
                 btn.onclick = function () {
                     let file = path.localPath('storage/urls.json');
@@ -77,7 +78,8 @@ function SCREEN_SELECTION_UPDATE() {
                         data_urls.push([{
                             type_url: 'stream',
                             id: source.id,
-                            name: source.name
+                            name: source.name,
+                            title: `Monitor ${i - 1}`
                         }]);
                         fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
                             $(btn).prop('disabled', true);

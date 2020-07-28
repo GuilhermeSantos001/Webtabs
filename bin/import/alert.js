@@ -1,3 +1,5 @@
+const controller = require('./controller');
+
 let i = 0;
 
 function info(title = '', text = '') {
@@ -8,8 +10,8 @@ function info(title = '', text = '') {
         left: 0; right: 0; margin-left: auto; margin-right: auto; padding: 1rem;"> \
         <a id="alert_close${i}" class="btn btn-outline-white float-right" role="button" \
         style="height: 1rem; margin-top: -1vw;"><i class="material-icons">clear</i></a> \
-        <h1 class="text-uppercase">${title.length >0 ? title: 'Mensagem do Sistema'}</h1> \
-        <strong id="alert_text${i}">${text.length >0 ? text: 'Testando o sistema...'}</strong> \
+        <h1 class="text-uppercase">${String(title).length > 0 ? String(title): 'Mensagem do Sistema'}</h1> \
+        <strong id="alert_text${i}">${String(text).length > 0 ? String(text).length >= controller.limitTextAlert ? `${String(text).slice(0, controller.limitTextAlert)}...`: String(text): 'Testando o sistema...'}</strong> \
         </div>`.replace(/\s{2,}/g, ''));
     $(`#layerAlert${i}`).show("fast").animate({
         "opacity": 100
