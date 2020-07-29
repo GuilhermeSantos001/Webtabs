@@ -1,0 +1,15 @@
+.container-buttons {
+    height: 100vh;
+}
+
+.container-content {
+    height: 100vh;
+}
+
+.btn-primary {
+    margin: 1rem;
+}
+
+.slider .indicators .indicator-item.active {
+    background-color: #1ed2ff;
+  }

@@ -1,0 +1,85 @@
+extends layout
+
+append head
+  link(rel='stylesheet' href='/stylesheets/index.css')
+
+block content
+  div(class="row")
+    div(class="col s12")
+      img(class="materialboxed" data-caption="WEBTABS" width="250" src="images/logo.png")
+  div(class="row")
+    div(class="col s12 container-buttons blue darken-1")
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal1") Acessar
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal2") Baixar Webtabs
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal3") Ver Documentação
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal4") Sobre o Webtabs
+  div(id="modal1" class="modal modal-fixed-footer")
+    div(class="modal-content")
+      div(class="row")
+        div(class="col s12")
+          h2(class="center-align")="Acesse sua Aplicação"
+          h5(class="center-align grey-text")="Configure o seu Webtabs para ter acesso online"
+          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Tutorial
+        div(class="input-field col s12")
+          i(class="material-icons prefix") android
+          input(value="" id="application_name" type="text")
+          label(class="active" for="application_name") Nome da Aplicação
+        div(class="input-field col s12")
+          i(class="material-icons prefix") lock_outline
+          input(value="" id="application_code" type="password")
+          label(class="active" for="application_code") Senha da Aplicação
+    div(class="modal-footer")
+      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Entrar
+      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+  div(id="modal2" class="modal modal-fixed-footer")
+    div(class="modal-content")
+      div(class="row")
+        div(class="col s12")
+          h2(class="center-align")="Escolha o seu Download"
+          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!"
+          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Planos
+          h5(class="center-align grey-text")="Lista para Computadores Windows"
+          div(class="collection")
+            a(href="#!" class="collection-item") v9.0.0 - Em Desenvolvimento
+            a(href="#!" class="collection-item") v8.0.0 - Mais Nova
+            a(href="#!" class="collection-item") v7.0.0 - Estável
+            a(href="#!" class="collection-item") v6.0.0
+            a(href="#!" class="collection-item") v5.9.6
+    div(class="modal-footer")
+      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+  div(id="modal3" class="modal modal-fixed-footer")
+    div(class="modal-content")
+      div(class="row")
+        div(class="col s12")
+          h2(class="center-align")="Precisa de Ajuda?"
+          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!"
+          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Planos
+        div(class="col s12")
+          ul(class="collapsible" data-collapsible="accordion")
+            li
+              div(class="collapsible-header") #[i(class="material-icons") school] Como adicionar um slide - 29/07/2020 18:45 #[i(class="material-icons") date_range]
+              div(class="collapsible-body") #[span Escreva a aula aqui!!]
+            li
+              div(class="collapsible-header") #[i(class="material-icons") school] Como adicionar um video do youtube - 29/07/2020 20:00 #[i(class="material-icons") date_range]
+              div(class="collapsible-body") #[span Escreva a aula aqui!!]              
+    div(class="modal-footer")
+      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+  div(id="modal4" class="modal modal-fixed-footer")
+    div(class="modal-content")
+      div(class="row")
+        div(class="col s12")
+          h2(class="center-align")="O que é Webtabs?"
+          h5(class="center-align grey-text")="Não deixe de baixar, caso tenha interesse"
+          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Baixar Agora!
+          p
+            | Webtabs é um programa com o mesmo objetivo de um #[a(href="https://boxloja.zendesk.com/hc/pt-br/articles/229459148-O-que-%C3%A9-Slideshow-" target="_blank") slideshow], mas ele não se resume a somente exibir coisas,
+            | você tambem pode trabalhar de forma produtiva com ele, imagine você ter varias contas no mesmo site e tenha
+            | que usar dois navegadores para usar o site em contas diferentes, bem com o Webtabs isso não é mais preciso,
+            | pois nele temos um sistema de cache de sessões para cada slide, ou seja, no mesmo programa conseguimos usar
+            | varias contas no mesmo site e sem nescessidade de ficar tendo que logar varias vezes.
+            | Podemos trocar o que está sendo exibido através de qualquer despositivo com acesso a internet, só precisamos
+            | acessar o site com nossos dados pessoais da aplicação, e pelo proprio site conseguimos configurar todos os
+            | detalhes do programa.
+    div(class="modal-footer")
+      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+  script(src="/javascripts/index.js")

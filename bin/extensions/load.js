@@ -1,4 +1,0 @@
-/**
- * Import Extensions
- */
-require('./dguard');
