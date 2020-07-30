@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const fs = require('fs');
+const path = require('path');
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Webtabs' });
-});
-
-module.exports = router;
+module.exports = (app) => {
+  fs
+    .readdirSync(__dirname)
+    .filter(file => ((file.indexOf('.')) !== 0 && (file.indexOf('.test')) === -1 && (file != "index.js")))
+    .forEach(file => require(path.resolve(__dirname, file))(app));
+}
