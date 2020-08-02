@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var bodyParser = require('body-parser');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -10,10 +11,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({
-  extended: false
-}));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -23,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const cors = require('cors');
 const corsOptions = {
   "origin": function (origin, callback) {
-    if (['http://localhost:3000', undefined].indexOf(origin) !== -1) {
+    if (['http://localhost:3000', 'http://192.168.0.104:3000', 'file://', undefined].indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
@@ -35,7 +36,7 @@ const corsOptions = {
 app.options('*', function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, api_key, authorization");
+  res.header("Access-Control-Allow-Headers", "Origin, Content-Type, system-code, authorization");
   return res.sendStatus(200);
 });
 

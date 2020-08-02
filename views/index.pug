@@ -9,7 +9,7 @@ block content
       img(class="materialboxed" data-caption="WEBTABS" width="250" src="images/logo.png")
   div(class="row")
     div(class="col s12 container-buttons blue darken-1")
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal1") Acessar
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal1") Comandos
       a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal2") Baixar Webtabs
       a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal3") Ver Documentação
       a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal4") Sobre o Webtabs
@@ -17,28 +17,31 @@ block content
     div(class="modal-content")
       div(class="row")
         div(class="col s12")
-          h2(class="center-align")="Acesse sua Aplicação"
-          h5(class="center-align grey-text")="Configure o seu Webtabs para ter acesso online"
+          h2(class="center-align")="Controle sua Aplicação"
+          h5(class="center-align grey-text")="Configure o seu Webtabs para ter acesso online" 
           a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Tutorial
         div(class="input-field col s12")
-          i(class="material-icons prefix") android
-          input(value="" id="application_name" type="text")
-          label(class="active" for="application_name") Nome da Aplicação
+          i(class="material-icons prefix") people
+          input(value="" id="application_username" type="text")
+          label(class="active" for="application_username") Nome de usuário
         div(class="input-field col s12")
           i(class="material-icons prefix") lock_outline
-          input(value="" id="application_code" type="password")
-          label(class="active" for="application_code") Senha da Aplicação
+          input(value="" id="application_password" type="password")
+          label(class="active" for="application_password") Senha de usuário
+        div(class="col s12")
+          a(id="clearServerCommands" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Limpar todos os comandos do servidor
+          a(id="render_next" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Próximo Slide
+          a(id="render_return" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Retornar Slide
     div(class="modal-footer")
-      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Entrar
       a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
   div(id="modal2" class="modal modal-fixed-footer")
     div(class="modal-content")
       div(class="row")
         div(class="col s12")
           h2(class="center-align")="Escolha o seu Download"
-          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!"
+          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!" 
           a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Planos
-          h5(class="center-align grey-text")="Lista para Computadores Windows"
+          h5(class="center-align grey-text")="Lista para Computadores Windows" 
           div(class="collection")
             a(href="#!" class="collection-item") v9.0.0 - Em Desenvolvimento
             a(href="#!" class="collection-item") v8.0.0 - Mais Nova
@@ -52,7 +55,7 @@ block content
       div(class="row")
         div(class="col s12")
           h2(class="center-align")="Precisa de Ajuda?"
-          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!"
+          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!" 
           a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Planos
         div(class="col s12")
           ul(class="collapsible" data-collapsible="accordion")
@@ -69,7 +72,7 @@ block content
       div(class="row")
         div(class="col s12")
           h2(class="center-align")="O que é Webtabs?"
-          h5(class="center-align grey-text")="Não deixe de baixar, caso tenha interesse"
+          h5(class="center-align grey-text")="Não deixe de baixar, caso tenha interesse" 
           a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Baixar Agora!
           p
             | Webtabs é um programa com o mesmo objetivo de um #[a(href="https://boxloja.zendesk.com/hc/pt-br/articles/229459148-O-que-%C3%A9-Slideshow-" target="_blank") slideshow], mas ele não se resume a somente exibir coisas,

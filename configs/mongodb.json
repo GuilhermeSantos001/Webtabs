@@ -1,0 +1,9 @@
+{
+    "user": {
+        "name": "administrator",
+        "password": "M4v3.g4up02020#"
+    },
+    "address": "localhost",
+    "port": "27017",
+    "db": "webtabscontrolleronline"
+}
