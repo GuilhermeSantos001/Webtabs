@@ -8,7 +8,7 @@ $(document).ready(function () {
 });
 
 function restoreUserData() {
-    let data = JSON.parse(sessionStorage.getItem('userdata'));
+    let data = JSON.parse(localStorage.getItem('userdata'));
 
     if (data && data['user'] && data['pass']) {
         $('#application_username').val(data['user']);
@@ -21,7 +21,7 @@ function saveUserData() {
     let user = $('#application_username').val(),
         pass = $('#application_password').val();
 
-    sessionStorage.setItem('userdata', JSON.stringify({ user, pass }));
+    localStorage.setItem('userdata', JSON.stringify({ user, pass }));
 }
 
 document.getElementById('application_username').onkeyup = function () { saveUserData(); };
@@ -32,7 +32,7 @@ document.getElementById('application_store_user_data').onclick = function () {
     if ($('#application_store_user_data').is(":checked")) {
         saveUserData();
     } else {
-        sessionStorage.removeItem('userdata');
+        localStorage.removeItem('userdata');
     }
 };
 
