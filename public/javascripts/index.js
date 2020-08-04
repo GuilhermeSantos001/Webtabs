@@ -1,9 +1,9 @@
 $(document).ready(function () {
-    $('.modal').modal();
-    $('.collapsible').collapsible();
-    Materialize.updateTextFields();
     $('input#input_text, textarea#textarea1').characterCounter();
     $('select').material_select();
+    $('.collapsible').collapsible();
+    $('.modal').modal();
+    Materialize.updateTextFields();
     restoreUserData();
 });
 
@@ -37,12 +37,19 @@ document.getElementById('application_store_user_data').onclick = function () {
 };
 
 function commandId() {
-    let abc = ['a', 'b', 'c'],
-        i = 0, l = 10,
+    let words = [
+        'a', 'b', 'c', 'd', 'e', 'f',
+        'g', 'h', 'i', 'j', 'k', 'l',
+        'm', 'n', 'o', 'p', 'q', 'r',
+        's', 't', 'u', 'v', 'w', 'x',
+        'y', 'z', '0', '1', '2', '3',
+        '4', '5', '6', '7', '8', '9'
+    ],
+        i = 0,
         id = '';
 
-    for (; i < l; i++) {
-        id += abc[Math.floor(Math.random() * abc.length)];
+    for (; i < 10; i++) {
+        id += words[Math.floor(Math.random() * words.length)];
     }
 
     return id;
