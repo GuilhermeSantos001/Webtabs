@@ -2,7 +2,39 @@ $(document).ready(function () {
     $('.modal').modal();
     $('.collapsible').collapsible();
     Materialize.updateTextFields();
+    $('input#input_text, textarea#textarea1').characterCounter();
+    $('select').material_select();
+    restoreUserData();
 });
+
+function restoreUserData() {
+    let data = JSON.parse(sessionStorage.getItem('userdata'));
+
+    if (data && data['user'] && data['pass']) {
+        $('#application_username').val(data['user']);
+        $('#application_password').val(data['pass']);
+        $('#application_store_user_data').attr('checked', true);
+    }
+}
+
+function saveUserData() {
+    let user = $('#application_username').val(),
+        pass = $('#application_password').val();
+
+    sessionStorage.setItem('userdata', JSON.stringify({ user, pass }));
+}
+
+document.getElementById('application_username').onkeyup = function () { saveUserData(); };
+
+document.getElementById('application_password').onkeyup = function () { saveUserData(); };
+
+document.getElementById('application_store_user_data').onclick = function () {
+    if ($('#application_store_user_data').is(":checked")) {
+        saveUserData();
+    } else {
+        sessionStorage.removeItem('userdata');
+    }
+};
 
 function commandId() {
     let abc = ['a', 'b', 'c'],

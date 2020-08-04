@@ -29,6 +29,10 @@ block content
           input(value="" id="application_password" type="password")
           label(class="active" for="application_password") Senha de usuário
         div(class="col s12")
+          p
+            input(type="checkbox" class="filled-in" id="application_store_user_data")
+            label(for="application_store_user_data") Armazenar dados de acesso
+        div(class="col s12")
           a(id="clearServerCommands" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Limpar todos os comandos do servidor
           a(id="render_next" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Próximo Slide
           a(id="render_return" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Retornar Slide
