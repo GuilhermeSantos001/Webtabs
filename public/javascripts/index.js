@@ -18,10 +18,12 @@ function restoreUserData() {
 }
 
 function saveUserData() {
-    let user = $('#application_username').val(),
-        pass = $('#application_password').val();
+    if ($('#application_store_user_data').is(":checked")) {
+        let user = $('#application_username').val(),
+            pass = $('#application_password').val();
 
-    localStorage.setItem('userdata', JSON.stringify({ user, pass }));
+        localStorage.setItem('userdata', JSON.stringify({ user, pass }));
+    }
 }
 
 document.getElementById('application_username').onkeyup = function () { saveUserData(); };
