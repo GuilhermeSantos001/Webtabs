@@ -52,9 +52,15 @@ router.post(['/register'], middlewareAPI, middlewareAuth, async (req, res) => {
   }
 });
 
-router.post(['/clear'], middlewareAPI, middlewareAuth, async (req, res) => {
+router.post(['/clear', '/clear/:id'], middlewareAPI, middlewareAuth, async (req, res) => {
+  let {
+    id
+  } = getReqProps(req, ['id']);
+
+  if (!id) id = '';
+
   try {
-    mongodb.clearCommands(result => {
+    mongodb.clearCommands(id, result => {
       return res.status(200).send({ result });
     });
   } catch (err) {

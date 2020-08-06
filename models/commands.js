@@ -1,6 +1,6 @@
 //================================================================================
 // Schema(Commands)
-// Feito para o cadastro de usuarios
+// Feito para o cadastro de comandos
 //================================================================================
 /**
  * @private Restrito ao escopo global
@@ -43,7 +43,7 @@ var commandsSchema = new Schema({
 /**
  * @public Exportado pelo module.exports
  * @type {{}}
- * @description Define o Schema para criar os usuarios
+ * @description Define o Schema para criar os comandos
  * @default mongoose.model('commands', commandsSchema)
  */
 var Commands = mongoose.model('commands', commandsSchema);

@@ -23,10 +23,18 @@ var configMongoDB = require('../configs/mongodb') || {
 /**
  * @private Restrito ao escopo global
  * @type {{}}
- * @description Importa o modulo para criar o Schema de usuarios
+ * @description Importa o modulo para criar o Schema de comandos
  * @default require('../models/commands')
  */
 var Schema_Commands = require('../models/commands');
+
+/**
+ * @private Restrito ao escopo global
+ * @type {{}}
+ * @description Importa o modulo para criar o Schema de janelas
+ * @default require('../models/windows')
+ */
+var Schema_Windows = require('../models/windows');
 
 /**
  * @private Restrito ao escopo global
@@ -87,10 +95,101 @@ process.on('SIGINT', function () {
 //================================================================================
 // MODULOS DO BANCO DE DADOS
 //================================================================================
+
+/**
+ * @description Cria um novo comando
+ * @param {object} props Propriedades da janela
+ * @param {function} callback Função a ser retornada com uma array de resposta
+ * @author GuilhermeSantos
+ * @version 1.0.0
+ */
+function createWindow(props, callback) {
+    mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }, (err, db) => {
+        if (err) {
+            callback([
+                `Não foi possivel conectar com o mongoDB (Database ${db})`,
+                err
+            ])
+            return mongoose.connection.close();
+        }
+        mongooseConnected();
+    });
+
+    function mongooseConnected() {
+        const {
+            id,
+            width,
+            height,
+            x,
+            y,
+            nodeIntegrationInSubFrames,
+            nodeIntegrationInWorker,
+            nodeIntegration,
+            webviewTag,
+            webSecurity
+        } = props;
+
+        var window = new Schema_Windows({
+            id: String(id),
+            width: Number(width),
+            height: Number(height),
+            x: Number(x),
+            y: Number(y),
+            webPreferences: {
+                nodeIntegrationInSubFrames,
+                nodeIntegrationInWorker,
+                nodeIntegration,
+                webviewTag,
+                webSecurity
+            }
+        });
+        window.validate((err) => {
+            if (err) {
+                console.error(`Não é possivel criar a nova janela com o identificador(${id})`);
+                console.error(err);
+                return mongoose.connection.close();
+            }
+            Schema_Windows.find({
+                id: String(id)
+            }, (err, list) => {
+                if (err) {
+                    callback([
+                        `Não foi possivel verificar se a janela com o identificador(${id}) já foi salva`,
+                        err
+                    ]);
+                    return mongoose.connection.close();
+                }
+
+                if (list instanceof Array !== true) list = [];
+
+                let items = list.filter(item => item.id == id);
+
+                if (items.length <= 0) {
+                    window.save(function (err) {
+                        if (err) {
+                            callback([
+                                `Erro na hora de salvar a nova janela com o identificador(${id})`,
+                                err
+                            ]);
+                            return mongoose.connection.close();
+                        }
+                        callback(`Janela com o identificador(${id}) salva no banco de dados`);
+                        return mongoose.connection.close();
+                    });
+                } else {
+                    callback(`A janela com o identificador(${id}) já foi salva no banco de dados`);
+                    return mongoose.connection.close();
+                }
+            });
+        });
+    }
+};
+
 /**
  * @description Cria um novo comando
  * @param {string} id Identificador do comando
  * @param {string} value O valor do comando
+ * @param {function} callback Função a ser retornada com uma array de resposta
  * @author GuilhermeSantos
  * @version 1.0.0
  */
@@ -98,7 +197,7 @@ function createCommand(id, value, callback) {
     mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }, (err, db) => {
         if (err) {
             callback([
-                `Não foi possivel conectar com o mongoDB`,
+                `Não foi possivel conectar com o mongoDB (Database ${db})`,
                 err
             ])
             return mongoose.connection.close();
@@ -145,7 +244,7 @@ function createCommand(id, value, callback) {
                         return mongoose.connection.close();
                     });
                 } else {
-                    callback(`O comando com o identificador(${id}) já foi salvo`);
+                    callback(`O comando com o identificador(${id}) já foi salvo no banco de dados`);
                     return mongoose.connection.close();
                 }
             });
@@ -154,8 +253,84 @@ function createCommand(id, value, callback) {
 };
 
 /**
+ * @description Retorna a janela
+ * @param {string} id Identificador da janela
+ * @param {function} callback Função a ser retornada com uma array de resposta
+ * @author GuilhermeSantos
+ * @version 1.0.0
+ */
+function getWindow(id, callback) {
+    mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }, (err, db) => {
+        if (err) {
+            callback([
+                `Não foi possivel conectar com o mongoDB (Database ${db})`,
+                err
+            ])
+            return mongoose.connection.close();
+        }
+        mongooseConnected();
+    });
+
+    function mongooseConnected() {
+        Schema_Windows.find(id.length <= 0 ? {} : { id: String(id) }, (err, list) => {
+            if (err) {
+                callback([
+                    `Não foi possivel verificar se a janela com o identificador(${id}) já foi salva`,
+                    err
+                ]);
+                return mongoose.connection.close();
+            }
+
+            if (list instanceof Array !== true) list = [];
+
+            let items = id != '' ? list.filter(item => {
+                if (item.id == id)
+                    return {
+                        id: item.id,
+                        width: item.width,
+                        height: item.height,
+                        x: item.x,
+                        y: item.y,
+                        webPreferences: {
+                            nodeIntegrationInSubFrames: item.webPreferences.nodeIntegrationInSubFrames,
+                            nodeIntegrationInWorker: item.webPreferences.nodeIntegrationInWorker,
+                            nodeIntegration: item.webPreferences.nodeIntegration,
+                            webviewTag: item.webPreferences.webviewTag,
+                            webSecurity: item.webPreferences.webSecurity
+                        }
+                    }
+            }) : list.map(item => {
+                return {
+                    id: item.id,
+                    width: item.width,
+                    height: item.height,
+                    x: item.x,
+                    y: item.y,
+                    webPreferences: {
+                        nodeIntegrationInSubFrames: item.webPreferences.nodeIntegrationInSubFrames,
+                        nodeIntegrationInWorker: item.webPreferences.nodeIntegrationInWorker,
+                        nodeIntegration: item.webPreferences.nodeIntegration,
+                        webviewTag: item.webPreferences.webviewTag,
+                        webSecurity: item.webPreferences.webSecurity
+                    }
+                }
+            });
+
+            if (items.length <= 0) {
+                callback(`Janela com o identificador(${id}) não existe no banco de dados`);
+                return mongoose.connection.close();
+            } else {
+                callback(items);
+                return mongoose.connection.close();
+            }
+        });
+    }
+};
+
+/**
  * @description Retorna o comando
  * @param {string} id Identificador do comando
+ * @param {function} callback Função a ser retornada com uma array de resposta
  * @author GuilhermeSantos
  * @version 1.0.0
  */
@@ -163,7 +338,7 @@ function getCommand(id, callback) {
     mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }, (err, db) => {
         if (err) {
             callback([
-                `Não foi possivel conectar com o mongoDB`,
+                `Não foi possivel conectar com o mongoDB (Database ${db})`,
                 err
             ])
             return mongoose.connection.close();
@@ -185,9 +360,17 @@ function getCommand(id, callback) {
 
             let items = id != '' ? list.filter(item => {
                 if (item.id == id)
-                    return { id: item.id, value: item.value }
+                    return {
+                        id: item.id,
+                        value: item.value,
+                        valid: item.valid
+                    }
             }) : list.map(item => {
-                return { id: item.id, value: item.value }
+                return {
+                    id: item.id,
+                    value: item.value,
+                    valid: item.valid
+                }
             });
 
             if (items.length <= 0) {
@@ -204,13 +387,15 @@ function getCommand(id, callback) {
 /**
  * @description Limpa os comandos
  * @author GuilhermeSantos
- * @version 1.0.0
+ * @param {string} id Identificador do comando
+ * @param {function} callback Função a ser retornada com uma array de resposta
+ * @version 1.1.0
  */
-function clearCommands(callback) {
+function clearCommands(id, callback) {
     mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true }, (err, db) => {
         if (err) {
             callback([
-                `Não foi possivel conectar com o mongoDB`,
+                `Não foi possivel conectar com o mongoDB (Database ${db})`,
                 err
             ])
             return mongoose.connection.close();
@@ -219,15 +404,19 @@ function clearCommands(callback) {
     });
 
     function mongooseConnected() {
-        Schema_Commands.remove({}, (err) => {
+        Schema_Commands.remove(id.length <= 0 ? {} : { id: String(id) }, (err) => {
             if (err) {
                 callback([
-                    `Não foi possivel remover os comandos`,
+                    id.length <= 0 ? `Não foi possivel remover os comandos` :
+                        `Não é possivel remover o comando com o ID(${id}) do banco de dados`,
                     err
                 ]);
                 return mongoose.connection.close();
             }
-            callback(`Comandos removidos do banco de dados`);
+            callback(
+                id.length <= 0 ? `Comandos removidos do banco de dados` :
+                    `Comando com o ID(${id}) removido do banco de dados`,
+            );
             return mongoose.connection.close();
         });
     }
@@ -237,6 +426,8 @@ function clearCommands(callback) {
 // MODULO PARA EXPORTAR O SCRIPT
 //================================================================================
 module.exports = {
+    createWindow,
+    getWindow,
     createCommand,
     getCommand,
     clearCommands
