@@ -13,7 +13,9 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const cors = require('cors');
 const corsOptions = {
   "origin": function (origin, callback) {
-    if (['http://localhost:3000', 'http://192.168.0.104:3000', 'file://', undefined].indexOf(origin) !== -1) {
+    if (['http://localhost:3000', 'http://192.168.0.104:3000', 'http://192.168.0.106:3000', 'file://', undefined].indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))

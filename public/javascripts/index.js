@@ -22,13 +22,20 @@ function saveUserData() {
         let user = $('#application_username').val(),
             pass = $('#application_password').val();
 
-        localStorage.setItem('userdata', JSON.stringify({ user, pass }));
+        localStorage.setItem('userdata', JSON.stringify({
+            user,
+            pass
+        }));
     }
 }
 
-document.getElementById('application_username').onkeyup = function () { saveUserData(); };
+document.getElementById('application_username').onkeyup = function () {
+    saveUserData();
+};
 
-document.getElementById('application_password').onkeyup = function () { saveUserData(); };
+document.getElementById('application_password').onkeyup = function () {
+    saveUserData();
+};
 
 document.getElementById('application_store_user_data').onclick = function () {
     if ($('#application_store_user_data').is(":checked")) {
@@ -40,13 +47,13 @@ document.getElementById('application_store_user_data').onclick = function () {
 
 function commandId() {
     let words = [
-        'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l',
-        'm', 'n', 'o', 'p', 'q', 'r',
-        's', 't', 'u', 'v', 'w', 'x',
-        'y', 'z', '0', '1', '2', '3',
-        '4', '5', '6', '7', '8', '9'
-    ],
+            'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r',
+            's', 't', 'u', 'v', 'w', 'x',
+            'y', 'z', '0', '1', '2', '3',
+            '4', '5', '6', '7', '8', '9'
+        ],
         i = 0,
         id = '';
 
@@ -57,6 +64,9 @@ function commandId() {
     return id;
 }
 
+const base_url =  'http://192.168.0.106:3000';
+
+
 document.getElementById('clearServerCommands').onclick = function () {
     let user = $('#application_username').val(),
         pass = $('#application_password').val();
@@ -64,7 +74,7 @@ document.getElementById('clearServerCommands').onclick = function () {
     let settings = {
         "async": true,
         "crossDomain": true,
-        "url": "http://192.168.0.104:3000/commands/clear",
+        "url": `${base_url}/commands/clear`,
         "method": "POST",
         "headers": {
             "content-type": "application/json",
@@ -79,46 +89,32 @@ document.getElementById('clearServerCommands').onclick = function () {
     });
 };
 
-document.getElementById('render_next').onclick = function () {
-    let user = $('#application_username').val(),
-        pass = $('#application_password').val();
 
-    let settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "http://192.168.0.104:3000/commands/register",
-        "method": "POST",
-        "headers": {
-            "content-type": "application/json",
-            "system-code": "113195464d008eaf8e6b648574bd5306"
-        },
-        "processData": false,
-        "data": `{\n\t\"id\": \"${commandId()}\",\n\t\"value\": \"render_next\",\n\t\"user\": \"${user}\",\n\t\"pass\": \"${pass}\"\n}`
-    }
 
-    $.ajax(settings).done(function (response) {
-        console.log(response);
-    });
-};
+[
+    'render_next',
+    'render_return',
+    'render_fullscreen'
+].map(buttonName => {
+    document.getElementById(buttonName).onclick = function () {
+        let user = $('#application_username').val(),
+            pass = $('#application_password').val();
 
-document.getElementById('render_return').onclick = function () {
-    let user = $('#application_username').val(),
-        pass = $('#application_password').val();
+        let settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": `${base_url}/commands/register`,
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json",
+                "system-code": "113195464d008eaf8e6b648574bd5306"
+            },
+            "processData": false,
+            "data": `{\n\t\"id\": \"${commandId()}\",\n\t\"value\": \"${buttonName}\",\n\t\"user\": \"${user}\",\n\t\"pass\": \"${pass}\"\n}`
+        }
 
-    let settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "http://192.168.0.104:3000/commands/register",
-        "method": "POST",
-        "headers": {
-            "content-type": "application/json",
-            "system-code": "113195464d008eaf8e6b648574bd5306"
-        },
-        "processData": false,
-        "data": `{\n\t\"id\": \"${commandId()}\",\n\t\"value\": \"render_return\",\n\t\"user\": \"${user}\",\n\t\"pass\": \"${pass}\"\n}`
-    }
-
-    $.ajax(settings).done(function (response) {
-        console.log(response);
-    });
-};
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    };
+});
