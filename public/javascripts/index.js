@@ -47,13 +47,13 @@ document.getElementById('application_store_user_data').onclick = function () {
 
 function commandId() {
     let words = [
-            'a', 'b', 'c', 'd', 'e', 'f',
-            'g', 'h', 'i', 'j', 'k', 'l',
-            'm', 'n', 'o', 'p', 'q', 'r',
-            's', 't', 'u', 'v', 'w', 'x',
-            'y', 'z', '0', '1', '2', '3',
-            '4', '5', '6', '7', '8', '9'
-        ],
+        'a', 'b', 'c', 'd', 'e', 'f',
+        'g', 'h', 'i', 'j', 'k', 'l',
+        'm', 'n', 'o', 'p', 'q', 'r',
+        's', 't', 'u', 'v', 'w', 'x',
+        'y', 'z', '0', '1', '2', '3',
+        '4', '5', '6', '7', '8', '9'
+    ],
         i = 0,
         id = '';
 
@@ -64,8 +64,7 @@ function commandId() {
     return id;
 }
 
-const base_url =  'http://192.168.0.106:3000';
-
+const base_url = 'http://192.168.0.104:3000';
 
 document.getElementById('clearServerCommands').onclick = function () {
     let user = $('#application_username').val(),
@@ -89,12 +88,17 @@ document.getElementById('clearServerCommands').onclick = function () {
     });
 };
 
-
-
 [
     'render_next',
     'render_return',
-    'render_fullscreen'
+    'render_fullscreen',
+    'render_menubarshow',
+    'render_menubarhide',
+    'render_mouseshow',
+    'render_mousehide',
+    'render_frameedit',
+    'render_framemanager',
+    'render_pause'
 ].map(buttonName => {
     document.getElementById(buttonName).onclick = function () {
         let user = $('#application_username').val(),

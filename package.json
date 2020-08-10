@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
+    "update": "npm update -i",
     "installer": "npm install"
   },
   "dependencies": {
@@ -16,7 +17,7 @@
     "pug": "^3.0.0"
   },
   "devDependencies": {
-    "mongoose": "^5.9.27",
+    "mongoose": "^5.9.28",
     "nodemon": "^2.0.4"
   }
 }
