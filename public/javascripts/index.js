@@ -64,7 +64,7 @@ function commandId() {
     return id;
 }
 
-const base_url = 'http://192.168.0.104:3000';
+const base_url = 'http://192.168.0.106:3000';
 
 document.getElementById('clearServerCommands').onclick = function () {
     let user = $('#application_username').val(),
@@ -98,7 +98,10 @@ document.getElementById('clearServerCommands').onclick = function () {
     'render_mousehide',
     'render_frameedit',
     'render_framemanager',
-    'render_pause'
+    'render_running',
+    'render_pause',
+    'system_toogledevtools',
+    'system_tooglereload'
 ].map(buttonName => {
     document.getElementById(buttonName).onclick = function () {
         let user = $('#application_username').val(),

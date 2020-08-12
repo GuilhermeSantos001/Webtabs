@@ -10,9 +10,9 @@ block content
   div(class="row")
     div(class="col s12 container-buttons blue darken-1")
       a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal1") Comandos
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal2") Baixar Webtabs
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal3") Ver Documentação
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal4") Sobre o Webtabs
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal2" disabled) Baixar Webtabs
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal3" disabled) Ver Documentação
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal4" disabled) Sobre o Webtabs
   div(id="modal1" class="modal modal-fixed-footer")
     div(class="modal-content")
       div(class="row")
@@ -35,9 +35,12 @@ block content
         div(class="col s12")
           a(id="clearServerCommands" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Limpar todos os comandos do servidor
           a(id="render_fullscreen" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Tela Cheia (Ligar/Desligar)
+          a(id="system_toogledevtools" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Abrir/Fechar Debug
+          a(id="system_tooglereload" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Recarregar Aplicativo
           a(id="render_frameedit" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Editar conteudo
           a(id="render_framemanager" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Editar slides
-          a(id="render_pause" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Pausar/Executar Slide
+          a(id="render_running" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Executar Slide
+          a(id="render_pause" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Pausar Slide
           a(id="render_next" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Próximo Slide
           a(id="render_return" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Retornar Slide
           a(id="render_menubarshow" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Exibir barra de menu
