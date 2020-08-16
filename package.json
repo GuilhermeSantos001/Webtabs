@@ -17,7 +17,7 @@
     "pug": "^3.0.0"
   },
   "devDependencies": {
-    "mongoose": "^5.9.28",
+    "mongoose": "^5.10.0",
     "nodemon": "^2.0.4"
   }
 }

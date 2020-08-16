@@ -64,7 +64,7 @@ function commandId() {
     return id;
 }
 
-const base_url = 'http://192.168.0.106:3000';
+const base_url = 'http://192.168.0.104:3000';
 
 document.getElementById('clearServerCommands').onclick = function () {
     let user = $('#application_username').val(),
