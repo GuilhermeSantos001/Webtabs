@@ -59,6 +59,7 @@ function loadConfigGlobal() {
 function animatelayerContent() {
     let file = path.localPath('storage/framereload.json');
     if (!fs.existsSync(file)) {
+        controller.defineAction('animate_init_layer_content', true);
         $('#layerContent')
             .animate({
                 "margin-top": `-=${height}`,
@@ -72,6 +73,7 @@ function animatelayerContent() {
                 "margin-top": `-=${height}`,
                 opacity: 0
             }, 'slow', function () {
+                controller.defineAction('animate_init_layer_content', false);
                 $('#layerContent').hide();
             });
     } else {

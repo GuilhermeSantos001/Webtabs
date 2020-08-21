@@ -705,6 +705,14 @@ function frameInterval(type) {
 (() => {
     setInterval(() => {
         /**
+         * Exibe o registro de alterações
+         */
+        if (!controller.action('animate_init_layer_content') && !controller.action('showChangeLog')) {
+            controller.defineAction('showChangeLog', true);
+            controller.showChangelog();
+        }
+
+        /**
          * Verifica se existe algo para ser exibido.
          */
         if (controller.frameEmpty() && !controller.action('addhomepage')) {
@@ -1105,11 +1113,17 @@ function frameInterval(type) {
 ipcRenderer
     .on('render_framePause', () => {
         if (controller.frameEmpty()) return;
-        if (!frameIsPause()) framePause();
+        if (!frameIsPause()) {
+            controller.defineAction('frameIsPause', true);
+            framePause();
+        }
     })
     .on('render_frameResume', () => {
         if (controller.frameEmpty()) return;
-        if (frameIsPause()) frameResume();
+        if (frameIsPause()) {
+            controller.defineAction('frameIsPause', false);
+            frameResume();
+        }
     })
     .on('render_resetZoom', () => {
         if (controller.frameEmpty()) return;

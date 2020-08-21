@@ -143,9 +143,9 @@ $(document).ready(function () {
                 extension = 0,
                 title = $('#input_add_url_title').val() || false;
             if (!url || typeof url != 'string' || url.length <= 0) return;
-            chkurl.direct(url, e => {
-                if (!e) {
-                    return ALERT.info('', `A URL "${url}" não pode ser adicionada!!!`);
+            chkurl.direct(url, res => {
+                if (!res) {
+                    return ALERT.info('', `A URL "${res}" não pode ser adicionada!!!`);
                 }
                 /**
                  * Extensions
@@ -162,14 +162,14 @@ $(document).ready(function () {
 
                 if (extension > 0) {
                     data_urls.push([
-                        url,
+                        res,
                         0,
                         'dguard',
                         title
                     ]);
                 } else {
                     data_urls.push([
-                        url,
+                        res,
                         0,
                         null,
                         title
@@ -178,7 +178,7 @@ $(document).ready(function () {
                 fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
                     $('#input_add_url').val('');
                     $('#input_add_url_title').val('');
-                    ALERT.info('', `A URL "${url}" foi adicionada com sucesso!!!`);
+                    ALERT.info('', `A URL "${res}" foi adicionada com sucesso!!!`);
                     mainWindow.webContents.send('add_url');
                 });
             });

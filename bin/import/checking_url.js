@@ -13,11 +13,21 @@ function direct(url, callback) {
 
     if (!http) return callback(false);
 
+    if (url.substring(0, 5).match(/htt/) === null) {
+        url = `http://${url}`;
+    }
+
+    if (url.match(/\.com/) === null) {
+        console.log(url);
+    }
+
     try {
         http.get(url, res => {
-            const { statusCode } = res;
+            const {
+                statusCode
+            } = res;
             if (statusCode >= 100 && statusCode <= 308) {
-                return callback(true);
+                return callback(url);
             } else {
                 return callback(false);
             }
@@ -44,13 +54,24 @@ function getDomain(url, callback) {
 
     if (!http) return callback(false);
 
+    if (url.substring(0, 5).match(/htt/) === null) {
+        url = `http://${url}`;
+    }
+
     try {
-        const { URL } = require('url');
-        const { hostname } = new URL(url);
+        const {
+            URL
+        } = require('url');
+        const {
+            hostname
+        } = new URL(url);
         callback(hostname);
     } catch (e) {
         return callback(false);
     }
 };
 
-module.exports = { direct, getDomain }
+module.exports = {
+    direct,
+    getDomain
+}

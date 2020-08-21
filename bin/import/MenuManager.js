@@ -1,3 +1,8 @@
+/**
+ * Imports
+ */
+const controller = require('../import/controller');
+
 function MenuManager() {
     throw new Error('This is a static class');
 }
@@ -21,6 +26,7 @@ MenuManager.isMenu = function (menu) {
 };
 
 MenuManager.isClear = function () {
+    if (controller.action('frameIsPause')) return false;
     return MenuManager._menu === null;
 };
 
