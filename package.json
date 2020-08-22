@@ -7,7 +7,6 @@
   "scripts": {
     "installer": "npm i",
     "update": "npm i -g npm-check-updates && ncu -u",
-    "lint": "eslint main.js ./src/bin ./src/sources",
     "start": "gulp start",
     "pack:linux32": "gulp pack-linux-armv7l",
     "pack:linux64": "gulp pack-linux-x64",
@@ -32,22 +31,14 @@
   "devDependencies": {
     "electron": "^9.2.1",
     "electron-packager": "^15.1.0",
-    "eslint": "^7.7.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
     "gulp": "^4.0.2"
   },
   "dependencies": {
-    "bootstrap": "^4.5.2",
     "electron-is-dev": "^1.2.0",
     "jquery": "^3.5.1",
     "jsonfile": "^6.0.1",
     "lz-string": "^1.4.4",
     "material-design-icons": "^3.0.1",
-    "rimraf": "^3.0.2",
     "underscore": "^1.10.2"
   }
 }
