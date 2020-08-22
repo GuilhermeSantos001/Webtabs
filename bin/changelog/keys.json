@@ -1,8 +1,0 @@
-{
-  "log1": {
-    "read": false,
-    "text": "bin/changelog/logs/text.txt",
-    "title": "UPDATE 5.6.32",
-    "footer": "Postado em 18/08/2020. <br /> - Por: GuilhermeSantos001"
-  }
-}

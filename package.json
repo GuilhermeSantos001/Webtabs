@@ -5,45 +5,49 @@
   "description": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
   "main": "main.js",
   "scripts": {
-    "installer": "node .preinstall.js && npm install",
-    "update": "npm update -i",
-    "start": "electron .",
-    "win": "electron-builder -w"
+    "installer": "npm i",
+    "update": "npm i -g npm-check-updates && ncu -u",
+    "lint": "eslint main.js ./src/bin ./src/sources",
+    "start": "gulp start",
+    "pack:linux32": "gulp pack-linux-armv7l",
+    "pack:linux64": "gulp pack-linux-x64",
+    "pack:windows32": "gulp pack-windows-ia32",
+    "pack:windows64": "gulp pack-windows-x64",
+    "pack:osx": "gulp pack-osx"
   },
-  "build": {
-    "npmRebuild": false,
-    "asar": true,
-    "win": {
-      "icon": "assets/img/logo.ico",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
-    }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GuilhermeSantos001/Webtabs"
   },
-  "repository": "https://github.com/GuilhermeSantos001/Webtabs",
   "keywords": [
     "Webtabs",
     "Electron"
   ],
   "author": "GuilhermeSantos001",
   "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/GuilhermeSantos001/Webtabs/issues"
+  },
+  "homepage": "",
   "devDependencies": {
-    "electron": "^7.3.0",
-    "electron-builder": "^21.2.0"
+    "electron": "^9.2.1",
+    "electron-packager": "^15.1.0",
+    "eslint": "^7.7.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "gulp": "^4.0.2"
   },
   "dependencies": {
-    "bootstrap": "^4.5.0",
-    "electron-is-dev": "^1.1.0",
-    "jquery": "^3.4.1",
+    "bootstrap": "^4.5.2",
+    "electron-is-dev": "^1.2.0",
+    "jquery": "^3.5.1",
+    "jsonfile": "^6.0.1",
     "lz-string": "^1.4.4",
     "material-design-icons": "^3.0.1",
-    "ncp": "^2.0.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "underscore": "^1.10.2"
   }
 }

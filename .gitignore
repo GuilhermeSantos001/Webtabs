@@ -1,5 +1,11 @@
-**/node_modules/**
-**/dist/**
-
-**/test/**
-*.test.*
+.idea/
+node_modules/
+dist/
+releases/
+release/
+TODO.txt
+package-lock.json
+*.log
+*.xcf
+*.bak
+*.old

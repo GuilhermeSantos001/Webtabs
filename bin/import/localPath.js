@@ -11,7 +11,7 @@ const [{
 /**
  * @description Retorna o caminho local para o arquivo/pasta
  */
-function localPath(p, restrict, custom) {
+function localPath(p, custom) {
     // Retira uma parte da string
     if (p.substring(0, 1) === '/')
         p = p.substring(1);
@@ -22,17 +22,9 @@ function localPath(p, restrict, custom) {
         let fs = require('fs'),
             pathbase;
         if (remote && remote.app) {
-            if (!restrict) {
-                pathbase = path.join(remote.app.getPath(custom || 'documents'), 'Webtabs');
-            } else {
-                pathbase = path.join(remote.app.getPath('module').replace('\\node_modules\\electron\\dist\\electron.exe', ''));
-            }
+            pathbase = path.join(remote.app.getPath(custom || 'documents'), 'Webtabs');
         } else {
-            if (!restrict) {
-                pathbase = path.join(app.getPath(custom || 'documents'), 'Webtabs');
-            } else {
-                pathbase = path.join(app.getPath('module').replace('\\node_modules\\electron\\dist\\electron.exe', ''));
-            }
+            pathbase = path.join(app.getPath(custom || 'documents'), 'Webtabs');
         }
         if (!fs.existsSync(pathbase)) fs.mkdirSync(pathbase);
         return pathbase;

@@ -705,19 +705,44 @@ function frameInterval(type) {
 (() => {
     setInterval(() => {
         /**
-         * Exibe o registro de alterações
-         */
-        if (!controller.action('animate_init_layer_content') && !controller.action('showChangeLog')) {
-            controller.defineAction('showChangeLog', true);
-            controller.showChangelog();
-        }
-
-        /**
          * Verifica se existe algo para ser exibido.
          */
         if (controller.frameEmpty() && !controller.action('addhomepage')) {
             controller.defineAction('addhomepage', true);
-            $('.layerFrame').append(fs.readFileSync(path.localPath('bin\\menus\\html\\homepage.html', true), 'utf8'));
+            $('.layerFrame').append(`
+            <style>
+                #layerHomePage {
+                    height: 100vh;
+                    opacity: 0;
+                }
+
+                #layerContentHomePage {
+                    height: 100vh;
+                }
+            </style>
+            <div id="layerHomePage" class="bg-dark text-white col-12 overflow-auto">
+                <div id="layerContentHomePage" class="row align-items-center justify-content-center">
+                    <div class="col-12">
+                        <p class="text-uppercase text-muted text-center font-weight-bold" style="font-size: 5rem;">
+                            WEBTABS
+                        </p>
+                        <p class="text-uppercase text-muted text-center font-weight-bold" style="font-size: 1.5rem;">
+                            Abra o menu de ações com o atalho F9\
+                        </p>
+                        <p class="text-uppercase text-muted text-center font-weight-bold" style="font-size: .8rem;">
+                            Você pode adicionar urls, ou capturar a tela do monitor e exibir suas fotos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document).ready(() => {
+                    $('#layerHomePage').show("fast").delay(500).animate({\
+                        "opacity": 100
+                    }, 3600);
+                });
+            </script>
+            `.trim());
         } else if (!frameIsPause() && !controller.frameEmpty() && controller.action('addhomepage')) {
             controller.defineAction('addhomepage', false);
             $('#layerHomePage').animate({
