@@ -34,6 +34,7 @@
     "gulp": "^4.0.2"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "electron-is-dev": "^1.2.0",
     "jquery": "^3.5.1",
     "jsonfile": "^6.0.1",
