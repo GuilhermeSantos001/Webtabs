@@ -1,3 +1,5 @@
+const CONTROLLER = require('../import/controller');
+
 /**
  * Import
  */
@@ -705,6 +707,13 @@ function frameInterval(type) {
 (() => {
     setInterval(() => {
         /**
+         * Verifica se existe novas mudanças
+         */
+        if (menu.getMenuItemById('changelog_show').checked && !controller.action('showchangelog')) {
+            controller.changelog.initialize();
+        }
+
+        /**
          * Verifica se existe algo para ser exibido.
          */
         if (controller.frameEmpty() && !controller.action('addhomepage')) {
@@ -1239,4 +1248,7 @@ ipcRenderer
     })
     .on('window_frame_show_info_system', () => {
         ALERT.info('WEBTABS', `Versão atual: ${controller.versionSystem}`);
+    })
+    .on('changelog_reset_registry', () => {
+        controller.changelog.resetShowChangelog();
     })

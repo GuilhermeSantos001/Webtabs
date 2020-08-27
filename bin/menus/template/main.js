@@ -144,10 +144,15 @@ class Template {
                             id: 'devtools_developerMode',
                             label: 'Exibir mensagens de depuração',
                             type: 'checkbox',
-                            checked: data_menu['devtools']['developermode'],
-                            click: () => {
-                                data_menu['devtools']['developermode'] = Menu.getApplicationMenu().getMenuItemById('devtools_developerMode').checked;
-                                saveData();
+                            checked: (() => {
+                                return cacheMenu.getDeveloperToolsModeValue('show_debug_messages');
+                            })(),
+                            click: (menuItem) => {
+                                if (menuItem.checked) {
+                                    cacheMenu.setDeveloperToolsModeValue('show_debug_messages', true);
+                                } else {
+                                    cacheMenu.setDeveloperToolsModeValue('show_debug_messages', false);
+                                }
                             }
                         },
                         {
@@ -269,6 +274,36 @@ class Template {
                             click: () => {
                                 BrowserWindow.getFocusedWindow().setMenuBarVisibility(false);
                                 BrowserWindow.getFocusedWindow().setAutoHideMenuBar(true);
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: 'Janela de registro de mudanças',
+                    submenu: [{
+                            id: 'changelog_show',
+                            label: 'Permitida',
+                            type: 'radio',
+                            checked: (() => {
+                                return cacheMenu.getChangelogValue('show');
+                            })(),
+                            click: (menuItem) => {
+                                if (menuItem.checked) {
+                                    cacheMenu.setChangelogValue('show', true);
+                                }
+                            }
+                        },
+                        {
+                            id: 'changelog_show',
+                            label: 'Desativada',
+                            type: 'radio',
+                            checked: (() => {
+                                return !cacheMenu.getChangelogValue('show');
+                            })(),
+                            click: (menuItem) => {
+                                if (menuItem.checked) {
+                                    cacheMenu.setChangelogValue('show', false);
+                                }
                             }
                         }
                     ]
@@ -436,10 +471,21 @@ class Template {
         },
         {
             label: 'Sobre',
-            accelerator: 'CommandOrControl+F10',
-            click: () => {
-                BrowserWindow.getFocusedWindow().webContents.send('window_frame_show_info_system');
-            }
+            submenu: [{
+                    label: 'Ver a versão atual',
+                    accelerator: 'CommandOrControl+F10',
+                    click: () => {
+                        BrowserWindow.getFocusedWindow().webContents.send('window_frame_show_info_system');
+                    }
+                },
+                {
+                    label: 'Mostrar o registro de mudanças',
+                    accelerator: 'CommandOrControl+F11',
+                    click: () => {
+                        BrowserWindow.getFocusedWindow().webContents.send('changelog_reset_registry');
+                    }
+                }
+            ]
         }
     ]
 }

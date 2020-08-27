@@ -28,12 +28,16 @@ class CACHE {
                     pause: false
                 },
                 developertoolsmode: {
+                    show_debug_messages: true,
                     start_frame: true,
                     append_frames: true,
                     remove_frames: true,
                     tick_frames: true,
                     pause_frames: true,
                     errors_system: true
+                },
+                changelog: {
+                    show: true
                 }
             }
             this.saveData();
@@ -62,6 +66,15 @@ class CACHE {
 
     getDeveloperToolsModeValue(key) {
         return this.data.developertoolsmode[key];
+    }
+
+    setChangelogValue(key, value) {
+        this.data.changelog[key] = value;
+        this.saveData();
+    }
+
+    getChangelogValue(key) {
+        return this.data.changelog[key];
     }
 }
 

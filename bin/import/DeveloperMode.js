@@ -37,9 +37,23 @@ class DeveloperMode {
             remote &&
             remote.Menu
         ) {
+            if (remote.Menu.getApplicationMenu().getMenuItemById(String('devtools_developerMode'))) {
+                if (!remote.Menu.getApplicationMenu().getMenuItemById(String('devtools_developerMode')).checked) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
             if (remote.Menu.getApplicationMenu().getMenuItemById(String(mode)))
                 return remote.Menu.getApplicationMenu().getMenuItemById(String(mode)).checked;
         } else {
+            if (Menu.getApplicationMenu().getMenuItemById(String('devtools_developerMode'))) {
+                if (!Menu.getApplicationMenu().getMenuItemById(String('devtools_developerMode')).checked) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
             if (Menu.getApplicationMenu().getMenuItemById(String(mode)))
                 return Menu.getApplicationMenu().getMenuItemById(String(mode)).checked;
         }
