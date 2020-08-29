@@ -29,7 +29,7 @@
   },
   "homepage": "",
   "devDependencies": {
-    "electron": "^10.0.0",
+    "electron": "^10.1.0",
     "electron-packager": "^15.1.0",
     "gulp": "^4.0.2"
   },
@@ -40,6 +40,6 @@
     "jsonfile": "^6.0.1",
     "lz-string": "^1.4.4",
     "material-design-icons": "^3.0.1",
-    "underscore": "^1.10.2"
+    "underscore": "^1.11.0"
   }
 }
