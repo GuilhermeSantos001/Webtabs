@@ -1,8 +1,7 @@
 /**
  * Import
  */
-const [
-    {
+const [{
         ipcRenderer,
         remote
     },
@@ -10,11 +9,11 @@ const [
     path,
     LZString
 ] = [
-        require('electron'),
-        require('fs'),
-        require('../import/localPath'),
-        require('../import/LZString')
-    ];
+    require('electron'),
+    require('fs'),
+    require('../import/localPath'),
+    require('../import/LZString')
+];
 
 /**
  * Variables
@@ -23,9 +22,9 @@ let [
     data,
     visibility
 ] = [
-        null,
-        null
-    ]
+    null,
+    null
+]
 
 /**
  * SCI ▲
@@ -50,7 +49,7 @@ function loadData() {
             "layout_cam": 0,
             "cam": 0
         }
-        fs.writeFileSync(file, JSON.stringify(data, null, 2));
+        fs.writeFileSync(file, Buffer.from(JSON.stringify(data), 'utf-8'), {flag: 'w+'});
     }
 };
 
@@ -93,30 +92,30 @@ function createscript() {
     });",
         file = path.localPath('extensions/scripts/dguard.js');
     if (!path.localPathExists('extensions/scripts/dguard.js')) path.localPathCreate('extensions/scripts/dguard.js');
-    fs.writeFileSync(file, LZString.compressToBase64(script), 'utf8');
+    fs.writeFileSync(file, Buffer.from(LZString.compressToBase64(script), 'utf-8'), {flag: 'w+'});
 };
 
 function usernamechange() {
     let file = path.localPath('extensions/storage/dguard.json');
     if (!path.localPathExists('extensions/storage/dguard.json')) path.localPathCreate('extensions/storage/dguard.json');
-    fs.writeFileSync(file, JSON.stringify({
+    fs.writeFileSync(file, Buffer.from(JSON.stringify({
         "username": String($('#form-dguard-username').val()),
         "password": String(data['password']),
         "layout_cam": Number(data['layout_cam']),
         "cam": Number(data['cam'])
-    }, null, 2), 'utf8');
+    }), 'utf-8'), {flag: 'w+'});
     data['username'] = $('#form-dguard-username').val();
 };
 
 function passwordchange() {
     let file = path.localPath('extensions/storage/dguard.json');
     if (!path.localPathExists('extensions/storage/dguard.json')) path.localPathCreate('extensions/storage/dguard.json');
-    fs.writeFileSync(file, JSON.stringify({
+    fs.writeFileSync(file, Buffer.from(JSON.stringify({
         "username": String(data['username']),
         "password": String($('#form-dguard-password').val()),
         "layout_cam": Number(data['layout_cam']),
         "cam": Number(data['cam'])
-    }, null, 2), 'utf8');
+    }), 'utf-8'), {flag: 'w+'});
     data['password'] = $('#form-dguard-password').val();
 };
 
@@ -143,7 +142,9 @@ $(document).ready(() => {
         if (!visibility) {
             $('#form-dguard-password-visibility')
                 .effect("shake")
-                .animate({ color: "gray" }, "fast");
+                .animate({
+                    color: "gray"
+                }, "fast");
             document.getElementById('form-dguard-password-visibility').innerText = 'visibility_off';
             $('#form-dguard-password')
                 .attr('type', 'text')
@@ -152,7 +153,9 @@ $(document).ready(() => {
         } else {
             $('#form-dguard-password-visibility')
                 .effect("shake")
-                .animate({ color: "white" }, "fast");
+                .animate({
+                    color: "white"
+                }, "fast");
             document.getElementById('form-dguard-password-visibility').innerText = 'visibility';
             $('#form-dguard-password')
                 .attr('type', 'password')

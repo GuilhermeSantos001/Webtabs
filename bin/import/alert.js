@@ -1,8 +1,6 @@
 /**
  * Imports
  */
-const controller = require('../import/controller');
-
 let i = 0;
 
 function info(title = '', text = '', footer = 'Developer Team', delay = {
@@ -10,6 +8,10 @@ function info(title = '', text = '', footer = 'Developer Team', delay = {
     time: 3600
 }) {
     return new Promise(function (resolve, reject) {
+        const controller = require('./controller');
+
+        if (controller.action('animate_init_layer_content')) return reject();
+
         controller.defineAction('frameIsPause', true);
 
         $('#layerContainer').append(`\

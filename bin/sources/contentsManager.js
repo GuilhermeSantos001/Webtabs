@@ -48,11 +48,11 @@ $('.layerFrame').append(`
                 data_change = false;
 
             if (fs.existsSync(path.localPath('storage/urls.json'))) {
-                data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [];
+                data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf-8')) || [];
             }
 
             if (fs.existsSync(path.localPath('storage/webcookies.json'))) {
-                web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf8')) || {
+                web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf-8')) || {
                     'size': 0
                 };
             }
@@ -373,12 +373,10 @@ $('.layerFrame').append(`
                         }, "fast").hide("fast");
                         if (data_change) {
                             if (data_urls.length > 0) {
-                                fs.writeFileSync(path.localPath('storage/urls.json'), JSON.stringify(data_urls,
-                                    null, 2), 'utf8');
+                                fs.writeFileSync(path.localPath('storage/urls.json'), Buffer.from(JSON.stringify(data_urls), 'utf-8'), {flag: 'w+'});
                             }
                             if (web_cookies instanceof Object) {
-                                fs.writeFileSync(path.localPath('storage/webcookies.json'), JSON.stringify(
-                                    web_cookies, null, 2), 'utf8');
+                                fs.writeFileSync(path.localPath('storage/webcookies.json'), Buffer.from(JSON.stringify(web_cookies), 'utf-8'), {flag: 'w+'});
                             }
                             remote.getCurrentWindow().webContents.reload();
                         }

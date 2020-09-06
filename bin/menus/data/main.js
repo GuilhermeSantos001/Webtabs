@@ -20,7 +20,7 @@ class CACHE {
         let file = path.localPath(this.path);
         if (!path.localPathExists(this.path)) path.localPathCreate(this.path);
         if (fs.existsSync(file)) {
-            this.data = JSON.parse(fs.readFileSync(file, 'utf8')) || {};
+            this.data = JSON.parse(fs.readFileSync(file, 'utf-8')) || {};
         } else {
             this.data = {
                 exibition: {
@@ -38,6 +38,9 @@ class CACHE {
                 },
                 changelog: {
                     show: true
+                },
+                controllerOnline: {
+                    activated: true
                 }
             }
             this.saveData();
@@ -47,7 +50,7 @@ class CACHE {
     saveData() {
         let file = path.localPath(this.path);
         if (!path.localPathExists(this.path)) path.localPathCreate(this.path);
-        fs.writeFileSync(file, JSON.stringify(this.data, null, 2));
+        fs.writeFileSync(file, Buffer.from(JSON.stringify(this.data), 'utf-8'), {flag: 'w+'});
     }
 
     setExibitionValue(key, value) {
@@ -75,6 +78,15 @@ class CACHE {
 
     getChangelogValue(key) {
         return this.data.changelog[key];
+    }
+
+    setControllerOnlineValue(key, value) {
+        this.data.controllerOnline[key] = value;
+        this.saveData();
+    }
+
+    getControllerOnlineValue(key) {
+        return this.data.controllerOnline[key];
     }
 }
 

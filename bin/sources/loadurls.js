@@ -1,5 +1,3 @@
-const CONTROLLER = require('../import/controller');
-
 /**
  * Import
  */
@@ -77,10 +75,16 @@ loadDataURLs();
 function createConfigGlobal() {
     if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
     if (fs.existsSync(path.localPath('configs/global.json'))) {
-        ConfigGlobal = JSON.parse(fs.readFileSync(path.localPath('configs/global.json'), 'utf8')) || [];
+        ConfigGlobal = JSON.parse(fs.readFileSync(path.localPath('configs/global.json'), 'utf-8')) || [];
     } else {
         ConfigGlobal = {
             "APPNAME": "WEBTABS",
+            "CONNECTIONTYPE": "http",
+            "SERVERIP": "localhost",
+            "SERVERPORT": "3000",
+            "APISYSTEMCODE": "113195464d008eaf8e6b648574bd5306",
+            "SERVERLOGINUSER": "admin",
+            "SERVERLOGINPASS": "123",            
             "TITLE": "WEBTABS",
             "SLOGAN": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
             "VERSION": controller.versionSystem,
@@ -88,45 +92,53 @@ function createConfigGlobal() {
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
         }
-        fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(ConfigGlobal, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('configs/global.json'), Buffer.from(JSON.stringify(ConfigGlobal), 'utf-8'), {
+            flag: 'w+'
+        });
     }
 };
 
 function createDataURLs() {
     if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
     if (fs.existsSync(path.localPath('storage/urls.json'))) {
-        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [];
+        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf-8')) || [];
     } else {
         data_urls = [];
-        fs.writeFileSync(path.localPath('storage/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('storage/urls.json'), Buffer.from(JSON.stringify(data_urls), 'utf-8'), {
+            flag: 'w+'
+        });
     }
 };
 
 function createWebCookies() {
     if (!path.localPathExists('storage/webcookies.json')) path.localPathCreate('storage/webcookies.json');
     if (fs.existsSync(path.localPath('storage/webcookies.json'))) {
-        web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf8')) || {
+        web_cookies = JSON.parse(fs.readFileSync(path.localPath('storage/webcookies.json'), 'utf-8')) || {
             'size': 0
         };
     } else {
         web_cookies = {
             'size': 0
         };
-        fs.writeFileSync(path.localPath('storage/webcookies.json'), JSON.stringify(web_cookies, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('storage/webcookies.json'), Buffer.from(JSON.stringify(web_cookies), 'utf-8'), {
+            flag: 'w+'
+        });
     }
 };
 
 /**
  * Data Urls
  */
-function saveDataURLs() {
+async function saveDataURLs() {
     let file = path.localPath('storage/urls.json');
     if (path.localPathExists('storage/urls.json')) {
+        console.log('DATA URL 1');
         fileProcess = 'write...';
-        fs.writeFile(file, JSON.stringify(urls, null, 2), 'utf8', () => {
-            fileProcess = 'done';
-            saveWebCookies();
+        await fs.writeFileSync(file, Buffer.from(JSON.stringify(urls), 'utf-8'), {
+            flag: 'w+'
         });
+        fileProcess = 'done';
+        saveWebCookies();
     }
 };
 
@@ -134,9 +146,7 @@ function loadDataURLs() {
     let file = path.localPath('storage/urls.json');
     if (path.localPathExists('storage/urls.json')) {
         fileProcess = 'reading...';
-        let data = JSON.parse(fs.readFileSync(file, {
-            encoding: 'utf8'
-        }));
+        let data = JSON.parse(fs.readFileSync(file, 'utf-8'));
         if (data instanceof Array === true) {
             fileProcess = 'done';
             urls = data;
@@ -145,17 +155,19 @@ function loadDataURLs() {
     }
 };
 
-function removeDataURLs(i) {
+async function removeDataURLs(i) {
     let file = path.localPath('storage/urls.json');
     if (path.localPathExists('storage/urls.json')) {
+        console.log('DATA URL 2');
         fileProcess = 'write...';
         if (urls[i] instanceof Array) {
             let cookie = urls[i][2];
             urls.splice(i, 1);
-            fs.writeFile(file, JSON.stringify(urls, null, 2), 'utf8', () => {
-                fileProcess = 'done';
-                removeWebCookies(cookie);
+            await fs.writeFileSync(file, Buffer.from(JSON.stringify(urls), 'utf-8'), {
+                flag: 'w+'
             });
+            fileProcess = 'done';
+            removeWebCookies(cookie);
         }
     }
 };
@@ -163,13 +175,15 @@ function removeDataURLs(i) {
 /**
  * Webcookies
  */
-function saveWebCookies() {
+async function saveWebCookies() {
     let file = path.localPath('storage/webcookies.json');
     if (path.localPathExists('storage/webcookies.json')) {
+        console.log('WEBCOOKIE');
         fileProcess = 'write...';
-        fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
-            fileProcess = 'done';
+        await fs.writeFileSync(file, Buffer.from(JSON.stringify(cookies), 'utf-8'), {
+            flag: 'w+'
         });
+        fileProcess = 'done';
     }
 };
 
@@ -177,9 +191,7 @@ function loadWebCookies() {
     let file = path.localPath('storage/webcookies.json');
     if (path.localPathExists('storage/webcookies.json')) {
         fileProcess = 'reading...';
-        let data = JSON.parse(fs.readFileSync(file, {
-            encoding: 'utf8'
-        }));
+        let data = JSON.parse(fs.readFileSync(file, 'utf-8'));
         if (data instanceof Object === true) {
             fileProcess = 'done';
             cookies = data;
@@ -187,19 +199,20 @@ function loadWebCookies() {
     }
 };
 
-function removeWebCookies(cookie) {
+async function removeWebCookies(cookie) {
     let file = path.localPath('storage/webcookies.json');
     if (path.localPathExists('storage/webcookies.json')) {
+        console.log('WEBCOOKIE 2');
         fileProcess = 'write...';
-        if (cookie != undefined) {
+        if (cookie === 'string') {
             if (cookies[cookie] instanceof Array) delete cookies[cookie];
-            fs.writeFile(file, JSON.stringify(cookies, null, 2), 'utf8', () => {
-                fileProcess = 'done';
+            await fs.writeFileSync(file, Buffer.from(JSON.stringify(cookies), 'utf-8'), {
+                flag: 'w+'
             });
+            fileProcess = 'done';
         } else {
-            fs.unlink(file, () => {
-                fileProcess = 'done';
-            });
+            await fs.unlinkSync(file);
+            fileProcess = 'done';
         }
     }
 };
@@ -257,19 +270,7 @@ function removeFrame() {
                         url: urls[i - 1][0]
                     })
                     .then((data) => {
-                        cookies[urls[i - 1][2]] = data;
-                        saveDataURLs();
-                        clearInterval(interval), interval = null;
-                        frame.removeEventListener('did-finish-load', frame.listener);
-                        frame.remove();
-                        frame = null;
-                        /**
-                         * Update Menu Extensions
-                         */
-                        /**
-                         * D-Guard
-                         */
-                        ipcRenderer.send('extensions_dguard_menu_close');
+                        return finish(true, data);
                     }).catch((error) => {
                         if (DeveloperMode.getDevToolsDeveloperMode() &&
                             DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
@@ -279,15 +280,23 @@ function removeFrame() {
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'image' ||
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'video'
             ) {
-                finish(false);
+                return finish(false);
             }
 
-            function finish(listener) {
+            function finish(listener, data) {
+                if (data) cookies[urls[i - 1][2]] = data;
+                if (urls.length - 1 <= 0) i = 0;
+                else if (i + 1 > urls.length) i = 0;
                 saveDataURLs();
                 clearInterval(interval), interval = null;
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                if (controller.action('control_server_render_process')) {
+                    controller.defineAction('control_server_render_process', false);
+                    controller.defineAction('control_server_initialize', false);
+                    controller.serverCommandsClear(controller.action('control_server_command_id'));
+                }
                 /**
                  * Update Menu Extensions
                  */
@@ -316,8 +325,7 @@ function returnFrame() {
                 if (String(urls[i - 1][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({})
                     .then((data) => {
-                        cookies[urls[i - 1][2]] = data;
-                        finish(true);
+                        return finish(true, data);
                     }).catch((error) => {
                         if (DeveloperMode.getDevToolsDeveloperMode() &&
                             DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
@@ -327,20 +335,25 @@ function returnFrame() {
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'image' ||
                 typeof urls[i - 1][0] === 'object' && urls[i - 1][0]["type_url"] === 'video'
             ) {
-                finish(false);
+                return finish(false);
             }
 
-            function finish(listener) {
-                if (i > 1) {
+            function finish(listener, data) {
+                if (data) cookies[urls[i - 1][2]] = data;
+                if (urls.length - 1 <= 0) i = 0;
+                else if (i > 1) {
                     i = i - 2 < 0 ? 0 : i - 2;
-                } else {
-                    i = urls.length - 1;
                 }
                 saveDataURLs();
                 clearInterval(interval), interval = null;
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                if (controller.action('control_server_render_process')) {
+                    controller.defineAction('control_server_render_process', false);
+                    controller.defineAction('control_server_initialize', false);
+                    controller.serverCommandsClear(controller.action('control_server_command_id'));
+                }
                 /**
                  * Update Menu Extensions
                  */
@@ -370,8 +383,7 @@ function flushFrame() {
                 if (String(urls[__i][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({})
                     .then((data) => {
-                        cookies[urls[__i][2]] = data;
-                        finish(true);
+                        return finish(true, data);
                     }).catch((error) => {
                         if (DeveloperMode.getDevToolsDeveloperMode() &&
                             DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
@@ -381,16 +393,23 @@ function flushFrame() {
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'image' ||
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'video'
             ) {
-                finish(false);
+                return finish(false);
             }
 
-            function finish(listener) {
-                i = __i;
+            function finish(listener, data) {
+                if (data) cookies[urls[__i][2]] = data;
+                if (urls.length - 1 <= 0) i = 0;
+                else i = __i;
                 saveDataURLs();
                 clearInterval(interval), interval = null;
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                if (controller.action('control_server_render_process')) {
+                    controller.defineAction('control_server_render_process', false);
+                    controller.defineAction('control_server_initialize', false);
+                    controller.serverCommandsClear(controller.action('control_server_command_id'));
+                }
                 /**
                  * Update Menu Extensions
                  */
@@ -423,11 +442,17 @@ function deleteFrame(extensions) {
          */
         if (extensions === 'dguard') {
             return $(frame).fadeOut('slow', function () {
-                i = __i;
+                if (urls.length - 1 <= 0) i = 0;
+                else i = __i;
                 clearInterval(interval), interval = null;
                 if (frame.listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                if (controller.action('control_server_render_process')) {
+                    controller.defineAction('control_server_render_process', false);
+                    controller.defineAction('control_server_initialize', false);
+                    controller.serverCommandsClear(controller.action('control_server_command_id'));
+                }
                 /**
                  * Update Menu Extensions
                  */
@@ -451,8 +476,7 @@ function deleteFrame(extensions) {
                 if (String(urls[__i][2]).toLowerCase() === 'dguard') return finish(true);
                 remote.getCurrentWindow().webContents.session.cookies.get({})
                     .then((data) => {
-                        cookies[urls[__i][2]] = data;
-                        finish(true);
+                        return finish(true, data);
                     }).catch((error) => {
                         if (DeveloperMode.getDevToolsDeveloperMode() &&
                             DeveloperMode.getDevToolsMode('errors_system')) console.log(error);
@@ -462,15 +486,22 @@ function deleteFrame(extensions) {
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'image' ||
                 typeof urls[__i][0] === 'object' && urls[__i][0]["type_url"] === 'video'
             ) {
-                finish(false);
+                return finish(false);
             }
 
-            function finish(listener) {
-                i = __i;
+            function finish(listener, data) {
+                if (data) cookies[urls[__i][2]] = data;
+                if (urls.length - 1 <= 0) i = 0;
+                else i = __i;
                 clearInterval(interval), interval = null;
                 if (listener) frame.removeEventListener('did-finish-load', frame.listener);
                 frame.remove();
                 frame = null;
+                if (controller.action('control_server_render_process')) {
+                    controller.defineAction('control_server_render_process', false);
+                    controller.defineAction('control_server_initialize', false);
+                    controller.serverCommandsClear(controller.action('control_server_command_id'));
+                }
                 /**
                  * Update Menu Extensions
                  */
@@ -707,9 +738,14 @@ function frameInterval(type) {
 (() => {
     setInterval(() => {
         /**
-         * Verifica se existe novas mudanças
+         * Verifica se existe novas mudanças.
          */
-        if (menu.getMenuItemById('changelog_show').checked && !controller.action('showchangelog')) {
+        if (
+            menu.getMenuItemById('changelog_show').checked &&
+            !controller.action('showchangelog') &&
+            !controller.action('animate_init_layer_content') &&
+            menuManager.isClear()
+        ) {
             controller.changelog.initialize();
         }
 
@@ -736,7 +772,7 @@ function frameInterval(type) {
                             WEBTABS
                         </p>
                         <p class="text-uppercase text-muted text-center font-weight-bold" style="font-size: 1.5rem;">
-                            Abra o menu de ações com o atalho F9\
+                            Abra o menu de ações com o atalho F9
                         </p>
                         <p class="text-uppercase text-muted text-center font-weight-bold" style="font-size: .8rem;">
                             Você pode adicionar urls, ou capturar a tela do monitor e exibir suas fotos.
@@ -746,7 +782,7 @@ function frameInterval(type) {
             </div>
             <script>
                 $(document).ready(() => {
-                    $('#layerHomePage').show("fast").delay(500).animate({\
+                    $('#layerHomePage').show("fast").delay(500).animate({
                         "opacity": 100
                     }, 3600);
                 });
@@ -759,13 +795,47 @@ function frameInterval(type) {
             }, "fast").hide("fast");
         }
 
+        /**
+         * Verifica se existe comandos(Gerenciador de Frame) no servidor
+         * à serem executados no programa.
+         */
+        if (menu.getMenuItemById('commands_controllerOnline_activated').checked &&
+            !controller.action('control_managerFrame_initialize')) {
+            controller.server.initialize('managerFrame');
+        }
+
+        /**
+         * Caso não exista nada a ser exibido,
+         * não passe daqui!
+         */
         if (controller.frameEmpty()) return;
 
         /**
-         * Verifica se o frame ainda não carregou, 
-         * durante o periodo de tempo estipulado.
+         * Verifica se existe comandos no servidor
+         * à serem executados no programa.
+         */
+        if (frame &&
+            frame.fadeInInitial === 'complete!' &&
+            menu.getMenuItemById('commands_controllerOnline_activated').checked &&
+            !controller.action('control_server_initialize')
+        ) {
+            controller.server.initialize('default');
+        }
+
+        /**
+         * Verifica se o frame ainda não carregou,
+         * durante o período de tempo estipulado.
          */
         if (!frame && !controller.frameEmpty()) {
+            /**
+             * Verifica a integridade dos dados
+             * a serem carregados para o frame
+             */
+            if (!urls[i]) {
+                loadDataURLs();
+                return loadWebCookies();
+            }
+
             /**
              * Limpa o cache do frame armazenado.
              */
@@ -862,7 +932,13 @@ function frameInterval(type) {
             deleteFrame('dguard');
             return;
         }
+
+        /**
+         * Verifica se o menu de gerenciamento de conteúdo
+         * está sendo utilizado
+         */
         if (menuManager.isMenu('contentsManager')) return;
+
         if (
             (!frame && !ProcessInterval && fileProcess === 'done')
         ) {
@@ -889,29 +965,31 @@ function frameInterval(type) {
                             (layout_cam < 1 || layout_cam > 3)
                         ) {
                             layout_cam = 3;
-                            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                                JSON.stringify({
-                                    username,
-                                    password,
-                                    layout_cam,
-                                    cam
-                                }, null, 2));
+                            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), Buffer.from(JSON.stringify({
+                                username,
+                                password,
+                                layout_cam,
+                                cam
+                            }), 'utf-8'), {
+                                flag: 'w+'
+                            });
                         }
                         /**
                          * Erro com a seleção de cameras
                          */
                         if (cam < 0) {
                             cam = 0;
-                            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'),
-                                JSON.stringify({
-                                    username,
-                                    password,
-                                    layout_cam,
-                                    cam
-                                }, null, 2));
+                            fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), Buffer.from(JSON.stringify({
+                                username,
+                                password,
+                                layout_cam,
+                                cam
+                            }), 'utf-8'), {
+                                flag: 'w+'
+                            });
                         }
                         /**
-                         * Erro com nome de usuario ou senha
+                         * Erro com nome de usuário ou senha
                          */
                         if (
                             (typeof username != 'string' || typeof password != 'string') ||
@@ -945,7 +1023,7 @@ function frameInterval(type) {
                         if (typeof urls[i][2] === 'string') {
                             let cookie = {
                                 i: 0,
-                                l: cookies[urls[i][2]].length - 1,
+                                l: cookies[urls[i][2]].length,
                                 values: cookies[urls[i][2]],
                                 callers: {
                                     listen: 0,
@@ -957,6 +1035,7 @@ function frameInterval(type) {
                                 /**
                                  * Define os cookies da pagina
                                  */
+                                if (!cookie.values[cookie.i]) continue;
                                 remote.getCurrentWindow().webContents.session.cookies.set({
                                         url: urls[i][0],
                                         name: cookie.values[cookie.i]['name'],
@@ -1013,6 +1092,9 @@ function frameInterval(type) {
                             DeveloperMode.getDevToolsMode('errors_system')) console.error(e);
                     });
 
+                /**
+                 * Processo de renderização do frame
+                 */
                 function render(exception) {
                     $('.layerFrame').append(`<webview id="frame" src="${urls[i++][0]}" style="z-index: 1; display:inline-flexbox; width: 100vw; height: 100vh; filter:opacity(0%);"></webview>`);
 
@@ -1090,7 +1172,7 @@ function frameInterval(type) {
                                                 if (result > 0) {
                                                     if ($('#layerExtension-DGuard').is(':hidden')) {
                                                         $('#layerExtension-DGuard').show("fast");
-                                                        ALERT.info('', `Verifique seu nome/senha de usuario do D-Guard.`);
+                                                        ALERT.info('', `Verifique seu nome/senha de usuário do D-Guard.`);
                                                     } else {
                                                         flushFrame();
                                                         clearInterval(auth);
@@ -1102,8 +1184,9 @@ function frameInterval(type) {
                                         }, 1000);
                                     }
                                 }
+
                                 /**
-                                 * Youtube
+                                 * Coloca os videos do Youtube em tela cheia
                                  */
                                 if (String(urls[i - 1][0]).indexOf('youtube.com') != -1) {
                                     frame.executeJavaScript(`
@@ -1190,21 +1273,20 @@ ipcRenderer
         }
     })
     .on('render_next', () => {
-        if (controller.frameEmpty()) return;
-        if (frame && fileProcess === 'done') {
+        if (controller.frameEmpty() || controller.action('frame_add_url_process')) return;
+        if (frame && frame.fadeInInitial === 'complete!' && fileProcess === 'done') {
             removeFrame();
         }
     })
     .on('render_return', () => {
-        if (controller.frameEmpty()) return;
-        if (frame && fileProcess === 'done') {
+        if (controller.frameEmpty() || controller.action('frame_add_url_process')) return;
+        if (frame && frame.fadeInInitial === 'complete!' && fileProcess === 'done') {
             returnFrame();
         }
     })
     .on('add_url', () => {
         if (urls) {
-            while (frame && frame.fadeInInitial === 'processing...' ||
-                frame && frame.removeProcess) return;
+            while (controller.action('frame_add_url_process') || frame && frame.fadeInInitial === 'processing...' || frame && frame.removeProcess) return;
             loadDataURLs();
         }
     })
@@ -1231,7 +1313,9 @@ ipcRenderer
                     var __cookies = JSON.parse(fs.readFileSync(path.localPath('extensions/storage/dguard.json'))) || {};
                     __cookies['layout_cam'] = cam;
                 }
-                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), JSON.stringify(__cookies, null, 2));
+                fs.writeFileSync(path.localPath('extensions/storage/dguard.json'), Buffer.from(JSON.stringify(__cookies), 'utf-8'), {
+                    flag: 'w+'
+                });
                 resolve();
             })
             .then(() => {
@@ -1241,9 +1325,11 @@ ipcRenderer
     .on('window_frame_reload', () => {
         let file = path.localPath('storage/framereload.json');
         if (!path.localPathExists('storage/framereload.json')) path.localPathCreate('storage/framereload.json');
-        fs.writeFileSync(file, JSON.stringify({
+        fs.writeFileSync(file, Buffer.from(JSON.stringify({
             "cache": i - 1
-        }, null, 2), 'utf8');
+        }), 'utf-8'), {
+            flag: 'w+'
+        });
         remote.getCurrentWindow().webContents.reload();
     })
     .on('window_frame_show_info_system', () => {

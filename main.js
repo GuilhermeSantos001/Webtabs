@@ -34,7 +34,7 @@ function createWindow() {
     selected = (data => {
       if (data.selected != undefined) return data.selected;
       return 0;
-    })(JSON.parse(fs.readFileSync(file, 'utf8')) || {});
+    })(JSON.parse(fs.readFileSync(file, 'utf-8')) || {});
   }
   const displays = screen.getAllDisplays();
   while (!displays[selected]) {

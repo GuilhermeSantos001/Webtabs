@@ -9,17 +9,17 @@ const [{
     path,
     ALERT,
     bytesToSize,
-    chkurl,
     fs,
-    menuManager
+    menuManager,
+    controller
 ] = [
     require('electron'),
     require('../import/localPath'),
     require('../import/alert'),
     require('../import/bytesToSize'),
-    require('../import/checking_url'),
     require('fs'),
-    require('../import/MenuManager')
+    require('../import/MenuManager'),
+    require('../import/controller')
 ];
 
 /**
@@ -46,10 +46,12 @@ createDataURLs();
 function createDataURLs() {
     if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
     if (fs.existsSync(path.localPath('storage/urls.json'))) {
-        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf8')) || [];
+        data_urls = JSON.parse(fs.readFileSync(path.localPath('storage/urls.json'), 'utf-8')) || [];
     } else {
         data_urls = [];
-        fs.writeFileSync(path.localPath('storage/urls.json'), JSON.stringify(data_urls, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('storage/urls.json'), Buffer.from(JSON.stringify(data_urls), 'utf-8'), {
+            flag: 'w+'
+        });
     }
 };
 
@@ -81,10 +83,11 @@ function SCREEN_SELECTION_UPDATE() {
                             name: source.name,
                             title: `Monitor ${i - 1}`
                         }]);
-                        fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
-                            $(btn).prop('disabled', true);
-                            mainWindow.webContents.send('add_url');
+                        fs.writeFileSync(file, Buffer.from(JSON.stringify(data_urls), 'utf-8'), {
+                            flag: 'w+'
                         });
+                        $(btn).prop('disabled', true);
+                        mainWindow.webContents.send('add_url');
                     }
                 };
                 if (BTN_SCREEN_SELECTION_EXIST(source.id, source.name)) $(btn).prop('disabled', true);
@@ -124,64 +127,32 @@ $(document).ready(function () {
                     url,
                     type_url: 'image'
                 }]);
-                fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
-                    $('#input_add_photo').val('');
-                    $('#show_filePath_photo').text('Procurar Imagem...');
-                    $('#size_file_photo').text('');
-                    ALERT.info('', `A sua imagem "${fileName}" foi adicionada com sucesso!!!`);
-                    mainWindow.webContents.send('add_url');
+                fs.writeFileSync(file, Buffer.from(JSON.stringify(data_urls), 'utf-8'), {
+                    flag: 'w+'
                 });
+                $('#input_add_photo').val('');
+                $('#show_filePath_photo').text('Procurar Imagem...');
+                $('#size_file_photo').text('');
+                ALERT.info('', `A sua imagem "${fileName}" foi adicionada com sucesso!!!`);
+                mainWindow.webContents.send('add_url');
             }
         }
     };
 
     document.getElementById("button_add_url").onclick = function () {
-        let file = path.localPath('storage/urls.json');
+        let filepath = path.localPath('storage/urls.json');
         if (!path.localPathExists('storage/urls.json')) path.localPathCreate('storage/urls.json');
-        if (fs.existsSync(file)) {
+        if (fs.existsSync(filepath)) {
             let url = $('#input_add_url').val() || '',
-                extension = 0,
                 title = $('#input_add_url_title').val() || false;
             if (!url || typeof url != 'string' || url.length <= 0) return;
-            chkurl.direct(url, res => {
-                if (!res) {
-                    return ALERT.info('', `A URL "${res}" não pode ser adicionada!!!`);
-                }
-                /**
-                 * Extensions
-                 */
-                /**
-                 * D-Guard
-                 */
-                extension = url.split('/').filter(str => {
-                    if (
-                        str.includes('grupomave.mooo.com') &&
-                        str.includes('8081')
-                    ) return true;
-                }).length;
-
-                if (extension > 0) {
-                    data_urls.push([
-                        res,
-                        0,
-                        'dguard',
-                        title
-                    ]);
-                } else {
-                    data_urls.push([
-                        res,
-                        0,
-                        null,
-                        title
-                    ]);
-                }
-                fs.writeFile(file, JSON.stringify(data_urls, null, 2), 'utf8', () => {
+            controller.frameAddURL(filepath, data_urls, title, url)
+                .then((data) => {
                     $('#input_add_url').val('');
                     $('#input_add_url_title').val('');
-                    ALERT.info('', `A URL "${res}" foi adicionada com sucesso!!!`);
+                    data_urls = data;
                     mainWindow.webContents.send('add_url');
                 });
-            });
         }
     };
     SCREEN_SELECTION_UPDATE();

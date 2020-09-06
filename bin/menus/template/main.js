@@ -40,7 +40,7 @@ createData();
 function createData() {
     if (!path.localPathExists('storage/menus/main.json')) path.localPathCreate('storage/menus/main.json');
     if (fs.existsSync(path.localPath('storage/menus/main.json'))) {
-        data_menu = JSON.parse(fs.readFileSync(path.localPath('storage/menus/main.json'), 'utf8')) || {
+        data_menu = JSON.parse(fs.readFileSync(path.localPath('storage/menus/main.json'), 'utf-8')) || {
             devtools: {
                 developermode: require('electron-is-dev')
             }
@@ -51,14 +51,18 @@ function createData() {
                 developermode: require('electron-is-dev')
             }
         }
-        fs.writeFileSync(path.localPath('storage/menus/main.json'), JSON.stringify(data_menu, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('storage/menus/main.json'), Buffer.from(JSON.stringify(data_menu), 'utf-8'), {
+            flag: 'w+'
+        });
     }
 };
 
 function saveData() {
     let file = path.localPath('storage/menus/main.json');
     if (path.localPathExists('storage/menus/main.json')) {
-        fs.writeFileSync(file, JSON.stringify(data_menu, null, 2), 'utf8');
+        fs.writeFileSync(file, Buffer.from(JSON.stringify(data_menu), 'utf-8'), {
+            flag: 'w+'
+        });
     }
 };
 
@@ -71,7 +75,7 @@ class Template {
     }
     loadData() {
         if (fs.existsSync(path.localPath('storage/menus/main.json'))) {
-            data_menu = JSON.parse(fs.readFileSync(path.localPath('storage/menus/main.json'), 'utf8')) || {
+            data_menu = JSON.parse(fs.readFileSync(path.localPath('storage/menus/main.json'), 'utf-8')) || {
                 devtools: {
                     developermode: require('electron-is-dev')
                 }
@@ -93,7 +97,7 @@ class Template {
                             data;
                         if (!path.localPathExists('configs/display.json')) path.localPathCreate('configs/display.json');
                         if (fs.existsSync(file)) {
-                            data = JSON.parse(fs.readFileSync(file, 'utf8')) || {};
+                            data = JSON.parse(fs.readFileSync(file, 'utf-8')) || {};
                         } else {
                             data = {
                                 selected: 0
@@ -126,15 +130,18 @@ class Template {
                                             width,
                                             height
                                         });
-                                        fs.writeFile(file, JSON.stringify(data, null, 2), e => {
-                                            if (isFullScreen) win.setFullScreen(true);
-                                            clearTimeout(delay);
+                                        fs.writeFileSync(file, Buffer.from(JSON.stringify(data), 'utf-8'), {
+                                            flag: 'w+'
                                         });
+                                        if (isFullScreen) win.setFullScreen(true);
+                                        clearTimeout(delay);
                                     }, 100);
                                 }
                             }
                         });
-                        fs.writeFileSync(file, JSON.stringify(data, null, 2));
+                        fs.writeFileSync(file, Buffer.from(JSON.stringify(data), 'utf-8'), {
+                            flag: 'w+'
+                        });
                         return data.displays;
                     })(screen.getAllDisplays())
                 },
@@ -255,8 +262,15 @@ class Template {
                     ]
                 },
                 {
+                    id: 'system_tooglereload',
                     label: 'Recarregar',
-                    role: 'reload'
+                    accelerator: 'CommandOrControl+R',
+                    click: () => {
+                        require('electron').app.relaunch({
+                            args: process.argv.slice(1).concat(['--relaunch'])
+                        })
+                        require('electron').app.exit(0)
+                    }
                 },
                 {
                     label: 'Barra de menu',
@@ -309,6 +323,36 @@ class Template {
                     ]
                 },
                 {
+                    label: 'Comados do controle online',
+                    submenu: [{
+                            id: 'commands_controllerOnline_activated',
+                            label: 'Ativado',
+                            type: 'radio',
+                            checked: (() => {
+                                return cacheMenu.getControllerOnlineValue('activated');
+                            })(),
+                            click: (menuItem) => {
+                                if (menuItem.checked) {
+                                    cacheMenu.setControllerOnlineValue('activated', true);
+                                }
+                            }
+                        },
+                        {
+                            id: 'commands_controllerOnline_deactivated',
+                            label: 'Desativado',
+                            type: 'radio',
+                            checked: (() => {
+                                return !cacheMenu.getControllerOnlineValue('activated');
+                            })(),
+                            click: (menuItem) => {
+                                if (menuItem.checked) {
+                                    cacheMenu.setControllerOnlineValue('activated', false);
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     label: 'Fechar',
                     role: 'close'
                 }
@@ -317,6 +361,7 @@ class Template {
         {
             label: 'Exibição',
             submenu: [{
+                    id: 'frame_running',
                     label: 'Executar',
                     type: 'radio',
                     checked: (() => {

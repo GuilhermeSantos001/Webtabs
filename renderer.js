@@ -41,10 +41,16 @@ animatelayerContent();
 function loadConfigGlobal() {
     if (!path.localPathExists('configs/global.json')) path.localPathCreate('configs/global.json');
     if (fs.existsSync(path.localPath('configs/global.json'))) {
-        data = JSON.parse(fs.readFileSync(path.localPath('configs/global.json'), 'utf8')) || [];
+        data = JSON.parse(fs.readFileSync(path.localPath('configs/global.json'), 'utf-8')) || [];
     } else {
         data = {
             "APPNAME": "WEBTABS",
+            "CONNECTIONTYPE": "http",
+            "SERVERIP": "localhost",
+            "SERVERPORT": "3000",
+            "APISYSTEMCODE": "113195464d008eaf8e6b648574bd5306",
+            "SERVERLOGINUSER": "admin",
+            "SERVERLOGINPASS": "123",            
             "TITLE": "WEBTABS",
             "SLOGAN": "Visualizar suas páginas favoritas como slides, nunca foi tão fácil.",
             "VERSION": controller.versionSystem,
@@ -52,7 +58,7 @@ function loadConfigGlobal() {
             "FRAMETIMETYPE": 2,
             "LOGO": "assets/img/logo.png"
         }
-        fs.writeFileSync(path.localPath('configs/global.json'), JSON.stringify(data, null, 2), 'utf8');
+        fs.writeFileSync(path.localPath('configs/global.json'), Buffer.from(JSON.stringify(data), 'utf-8'), {flag: 'w+'});
     };
 };
 
