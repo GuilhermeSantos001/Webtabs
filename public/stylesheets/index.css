@@ -6,10 +6,16 @@
     height: 100vh;
 }
 
-.btn-primary {
-    margin: 1rem;
+.modal-trigger {
+    margin-top: 1rem;
+}
+
+.btn-commands {
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
 }
 
 .slider .indicators .indicator-item.active {
     background-color: #1ed2ff;
-  }
+}

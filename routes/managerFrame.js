@@ -8,7 +8,7 @@ const middlewareAPI = require('../middlewares/api');
 const getReqProps = require('../modules/getReqProps');
 const mongodb = require('../modules/mongodb');
 
-router.get([`/all`, `/all/:id`], middlewareAPI, middlewareAuth, async (req, res) => {
+router.get([`/command/all`, `/command/all/:id`], middlewareAPI, middlewareAuth, async (req, res) => {
   let {
     id
   } = getReqProps(req, ['id']);
@@ -16,7 +16,7 @@ router.get([`/all`, `/all/:id`], middlewareAPI, middlewareAuth, async (req, res)
   if (!id) id = '';
 
   try {
-    mongodb.getCommand(id, result => {
+    mongodb.getCommandManagerFrame(id, result => {
       return res.status(200).send({
         result
       });
@@ -29,13 +29,19 @@ router.get([`/all`, `/all/:id`], middlewareAPI, middlewareAuth, async (req, res)
   }
 });
 
-router.post(['/register'], middlewareAPI, middlewareAuth, async (req, res) => {
+router.post(['/command/register'], middlewareAPI, middlewareAuth, async (req, res) => {
   let {
     id,
+    type,
     value
-  } = getReqProps(req, ['id', 'value']);
+  } = getReqProps(req, ['id', 'type', 'value']);
 
   if (!id) id = '';
+
+  if (!type) return res.status(400).send({
+    error: 'O comando precisa ter um tipo valido',
+    details: value
+  })
 
   if (!value) return res.status(400).send({
     error: 'O comando precisa ter um valor valido',
@@ -43,7 +49,7 @@ router.post(['/register'], middlewareAPI, middlewareAuth, async (req, res) => {
   })
 
   try {
-    mongodb.createCommand(id, value, result => {
+    mongodb.createCommandManagerFrame(id, type, Buffer.from(JSON.stringify(value), 'utf-8').toString(), result => {
       return res.status(200).send({
         result
       });
@@ -56,7 +62,7 @@ router.post(['/register'], middlewareAPI, middlewareAuth, async (req, res) => {
   }
 });
 
-router.post(['/clear', '/clear/:id'], middlewareAPI, middlewareAuth, async (req, res) => {
+router.post(['/command/clear', '/command/clear/:id'], middlewareAPI, middlewareAuth, async (req, res) => {
   let {
     id
   } = getReqProps(req, ['id']);
@@ -64,7 +70,7 @@ router.post(['/clear', '/clear/:id'], middlewareAPI, middlewareAuth, async (req,
   if (!id) id = '';
 
   try {
-    mongodb.clearCommands(id, result=> {
+    mongodb.clearCommandsManagerFrame(id, result => {
       return res.status(200).send({
         result
       });
@@ -77,4 +83,4 @@ router.post(['/clear', '/clear/:id'], middlewareAPI, middlewareAuth, async (req,
   }
 });
 
-module.exports = (app) => app.use('/commands', router);
+module.exports = (app) => app.use('/managerFrame', router);

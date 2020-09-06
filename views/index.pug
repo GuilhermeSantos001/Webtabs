@@ -9,17 +9,21 @@ block content
       img(class="materialboxed" data-caption="WEBTABS" width="250" src="images/logo.png")
   div(class="row")
     div(class="col s12 container-buttons blue darken-1")
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal1") Comandos
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal2" disabled) Baixar Webtabs
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal3" disabled) Ver Documentação
-      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal4" disabled) Sobre o Webtabs
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal1") Configurações
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal2") Comandos
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal3") Adicionar Links para exibição
+      a(class="waves-effect waves-light btn btn-large btn-primary modal-trigger col s12 white black-text" href="#modal4") Saiba Mais
   div(id="modal1" class="modal modal-fixed-footer")
     div(class="modal-content")
       div(class="row")
-        div(class="col s12")
-          h2(class="center-align")="Controle sua Aplicação"
-          h5(class="center-align grey-text")="Configure o seu Webtabs para ter acesso online" 
-          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Tutorial
+        div(class="input-field col s12 m12 l6 xl6")
+          i(class="material-icons prefix") router
+          input(value=serverIP id="server_ip" type="text" disabled)
+          label(class="active" for="server_ip") IP do servidor
+        div(class="input-field col s12 m12 l6 xl6")
+          i(class="material-icons prefix") sensor_window
+          input(value=serverPort id="server_port" type="text" disabled)
+          label(class="active" for="server_port") Porta do servidor
         div(class="input-field col s12")
           i(class="material-icons prefix") people
           input(value="" id="application_username" type="text")
@@ -28,76 +32,72 @@ block content
           i(class="material-icons prefix") lock_outline
           input(value="" id="application_password" type="password")
           label(class="active" for="application_password") Senha de usuário
-        div(class="col s12")
+        div(class="col s12 m12 l6 xl6")
+          p
+            input(type="checkbox" class="filled-in" id="application_password_show_or_hide")
+            label(for="application_password_show_or_hide") Exibir senha          
+        div(class="col s12 m12 l6 xl6")
           p
             input(type="checkbox" class="filled-in" id="application_store_user_data")
             label(for="application_store_user_data") Armazenar dados de acesso
-        div(class="col s12")
-          a(id="clearServerCommands" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Limpar todos os comandos do servidor
-          a(id="render_fullscreen" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Tela Cheia (Ligar/Desligar)
-          a(id="system_toogledevtools" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Abrir/Fechar Debug
-          a(id="system_tooglereload" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Recarregar Aplicativo
-          a(id="render_frameedit" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Editar conteúdo
-          a(id="render_framemanager" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Editar slides
-          a(id="render_running" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Executar Slide
-          a(id="render_pause" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Pausar Slide
-          a(id="render_next" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Próximo Slide
-          a(id="render_return" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Retornar Slide
-          a(id="render_menubarshow" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Exibir barra de menu
-          a(id="render_menubarhide" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ocultar barra de menu
-          a(id="render_mousehide" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ocultar cursor do mouse
-          a(id="render_mouseshow" class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Exibir cursor do mouse
     div(class="modal-footer")
-      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+      a(href="#!" class="modal-action modal-close waves-effect waves-dark btn-flat") Voltar
   div(id="modal2" class="modal modal-fixed-footer")
     div(class="modal-content")
       div(class="row")
         div(class="col s12")
-          h2(class="center-align")="Escolha o seu Download"
-          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!" 
-          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Planos
-          h5(class="center-align grey-text")="Lista para Computadores Windows" 
-          div(class="collection")
-            a(href="#!" class="collection-item") v9.0.0 - Em Desenvolvimento
-            a(href="#!" class="collection-item") v8.0.0 - Mais Nova
-            a(href="#!" class="collection-item") v7.0.0 - Estável
-            a(href="#!" class="collection-item") v6.0.0
-            a(href="#!" class="collection-item") v5.9.6
+          h4(class="center-align")="Controle a distância"
+          h5(class="center-align grey-text")="Configure o seu Webtabs para controla-lo online" 
+        div(class="col s12")
+          a(id="render_fullscreen" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Tela Cheia (Ligar/Desligar)
+          a(id="system_toogledevtools" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Abrir/Fechar Debug
+          a(id="system_tooglereload" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Recarregar Aplicativo
+          a(id="render_reload" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Recarregar Slide
+          a(id="render_running" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Executar Slide
+          a(id="render_pause" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Pausar Slide
+          a(id="render_next" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Próximo Slide
+          a(id="render_return" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Retornar Slide
+          a(id="render_menubarshow" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Exibir barra de menu
+          a(id="render_menubarhide" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Ocultar barra de menu
+          a(id="render_mouseshow" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Exibir cursor do mouse
+          a(id="render_mousehide" class="waves-effect waves-dark btn btn-large btn-primary col s12 m12 l6 xl6 white btn-commands black-text") Ocultar cursor do mouse
     div(class="modal-footer")
-      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+      a(href="#!" class="modal-action modal-close waves-effect waves-dark btn-flat") Voltar
   div(id="modal3" class="modal modal-fixed-footer")
     div(class="modal-content")
       div(class="row")
         div(class="col s12")
-          h2(class="center-align")="Precisa de Ajuda?"
-          h5(class="center-align grey-text")="Não deixe de conferir nossos planos de suporte 5 dias por semana!" 
-          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Ver Planos
+          h4(class="center-align")="Adicione links para exibição"
+          h5(class="center-align grey-text")="Copie o endereço do seu site favorito e veja a magia acontecer" 
         div(class="col s12")
-          ul(class="collapsible" data-collapsible="accordion")
-            li
-              div(class="collapsible-header") #[i(class="material-icons") school] Como adicionar um slide - 29/07/2020 18:45 #[i(class="material-icons") date_range]
-              div(class="collapsible-body") #[span Escreva a aula aqui!!]
-            li
-              div(class="collapsible-header") #[i(class="material-icons") school] Como adicionar um video do youtube - 29/07/2020 20:00 #[i(class="material-icons") date_range]
-              div(class="collapsible-body") #[span Escreva a aula aqui!!]              
+          div(class="input-field col s12")
+            i(class="material-icons prefix") title
+            input(value="" id="application_url_title" type="text")
+            label(class="active" for="application_url_title") Escreva um titulo
+          div(class="input-field col s12")
+            i(class="material-icons prefix") web
+            input(value="" id="application_url_value" type="text")
+            label(class="active" for="application_url_value") Insira a url
+        a(id="sendServerCommands" class="waves-effect waves-dark btn btn-large btn-primary col s12 white btn-commands black-text") Adicionar
+        div(class="col s12")
+          p(id="responseMessageServerCommands") Última Resposta do Servidor: Você ainda não fez nenhuma requisição ao servidor.
     div(class="modal-footer")
-      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+      a(href="#!" class="modal-action modal-close waves-effect waves-dark btn-flat") Voltar
   div(id="modal4" class="modal modal-fixed-footer")
     div(class="modal-content")
       div(class="row")
         div(class="col s12")
-          h2(class="center-align")="O que é Webtabs?"
-          h5(class="center-align grey-text")="Não deixe de baixar, caso tenha interesse" 
-          a(class="waves-effect waves-light btn btn-large btn-primary col s12 light-blue darken-1") Baixar Agora!
+          h4(class="center-align")="O que é Webtabs?"
+          h5(class="center-align grey-text")="Não deixe de entrar em contato" 
           p
-            | Webtabs é um programa com o mesmo objetivo de um #[a(href="https://boxloja.zendesk.com/hc/pt-br/articles/229459148-O-que-%C3%A9-Slideshow-" target="_blank") slideshow], mas ele não se resume a somente exibir coisas,
-            | você tambem pode trabalhar de forma produtiva com ele, imagine você ter varias contas no mesmo site e tenha
+            | Webtabs é um programa com o mesmo objetivo de um #[a(href="http://bit.ly/GoogleSlideshow" target="_blank") slideshow], mas ele não se resume a somente exibir coisas,
+            | você também pode trabalhar de forma produtiva com ele, imagine você ter varias contas no mesmo site e tenha
             | que usar dois navegadores para usar o site em contas diferentes, bem com o Webtabs isso não é mais preciso,
             | pois nele temos um sistema de cache de sessões para cada slide, ou seja, no mesmo programa conseguimos usar
-            | varias contas no mesmo site e sem nescessidade de ficar tendo que logar varias vezes.
-            | Podemos trocar o que está sendo exibido através de qualquer despositivo com acesso a internet, só precisamos
-            | acessar o site com nossos dados pessoais da aplicação, e pelo proprio site conseguimos configurar todos os
+            | varias contas no mesmo site e sem necessidade de ficar tendo que logar varias vezes.
+            | Podemos trocar o que está sendo exibido através de qualquer dispositivo com acesso a internet, só precisamos
+            | acessar o site com nossos dados pessoais da aplicação, e pelo próprio site conseguimos configurar todos os
             | detalhes do programa.
     div(class="modal-footer")
-      a(href="#!" class="modal-action modal-close waves-effect waves-green btn-flat") Voltar
+      a(href="#!" class="modal-action modal-close waves-effect waves-dark btn-flat") Voltar
   script(src="/javascripts/index.js")

@@ -47,13 +47,13 @@ document.getElementById('application_store_user_data').onclick = function () {
 
 function commandId() {
     let words = [
-        'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l',
-        'm', 'n', 'o', 'p', 'q', 'r',
-        's', 't', 'u', 'v', 'w', 'x',
-        'y', 'z', '0', '1', '2', '3',
-        '4', '5', '6', '7', '8', '9'
-    ],
+            'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l',
+            'm', 'n', 'o', 'p', 'q', 'r',
+            's', 't', 'u', 'v', 'w', 'x',
+            'y', 'z', '0', '1', '2', '3',
+            '4', '5', '6', '7', '8', '9'
+        ],
         i = 0,
         id = '';
 
@@ -64,31 +64,18 @@ function commandId() {
     return id;
 }
 
-const base_url = 'http://192.168.0.104:3000';
-
-document.getElementById('clearServerCommands').onclick = function () {
-    let user = $('#application_username').val(),
-        pass = $('#application_password').val();
-
-    let settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": `${base_url}/commands/clear`,
-        "method": "POST",
-        "headers": {
-            "content-type": "application/json",
-            "system-code": "113195464d008eaf8e6b648574bd5306"
-        },
-        "processData": false,
-        "data": `{\n\t\"user\": \"${user}\",\n\t\"pass\": \"${pass}\"\n}`
+document.getElementById('application_password_show_or_hide').onclick = function () {
+    if ($('#application_password_show_or_hide').is(":checked")) {
+        $('#application_password').attr('type', 'text');
+    } else {
+        $('#application_password').attr('type', 'password');
     }
-
-    $.ajax(settings).done(function (response) {
-        console.log(response);
-    });
 };
 
+const base_url = `http://${$('#server_ip').val()}:${$('#server_port').val()}`;
+
 [
+    'render_reload',
     'render_next',
     'render_return',
     'render_fullscreen',
@@ -96,17 +83,12 @@ document.getElementById('clearServerCommands').onclick = function () {
     'render_menubarhide',
     'render_mouseshow',
     'render_mousehide',
-    'render_frameedit',
-    'render_framemanager',
     'render_running',
     'render_pause',
     'system_toogledevtools',
     'system_tooglereload'
 ].map(buttonName => {
     document.getElementById(buttonName).onclick = function () {
-        let user = $('#application_username').val(),
-            pass = $('#application_password').val();
-
         let settings = {
             "async": true,
             "crossDomain": true,
@@ -117,11 +99,47 @@ document.getElementById('clearServerCommands').onclick = function () {
                 "system-code": "113195464d008eaf8e6b648574bd5306"
             },
             "processData": false,
-            "data": `{\n\t\"id\": \"${commandId()}\",\n\t\"value\": \"${buttonName}\",\n\t\"user\": \"${user}\",\n\t\"pass\": \"${pass}\"\n}`
+            "data": JSON.stringify({
+                user: $('#application_username').val(),
+                pass: $('#application_password').val(),
+                id: commandId(),
+                value: buttonName
+            })
         }
 
-        $.ajax(settings).done(function (response) {
-            console.log(response);
+        $.ajax(settings).done(function (res) {
+            console.log(res);
         });
     };
 });
+
+document.getElementById('sendServerCommands').onclick = function () {
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": `${base_url}/managerFrame/command/register`,
+        "method": "POST",
+        "headers": {
+            "content-type": "application/json",
+            "system-code": "113195464d008eaf8e6b648574bd5306"
+        },
+        "processData": false,
+        "data": JSON.stringify({
+            user: $('#application_username').val(),
+            pass: $('#application_password').val(),
+            id: commandId(),
+            type: "frame_add_url",
+            value: {
+                title: $('#application_url_title').val(),
+                url: $('#application_url_value').val()
+            }
+        })
+    }
+
+    $.ajax(settings).done(function (response) {
+        let message = response ? response.result : 'Erro Inesperado...';
+        $('#application_url_title').val('');
+        $('#application_url_value').val('');
+        document.getElementById('responseMessageServerCommands').innerText = `Última Resposta do Servidor: ${message}`;
+    });
+};

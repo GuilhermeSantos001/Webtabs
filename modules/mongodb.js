@@ -31,6 +31,14 @@ var Schema_Commands = require('../models/commands');
 /**
  * @private Restrito ao escopo global
  * @type {{}}
+ * @description Importa o modulo para criar o Schema de managerframe
+ * @default require('../models/managerFrame')
+ */
+var Schema_ManagerFrame = require('../models/managerFrame');
+
+/**
+ * @private Restrito ao escopo global
+ * @type {{}}
  * @description Endereço de DNS do mongoDB
  * @default `mongodb://${configMongoDB.user.name}:${configMongoDB.user.password}@${configMongoDB.address}:${configMongoDB.port}/${configMongoDB.db}?authSource=admin`
  */
@@ -103,7 +111,7 @@ function createCommand(id, value, callback) {
     }, (err, db) => {
         if (err) {
             callback([
-                `Não foi possivel conectar com o mongoDB (Database ${db})`,
+                `Não foi possível conectar com o mongoDB (Database ${db})`,
                 err
             ])
             return mongoose.connection.close();
@@ -118,7 +126,7 @@ function createCommand(id, value, callback) {
         });
         command.validate((err) => {
             if (err) {
-                console.error(`Não é possivel criar o novo comando com o identificador(${id})`);
+                console.error(`Não é possível criar o novo comando com o identificador(${id})`);
                 console.error(err);
                 return mongoose.connection.close();
             }
@@ -127,7 +135,7 @@ function createCommand(id, value, callback) {
             }, (err, list) => {
                 if (err) {
                     callback([
-                        `Não foi possivel verificar se o comando com o identificador(${id}) já foi salvo`,
+                        `Não foi possível verificar se o comando com o identificador(${id}) já foi salvo`,
                         err
                     ]);
                     return mongoose.connection.close();
@@ -173,7 +181,7 @@ function getCommand(id, callback) {
     }, (err, db) => {
         if (err) {
             callback([
-                `Não foi possivel conectar com o mongoDB (Database ${db})`,
+                `Não foi possível conectar com o mongoDB (Database ${db})`,
                 err
             ])
             return mongoose.connection.close();
@@ -187,7 +195,7 @@ function getCommand(id, callback) {
         }, (err, list) => {
             if (err) {
                 callback([
-                    `Não foi possivel verificar se o comando com o identificador(${id}) já foi salvo`,
+                    `Não foi possível verificar se o comando com o identificador(${id}) já foi salvo`,
                     err
                 ]);
                 return mongoose.connection.close();
@@ -199,14 +207,12 @@ function getCommand(id, callback) {
                 if (item.id == id)
                     return {
                         id: item.id,
-                        value: item.value,
-                        valid: item.valid
+                        value: item.value
                     }
             }) : list.map(item => {
                 return {
                     id: item.id,
-                    value: item.value,
-                    valid: item.valid
+                    value: item.value
                 }
             });
 
@@ -236,7 +242,7 @@ function clearCommands(id, callback) {
     }, (err, db) => {
         if (err) {
             callback([
-                `Não foi possivel conectar com o mongoDB (Database ${db})`,
+                `Não foi possível conectar com o mongoDB (Database ${db})`,
                 err
             ])
             return mongoose.connection.close();
@@ -250,15 +256,195 @@ function clearCommands(id, callback) {
         }, (err) => {
             if (err) {
                 callback([
-                    id.length <= 0 ? `Não foi possivel remover os comandos` :
-                    `Não é possivel remover o comando com o ID(${id}) do banco de dados`,
+                    id.length <= 0 ? `Não foi possível remover os comandos` :
+                    `Não é possível remover o comando com o ID(${id}) do banco de dados`,
                     err
                 ]);
                 return mongoose.connection.close();
             }
             callback(
                 id.length <= 0 ? `Comandos removidos do banco de dados` :
-                `Comando com o ID(${id}) removido do banco de dados`,
+                `Comando com o ID(${id}) removido do banco de dados`
+            );
+            return mongoose.connection.close();
+        });
+    }
+};
+
+/**
+ * @description Cria um novo comando para gerenciar o frame
+ * @param {string} id Identificador do comando
+ * @param {String} type O tipo de comando
+ * @param {String} value O valor do comando
+ * @param {function} callback Função a ser retornada com uma array de resposta
+ * @author GuilhermeSantos
+ * @version 1.0.0
+ */
+function createCommandManagerFrame(id, type, value, callback) {
+    mongoose.connect(uri, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useCreateIndex: true
+    }, (err, db) => {
+        if (err) {
+            callback([
+                `Não foi possível conectar com o mongoDB (Database ${db})`,
+                err
+            ])
+            return mongoose.connection.close();
+        }
+        mongooseConnected();
+    });
+
+    function mongooseConnected() {
+        var managerFrame = new Schema_ManagerFrame({
+            id: String(id),
+            type: String(type),
+            value: String(value)
+        });
+        managerFrame.validate((err) => {
+            if (err) {
+                console.error(`Não é possível criar o novo comando(Gerenciador do Frame) com o identificador(${id})`);
+                console.error(err);
+                return mongoose.connection.close();
+            }
+            Schema_ManagerFrame.find({
+                id: String(id)
+            }, (err, list) => {
+                if (err) {
+                    callback([
+                        `Não foi possível verificar se o comando(Gerenciador do Frame) com o identificador(${id}) já foi salvo`,
+                        err
+                    ]);
+                    return mongoose.connection.close();
+                }
+
+                if (list instanceof Array !== true) list = [];
+
+                let items = list.filter(item => item.id == id);
+
+                if (items.length <= 0) {
+                    managerFrame.save(function (err) {
+                        if (err) {
+                            callback([
+                                `Erro na hora de salvar o novo comando(Gerenciador do Frame) com o identificador(${id})`,
+                                err
+                            ]);
+                            return mongoose.connection.close();
+                        }
+                        callback(`Comando(Gerenciador do Frame) com o identificador(${id}) salvo no banco de dados`);
+                        return mongoose.connection.close();
+                    });
+                } else {
+                    callback(`O comando(Gerenciador do Frame) com o identificador(${id}) já foi salvo no banco de dados`);
+                    return mongoose.connection.close();
+                }
+            });
+        });
+    }
+};
+
+/**
+ * @description Retorna o comando do gerenciador de frame
+ * @param {string} id Identificador do comando
+ * @param {function} callback Função a ser retornada com uma array de resposta
+ * @author GuilhermeSantos
+ * @version 1.0.0
+ */
+function getCommandManagerFrame(id, callback) {
+    mongoose.connect(uri, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useCreateIndex: true
+    }, (err, db) => {
+        if (err) {
+            callback([
+                `Não foi possível conectar com o mongoDB (Database ${db})`,
+                err
+            ])
+            return mongoose.connection.close();
+        }
+        mongooseConnected();
+    });
+
+    function mongooseConnected() {
+        Schema_ManagerFrame.find(id.length <= 0 ? {} : {
+            id: String(id)
+        }, (err, list) => {
+            if (err) {
+                callback([
+                    `Não foi possível verificar se o comando com o identificador(${id}) já foi salvo`,
+                    err
+                ]);
+                return mongoose.connection.close();
+            }
+
+            if (list instanceof Array !== true) list = [];
+
+            let items = id != '' ? list.filter(item => {
+                if (item.id == id)
+                    return {
+                        id: item.id,
+                        type: item.type,
+                        value: item.value
+                    }
+            }) : list.map(item => {
+                return {
+                    id: item.id,
+                    type: item.type,
+                    value: item.value
+                }
+            });
+
+            if (items.length <= 0) {
+                callback(`Comando(Gerenciador do Frame) com o identificador(${id}) não existe no banco de dados`);
+                return mongoose.connection.close();
+            } else {
+                callback(items);
+                return mongoose.connection.close();
+            }
+        });
+    }
+};
+
+/**
+ * @description Limpa os comandos do gerenciador de frame
+ * @author GuilhermeSantos
+ * @param {string} id Identificador do comando
+ * @param {function} callback Função a ser retornada com uma array de resposta
+ * @version 1.1.0
+ */
+function clearCommandsManagerFrame(id, callback) {
+    mongoose.connect(uri, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useCreateIndex: true
+    }, (err, db) => {
+        if (err) {
+            callback([
+                `Não foi possível conectar com o mongoDB (Database ${db})`,
+                err
+            ])
+            return mongoose.connection.close();
+        }
+        mongooseConnected();
+    });
+
+    function mongooseConnected() {
+        Schema_ManagerFrame.remove(id.length <= 0 ? {} : {
+            id: String(id)
+        }, (err) => {
+            if (err) {
+                callback([
+                    id.length <= 0 ? `Não foi possível remover os comandos(Gerenciador do Frame)` :
+                    `Não é possível remover o comando(Gerenciador do Frame) com o ID(${id}) do banco de dados`,
+                    err
+                ]);
+                return mongoose.connection.close();
+            }
+            callback(
+                id.length <= 0 ? `Comandos(Gerenciador do Frame) removidos do banco de dados` :
+                `Comando(Gerenciador do Frame) com o ID(${id}) removido do banco de dados`
             );
             return mongoose.connection.close();
         });
@@ -271,5 +457,8 @@ function clearCommands(id, callback) {
 module.exports = {
     createCommand,
     getCommand,
-    clearCommands
+    clearCommands,
+    createCommandManagerFrame,
+    clearCommandsManagerFrame,
+    getCommandManagerFrame
 };

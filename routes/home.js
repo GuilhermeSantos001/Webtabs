@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router({
   strict: true,
@@ -7,7 +6,16 @@ const router = express.Router({
 
 /* GET home page. */
 router.get(`/`, async (req, res) => {
-    res.render('index', { title: 'Webtabs' });
+  const {
+    ip,
+    port
+  } = require('../configs/server.json');
+
+  res.render('index', {
+    title: 'Webtabs',
+    serverIP: ip,
+    serverPort: port
+  });
 });
 
 module.exports = (app) => app.use('/', router);
