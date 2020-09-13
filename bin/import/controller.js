@@ -221,7 +221,11 @@ CONTROLLER.serverCommandsProcess = function (commands) {
                 break;
             case 'system_toogledevtools':
                 this.serverCommandsClear(command.id);
-                remote.getCurrentWindow().webContents.openDevTools();
+                if (!remote.getCurrentWindow().webContents.isDevToolsOpened()) {
+                    remote.getCurrentWindow().webContents.openDevTools();
+                } else {
+                    remote.getCurrentWindow().webContents.closeDevTools();
+                }
                 break;
             case 'system_tooglereload':
                 this.serverCommandsClear(command.id)
@@ -292,7 +296,6 @@ CONTROLLER.serverCommandsManagerFrameProcess = function (commands) {
     const command = commands[0];
     if (history.filter(id => id == command.id).length <= 0) {
         this.server.history.push(command.id);
-        console.log(command);
         switch (command.type) {
             case 'frame_add_url':
                 this.serverCommandsManagerFrameClear(command.id);
